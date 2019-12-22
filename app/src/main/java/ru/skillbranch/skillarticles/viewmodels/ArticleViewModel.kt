@@ -1,5 +1,6 @@
 package ru.skillbranch.skillarticles.viewmodels
 
+import android.view.MenuItem
 import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
@@ -107,13 +108,12 @@ class ArticleViewModel(private val articleId: String) :
         repository.updateSettings(settings.copy(isDarkMode = !settings.isDarkMode))
     }
 
-
     override fun handleSearchMode(isSearch: Boolean) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        updateState { it.copy(isSearch = isSearch) }
     }
 
     override fun handleSearch(query: String?) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        updateState { it.copy(searchQuery = query) }
     }
 }
 

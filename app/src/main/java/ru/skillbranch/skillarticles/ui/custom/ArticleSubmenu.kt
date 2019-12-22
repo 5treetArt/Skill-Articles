@@ -90,7 +90,7 @@ class ArticleSubmenu @JvmOverloads constructor(
         }
     }
 
-    private class SavedState: BaseSavedState, Parcelable{
+    private class SavedState: BaseSavedState, Parcelable {
         var ssIsOpen = false
 
         constructor(superState: Parcelable?) : super(superState)
