@@ -22,7 +22,8 @@ class ArticleViewModel(private val articleId: String) :
                 title = article.title,
                 category = article.category,
                 categoryIcon = article.categoryIcon,
-                date = article.date.format()
+                date = article.date.format(),
+                author = article.author
             )
         }
 
@@ -65,6 +66,12 @@ class ArticleViewModel(private val articleId: String) :
     override fun handleBookmark() {
         val info = currentState.toArticlePersonalInfo()
         repository.updateArticlePersonalInfo(info.copy(isBookmark = !info.isBookmark))
+
+        (if (currentState.isBookmark) "Add to bookmarks"
+        else "Remove from bookmarks")
+            .run { notify(Notify.TextMessage(this)) }
+
+
     }
 
     override fun handleLike() {

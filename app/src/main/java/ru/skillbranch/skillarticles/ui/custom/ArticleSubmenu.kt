@@ -19,7 +19,7 @@ class ArticleSubmenu @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
-    private var isOpen = false
+    var isOpen = false
     private var centerX: Float = context.dpToPx(200)
     private var centerY: Float = context.dpToPx(96)
 
@@ -43,7 +43,6 @@ class ArticleSubmenu @JvmOverloads constructor(
         animatedHide()
     }
 
-
     private fun animatedShow() {
         val endRadius = hypot(centerX, centerY).toInt()
         val anim = ViewAnimationUtils.createCircularReveal(
@@ -53,7 +52,7 @@ class ArticleSubmenu @JvmOverloads constructor(
             0f,
             endRadius.toFloat()
         )
-        anim.doOnStart{
+        anim.doOnStart {
             visibility = View.VISIBLE
         }
         anim.start()
@@ -90,8 +89,8 @@ class ArticleSubmenu @JvmOverloads constructor(
         }
     }
 
-    private class SavedState: BaseSavedState, Parcelable {
-        var ssIsOpen = false
+    private class SavedState : BaseSavedState, Parcelable {
+        var ssIsOpen: Boolean = false
 
         constructor(superState: Parcelable?) : super(superState)
 
@@ -104,11 +103,12 @@ class ArticleSubmenu @JvmOverloads constructor(
             dst.writeInt(if (ssIsOpen) 1 else 0)
         }
 
-        override fun describeContents(): Int = 0
+        override fun describeContents() = 0
 
         companion object CREATOR : Parcelable.Creator<SavedState> {
             override fun createFromParcel(parcel: Parcel) = SavedState(parcel)
             override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
         }
     }
+
 }
