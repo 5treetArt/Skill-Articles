@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
-import kotlinx.android.synthetic.main.layout_search_view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
@@ -29,7 +28,7 @@ class RootActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_search, menu)
         val searchItem = menu?.findItem(R.id.action_search)
         with(searchItem?.actionView as SearchView) {
-
+            val textView = findViewById<SearchView.SearchAutoComplete>(R.id.search_src_text)
             if(viewModel.currentState.isSearch) {
                 searchItem.expandActionView()
                 setQuery(viewModel.currentState.searchQuery ?: "", false)
@@ -37,34 +36,47 @@ class RootActivity : AppCompatActivity() {
             queryHint = getString(R.string.main_search_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    viewModel.handleSearch(query ?: "")
-                    viewModel.handleSearchMode(false)
+                    viewModel.handleSearch(query)
+                    //viewModel.handleSearchMode(false)
                     return true
                 }
 
                 override fun onQueryTextChange(query: String?): Boolean {
-                    viewModel.handleSearch(query ?: "")
+                    viewModel.handleSearch(query)
                     return true
                 }
             })
-            setOnQueryTextFocusChangeListener { view, hasFocus ->
-                if (!hasFocus) {
-                    viewModel.handleSearchMode(false)
-                    if (query.isNullOrBlank())
-                        searchItem.collapseActionView()
-                }
-                //searchItem.collapseActionView()
-            }
+
+            //setOnQueryTextFocusChangeListener { view, hasFocus ->
+            //    if (!hasFocus) {
+            //        viewModel.handleSearchMode(false)
+            //        if (query.isNullOrBlank())
+            //            searchItem.collapseActionView()
+            //    }
+            //    //searchItem.collapseActionView()
+            //}
         }
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                viewModel.handleSearchMode(true)
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                viewModel.handleSearchMode(false)
+                return true
+            }
+
+        })
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.action_search) {
-            viewModel.handleSearchMode(true)
-            true
-        } else super.onOptionsItemSelected(item)
-    }
+    //override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    //    return if (item.itemId == R.id.action_search) {
+    //        viewModel.handleSearchMode(true)
+    //        true
+    //    } else super.onOptionsItemSelected(item)
+    //}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
