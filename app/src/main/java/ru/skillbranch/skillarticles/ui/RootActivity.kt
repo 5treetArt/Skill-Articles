@@ -29,6 +29,11 @@ class RootActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_search, menu)
         val searchItem = menu?.findItem(R.id.action_search)
         with(searchItem?.actionView as SearchView) {
+
+            if(viewModel.currentState.isSearch) {
+                searchItem.expandActionView()
+                setQuery(viewModel.currentState.searchQuery ?: "", false)
+            }
             queryHint = getString(R.string.main_search_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -42,14 +47,14 @@ class RootActivity : AppCompatActivity() {
                     return true
                 }
             })
-            //setOnQueryTextFocusChangeListener { view, hasFocus ->
-            //    if (!hasFocus) {
-            //        hideKeyboard()
-            //        if (query.isNullOrBlank())
-            //            searchItem.collapseActionView()
-            //    }
-            //    //searchItem.collapseActionView()
-            //}
+            setOnQueryTextFocusChangeListener { view, hasFocus ->
+                if (!hasFocus) {
+                    viewModel.handleSearchMode(false)
+                    if (query.isNullOrBlank())
+                        searchItem.collapseActionView()
+                }
+                //searchItem.collapseActionView()
+            }
         }
         return super.onCreateOptionsMenu(menu)
     }
