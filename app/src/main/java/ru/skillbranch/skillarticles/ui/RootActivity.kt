@@ -64,6 +64,8 @@ class RootActivity : AppCompatActivity() {
 
             override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
                 viewModel.handleSearchMode(false)
+                //для того, чтобы не отрисовывался значок меню вместо поиска
+                invalidateOptionsMenu()
                 return true
             }
 
