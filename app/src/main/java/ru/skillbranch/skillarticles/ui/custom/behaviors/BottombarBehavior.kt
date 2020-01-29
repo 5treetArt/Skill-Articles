@@ -13,16 +13,10 @@ import ru.skillbranch.skillarticles.ui.custom.Bottombar
 import kotlin.math.max
 import kotlin.math.min
 
-class BottombarBehavior(/*context: Context, attrs: AttributeSet*/)
-    : CoordinatorLayout.Behavior<Bottombar>(/*context, attrs*/) {
+class BottombarBehavior()
+    : CoordinatorLayout.Behavior<Bottombar>() {
 
-    override fun layoutDependsOn(
-        parent: CoordinatorLayout,
-        child: Bottombar,
-        dependency: View
-    ): Boolean {
-        return dependency is NestedScrollView
-    }
+    constructor(context: Context, attrs: AttributeSet): this()
 
     override fun onStartNestedScroll(
         coordinatorLayout: CoordinatorLayout,
@@ -44,20 +38,10 @@ class BottombarBehavior(/*context: Context, attrs: AttributeSet*/)
         consumed: IntArray,
         type: Int
     ) {
-        val offset = MathUtils.clamp(child.translationY + dy, 0f, child.minHeight.toFloat())
-        if (offset!=child.translationY) child.translationY = offset
-        //if (dy > 0)
-        //    child.animate()
-        //        .translationY(child.height.toFloat())
-        //        .setDuration(200L)
-        //        .withEndAction { child.visibility = View.INVISIBLE }
-        //        .start()
-        //else child.animate()
-        //    .translationY(0f)
-        //    .setDuration(200L)
-        //    .withStartAction { child.visibility = View.VISIBLE }
-        //    .start()
+        if (!child.isSearchMode) {
+            val offset = MathUtils.clamp(child.translationY + dy, 0f, child.minHeight.toFloat())
+            if (offset != child.translationY) child.translationY = offset
+        }
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
-        //child.translationY = max(0f, min(child.height.toFloat(), child.translationY + dy))
     }
 }

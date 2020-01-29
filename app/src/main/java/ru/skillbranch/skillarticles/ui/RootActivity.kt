@@ -1,37 +1,83 @@
 package ru.skillbranch.skillarticles.ui
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Selection
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.ScrollingMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.text.getSpans
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
+import kotlinx.android.synthetic.main.layout_search_view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
+import ru.skillbranch.skillarticles.extensions.setMarginOptionally
+import ru.skillbranch.skillarticles.ui.base.BaseActivity
+import ru.skillbranch.skillarticles.ui.base.IArticleView
+import ru.skillbranch.skillarticles.ui.custom.SearchFocusSpan
+import ru.skillbranch.skillarticles.ui.custom.SearchSpan
 import ru.skillbranch.skillarticles.viewmodels.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
-import ru.skillbranch.skillarticles.viewmodels.Notify
-import ru.skillbranch.skillarticles.viewmodels.ViewModelFactory
+import ru.skillbranch.skillarticles.viewmodels.base.Notify
+import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
-class RootActivity : AppCompatActivity() {
+class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
-    private lateinit var viewModel: ArticleViewModel
+    override val layout: Int = R.layout.activity_root
+    override lateinit var viewModel: ArticleViewModel
+
+    private var searchQuery: String? = null
+    private var isSearching = false
+
+    //TODO 55.46
+    private val bgColor = Color.RED
+    private val fgColor = Color.WHITE
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val vmFactory = ViewModelFactory("0")
+        viewModel = ViewModelProviders.of(this, vmFactory).get(ArticleViewModel::class.java)
+        viewModel.observeState(this) { renderUi(it) }
+        viewModel.observeNotifications(this) { renderNotifications(it) }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
-        val searchItem = menu?.findItem(R.id.action_search)
-        with(searchItem?.actionView as SearchView) {
-            val textView = findViewById<SearchView.SearchAutoComplete>(R.id.search_src_text)
-            if(viewModel.currentState.isSearch) {
-                searchItem.expandActionView()
-                setQuery(viewModel.currentState.searchQuery ?: "", false)
+        val menuItem = menu?.findItem(R.id.action_search)
+
+        menuItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                viewModel.handleSearchMode(true)
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                viewModel.handleSearchMode(false)
+                //для того, чтобы не отрисовывался значок меню вместо поиска
+                invalidateOptionsMenu()
+                return true
+            }
+
+        })
+
+        with(menuItem?.actionView as SearchView) {
+            if(isSearching) {
+                menuItem.expandActionView()
+                setQuery(searchQuery, false)
+                clearFocus()
             }
             queryHint = getString(R.string.main_search_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -46,31 +92,69 @@ class RootActivity : AppCompatActivity() {
                     return true
                 }
             })
-
-            //setOnQueryTextFocusChangeListener { view, hasFocus ->
-            //    if (!hasFocus) {
-            //        viewModel.handleSearchMode(false)
-            //        if (query.isNullOrBlank())
-            //            searchItem.collapseActionView()
-            //    }
-            //    //searchItem.collapseActionView()
-            //}
         }
-        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
-                viewModel.handleSearchMode(true)
-                return true
-            }
 
-            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
-                viewModel.handleSearchMode(false)
-                //для того, чтобы не отрисовывался значок меню вместо поиска
-                invalidateOptionsMenu()
-                return true
-            }
-
-        })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun setupViews() {
+        setupToolbar()
+        setupBottombar()
+        setupSubmenu()
+    }
+
+    override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
+        val content = tv_text_content.text as Spannable
+
+        //clear entry search
+        clearSearchResult()
+
+        searchResult.forEach { (start, end) ->
+            content.setSpan(
+                SearchSpan(bgColor, fgColor),
+                start,
+                end,
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        //scroll to first searched element
+        renderSearchPosition(0)
+    }
+
+    override fun renderSearchPosition(searchPosition: Int) {
+        val content = tv_text_content.text as Spannable
+
+
+        val spans = content.getSpans<SearchSpan>()
+        //clear last search position
+        content.getSpans<SearchFocusSpan>().forEach { content.removeSpan(it) }
+
+        if (spans.isNotEmpty()) {
+            val result = spans[searchPosition]
+            Selection.setSelection(content, content.getSpanStart(result))
+            content.setSpan(
+                SearchFocusSpan(bgColor, fgColor),
+                content.getSpanStart(result),
+                content.getSpanEnd(result),
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+    }
+
+    override fun clearSearchResult() {
+        val content = tv_text_content.text as Spannable
+        content.getSpans<SearchSpan>().forEach { content.removeSpan(it) }
+    }
+
+    override fun showSearchBar() {
+        bottombar.setSearchState(true)
+        scroll.setMarginOptionally(bottom = dpToIntPx(56))
+    }
+
+    override fun hideSearchBar() {
+        bottombar.setSearchState(false)
+        scroll.setMarginOptionally(bottom = dpToIntPx(0))
     }
 
     //override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -79,19 +163,6 @@ class RootActivity : AppCompatActivity() {
     //        true
     //    } else super.onOptionsItemSelected(item)
     //}
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_root)
-        setupToolbar()
-        setupBottombar()
-        setupSubmenu()
-
-        val vmFactory = ViewModelFactory("0")
-        viewModel = ViewModelProviders.of(this, vmFactory).get(ArticleViewModel::class.java)
-        viewModel.observeState(this) { renderUi(it) }
-        viewModel.observeNotifications(this) { renderNotifications(it) }
-    }
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
@@ -113,6 +184,21 @@ class RootActivity : AppCompatActivity() {
         btn_bookmark.setOnClickListener { viewModel.handleBookmark() }
         btn_share.setOnClickListener { viewModel.handleShare() }
         btn_settings.setOnClickListener { viewModel.handleToggleMenu() }
+
+        btn_result_up.setOnClickListener {
+            if (search_view.hasFocus()) search_view.clearFocus()
+            viewModel.handleUpResult()
+        }
+
+        btn_result_down.setOnClickListener {
+            if (search_view.hasFocus()) search_view.clearFocus()
+            viewModel.handleDownResult()
+        }
+
+        btn_search_close.setOnClickListener {
+            viewModel.handleSearchMode(false)
+            invalidateOptionsMenu()
+        }
     }
 
     private fun setupSubmenu() {
@@ -122,6 +208,14 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun renderUi(data: ArticleState) {
+
+        if (data.isSearch) showSearchBar() else hideSearchBar()
+
+        if (data.searchResults.isNotEmpty()) renderSearchResult(data.searchResults)
+        if (data.searchResults.isNotEmpty()) renderSearchPosition(data.searchPositition)
+
+        isSearching = data.isSearch
+
         //bind submenu state
         btn_settings.isChecked = data.isShowMenu
         if (data.isShowMenu) submenu.open() else submenu.close()
@@ -147,9 +241,13 @@ class RootActivity : AppCompatActivity() {
         }
 
         //bind content
-        tv_text_content.text =
-            if (data.isLoadingContent) "loading"
-            else data.content.first() as String
+        if (data.isLoadingContent) {
+            tv_text_content.text = "loading"
+        } else if (tv_text_content.text == "loading"){
+            val content = data.content.first() as String
+            tv_text_content.setText(content, TextView.BufferType.SPANNABLE)
+            tv_text_content.movementMethod = ScrollingMovementMethod()
+        }
 
         toolbar.title = data.title ?: "loading"
         toolbar.subtitle = data.category ?: "loading"
