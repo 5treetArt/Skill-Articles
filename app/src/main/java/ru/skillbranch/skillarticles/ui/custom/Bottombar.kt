@@ -23,7 +23,7 @@ class Bottombar @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr), CoordinatorLayout.AttachedBehavior {
     var isSearchMode = false
 
-    override fun getBehavior(): CoordinatorLayout.Behavior<*> {
+    override fun getBehavior(): CoordinatorLayout.Behavior<Bottombar> {
         return BottombarBehavior()
     }
 
@@ -34,13 +34,15 @@ class Bottombar @JvmOverloads constructor(
         background = materialBg
     }
 
+    //save state
     override fun onSaveInstanceState(): Parcelable? {
         val savedState = SavedState(super.onSaveInstanceState())
         savedState.ssIsSearchMode = isSearchMode
         return savedState
     }
 
-    override fun onRestoreInstanceState(state: Parcelable?) {
+    //restore state
+    override fun onRestoreInstanceState(state: Parcelable) {
         super.onRestoreInstanceState(state)
         if (state is SavedState) {
             isSearchMode = state.ssIsSearchMode
@@ -50,7 +52,7 @@ class Bottombar @JvmOverloads constructor(
     }
 
     fun setSearchState(search: Boolean) {
-        if(isSearchMode == search || !isAttachedToWindow) return
+        if (isSearchMode == search || !isAttachedToWindow) return
         isSearchMode = search
         if (isSearchMode) animateShowSearchPanel()
         else animateHideSearchPanel()
@@ -58,11 +60,11 @@ class Bottombar @JvmOverloads constructor(
 
     private fun animateHideSearchPanel() {
         group_bottom.isVisible = true
-        val endRadius = hypot(width.toFloat(), height/2f)
+        val endRadius = hypot(width.toFloat(), height / 2f)
         val va = ViewAnimationUtils.createCircularReveal(
             reveal,
             width,
-            height/2,
+            height / 2,
             endRadius,
             0f
         )
@@ -72,11 +74,11 @@ class Bottombar @JvmOverloads constructor(
 
     private fun animateShowSearchPanel() {
         reveal.isVisible = true
-        val endRadius = hypot(width.toFloat(), height/2f)
+        val endRadius = hypot(width.toFloat(), height / 2f)
         val va = ViewAnimationUtils.createCircularReveal(
             reveal,
             width,
-            height/2,
+            height / 2,
             0f,
             endRadius
         )
@@ -104,7 +106,7 @@ class Bottombar @JvmOverloads constructor(
     }
 
     private class SavedState : BaseSavedState, Parcelable {
-        var ssIsSearchMode = false
+        var ssIsSearchMode: Boolean = false
 
         constructor(superState: Parcelable?) : super(superState)
 
@@ -117,11 +119,10 @@ class Bottombar @JvmOverloads constructor(
             dst.writeInt(if (ssIsSearchMode) 1 else 0)
         }
 
-        override fun describeContents(): Int = 0
+        override fun describeContents() = 0
 
         companion object CREATOR : Parcelable.Creator<SavedState> {
             override fun createFromParcel(parcel: Parcel) = SavedState(parcel)
-
             override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
         }
     }

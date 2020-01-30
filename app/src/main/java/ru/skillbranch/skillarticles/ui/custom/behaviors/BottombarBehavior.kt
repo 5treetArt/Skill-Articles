@@ -3,15 +3,11 @@ package ru.skillbranch.skillarticles.ui.custom.behaviors
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ScrollView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.math.MathUtils
 import androidx.core.view.ViewCompat
-import androidx.core.widget.NestedScrollView
-import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.ui.custom.Bottombar
-import kotlin.math.max
-import kotlin.math.min
+
 
 class BottombarBehavior()
     : CoordinatorLayout.Behavior<Bottombar>() {

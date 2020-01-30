@@ -79,7 +79,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(),
                 if (binding.isFocusedSearch) requestFocus()
                 else clearFocus()
             }
-            queryHint = getString(R.string.main_search_hint)
+            queryHint = getString(R.string.article_search_placeholder)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     viewModel.handleSearch(query)
@@ -207,7 +207,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(),
         switch_mode.setOnClickListener { viewModel.handleNightMode() }
     }
 
-    override fun renderNotifications(notify: Notify) {
+    override fun renderNotification(notify: Notify) {
         val snackbar = Snackbar.make(coordinator_container, notify.message, Snackbar.LENGTH_LONG)
             .setAnchorView(bottombar)
 

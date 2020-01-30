@@ -13,7 +13,7 @@ abstract class BaseActivity<T : BaseViewModel<out IViewModelState>> : AppCompatA
 
     //set listeners, tuning views
     abstract fun setupViews()
-    abstract fun renderNotifications(notify: Notify)
+    abstract fun renderNotification(notify: Notify)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ abstract class BaseActivity<T : BaseViewModel<out IViewModelState>> : AppCompatA
         setupViews()
         binding.onFinishInflate()
         viewModel.observeState(this) { binding.bind(it) }
-        viewModel.observeNotifications(this) { renderNotifications(it) }
+        viewModel.observeNotifications(this) { renderNotification(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
