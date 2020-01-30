@@ -3,17 +3,17 @@ package ru.skillbranch.skillarticles.extensions
 import ru.skillbranch.skillarticles.utils.BoyerMoore
 
 
-fun String?.indexesOf(needle: String): List<Int> {
+fun String?.indexesOf(needle: String, ignoreCase: Boolean = true): List<Int> {
 
     val indexes = mutableListOf<Int>()
 
     if (this.isNullOrEmpty() || needle.isEmpty()) return indexes
 
-    var currentIdx = this.indexOf(needle, 0, true)
+    var currentIdx = this.indexOf(needle, 0, ignoreCase)
 
     while (currentIdx != -1) {
         indexes.add(currentIdx)
-        currentIdx = this.indexOf(needle, currentIdx + 1, true)
+        currentIdx = this.indexOf(needle, currentIdx + 1, ignoreCase)
     }
 
     return indexes
