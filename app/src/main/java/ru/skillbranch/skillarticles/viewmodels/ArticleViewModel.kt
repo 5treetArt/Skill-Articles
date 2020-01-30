@@ -1,6 +1,7 @@
 package ru.skillbranch.skillarticles.viewmodels
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
@@ -120,7 +121,7 @@ class ArticleViewModel(private val articleId: String) :
     }
 
     override fun handleSearchMode(isSearch: Boolean) {
-        updateState { it.copy(isSearch = isSearch) }
+        updateState { it.copy(isSearch = isSearch, isShowMenu = false, searchPosition = 0) }
     }
 
     override fun handleSearch(query: String?) {
@@ -131,11 +132,11 @@ class ArticleViewModel(private val articleId: String) :
     }
 
     fun handleUpResult() {
-        updateState { it.copy(searchPositition = it.searchPositition.dec()) }
+        updateState { it.copy(searchPosition = it.searchPosition.dec()) }
     }
 
     fun handleDownResult() {
-        updateState { it.copy(searchPositition = it.searchPositition.inc()) }
+        updateState { it.copy(searchPosition = it.searchPosition.inc()) }
     }
 }
 
@@ -151,7 +152,7 @@ data class ArticleState(
     val isSearch: Boolean = false,
     val searchQuery: String? = null,
     val searchResults: List<Pair<Int, Int>> = emptyList(),
-    val searchPositition: Int = 0,
+    val searchPosition: Int = 0,
     val shareLink: String? = null,
     val title: String? = null,
     val category: String? = null,
@@ -163,11 +164,24 @@ data class ArticleState(
     val reviews: List<Any> = emptyList()
 ) : IViewModelState {
     override fun save(outState: Bundle) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        outState.putAll(
+            bundleOf(
+                "isSearch" to isSearch,
+                "searchQuery" to searchQuery,
+                "searchResults" to searchResults,
+                "searchPosition" to searchPosition
+            )
+        )
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun restore(savedState: Bundle): IViewModelState {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return copy(
+            isSearch = savedState["isSearch"] as Boolean,
+            searchQuery = savedState["searchQuery"] as? String,
+            searchResults = savedState["searchResults"] as List<Pair<Int, Int>>,
+            searchPosition = savedState["searchPosition"] as Int
+        )
     }
 
 }

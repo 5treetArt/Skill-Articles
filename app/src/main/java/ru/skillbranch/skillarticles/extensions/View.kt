@@ -2,18 +2,16 @@ package ru.skillbranch.skillarticles.extensions
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.marginBottom
-import androidx.core.view.marginEnd
-import androidx.core.view.marginStart
-import androidx.core.view.marginTop
+import androidx.core.view.*
+
 fun View.setMarginOptionally(
-    start: Int = marginStart,
-    end: Int = marginEnd,
+    left: Int = marginLeft,
     top: Int = marginTop,
+    right: Int = marginRight,
     bottom: Int = marginBottom
 ) {
     val currentParams = layoutParams as ViewGroup.MarginLayoutParams
-    currentParams.setMargins(start, top, end, bottom)
+    currentParams.setMargins(left, top, right, bottom)
     layoutParams = currentParams
 }
 
