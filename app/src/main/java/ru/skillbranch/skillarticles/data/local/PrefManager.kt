@@ -6,11 +6,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 
 class PrefManager(context: Context) {
-    val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val preferences: SharedPreferences by lazy { PreferenceManager(context).sharedPreferences }
 
-    fun clearAll() {
-        preferences.edit(true) {
-            clear()
-        }
-    }
+    fun clearAll() = preferences.edit { clear() }
 }
