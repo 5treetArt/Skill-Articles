@@ -128,7 +128,11 @@ class ArticleViewModel(private val articleId: String) :
         query ?: return
         val result = (currentState.content.firstOrNull() as? String).indexesOf(query)
             .map { it to it + query.length }
-        updateState { it.copy(searchQuery = query, searchResults = result) }
+
+        val newSearchPos =
+            if (result.isNotEmpty() && currentState.searchPosition >= result.size) result.size - 1
+            else currentState.searchPosition
+        updateState { it.copy(searchQuery = query, searchResults = result, searchPosition = newSearchPos) }
     }
 
     fun handleUpResult() {
