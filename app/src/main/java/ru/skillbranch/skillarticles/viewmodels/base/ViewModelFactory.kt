@@ -1,14 +1,11 @@
 package ru.skillbranch.skillarticles.viewmodels.base
 
-fun <T> whenThis(thisRef: T, vararg actions: T.() -> Unit) {
-
-}
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
 
 class ViewModelFactory(private val params: Any?) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ArticleViewModel::class.java)) {
             return ArticleViewModel(params as String) as T
