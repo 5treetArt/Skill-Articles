@@ -1,5 +1,9 @@
 package ru.skillbranch.skillarticles.viewmodels.base
 
+fun <T> whenThis(thisRef: T, vararg actions: T.() -> Unit) {
+
+}
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
