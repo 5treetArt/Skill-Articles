@@ -168,7 +168,8 @@ object MarkdownParser {
                     //full text for regex
                     val preHandledText = string.substring(startIndex, endIndex)
                     //text without "\d+. "
-                    text = "^\\d+\\. (.+)\$".toRegex().find(preHandledText)!!.destructured.component1()
+                    text =
+                        "^\\d+\\. (.+)\$".toRegex().find(preHandledText)!!.destructured.component1()
                     //find inner elements
                     val subs = clear(text)
                     result.append(subs)
@@ -329,7 +330,9 @@ object MarkdownParser {
                     //full text for regex
                     text = string.substring(startIndex, endIndex)
                     //text without "\d+. "
-                    val (order: String, clearedText: String)= "^(\\d+\\.) (.+)\$".toRegex().find(text)!!.destructured
+                    val (order: String, clearedText: String) = "^(\\d+\\.) (.+)\$".toRegex().find(
+                        text
+                    )!!.destructured
 
                     //find inner elements
                     val subs = findElements(clearedText)
@@ -343,19 +346,25 @@ object MarkdownParser {
                 //BLOCK CODE
                 11 -> {
                     //text without "```{}```"
-                    text = string.subSequence(startIndex.plus(3), endIndex.minus(3))
+                    text = string.substring(startIndex.plus(3), endIndex.minus(3))
                     if (!text.contains(LINE_SEPARATOR)) {
                         val element = Element.BlockCode(Element.BlockCode.Type.SINGLE, text)
                         parents.add(element)
                     } else {
                         val strings = text.split(LINE_SEPARATOR.toRegex())
-                        val firstLine = Element.BlockCode(Element.BlockCode.Type.START, strings.first().plus(
-                            LINE_SEPARATOR))
+                        val firstLine = Element.BlockCode(
+                            Element.BlockCode.Type.START, strings.first().plus(
+                                LINE_SEPARATOR
+                            )
+                        )
                         parents.add(firstLine)
                         if (strings.size > 2) {
                             (1..strings.size.minus(2)).forEach {
-                                val element = Element.BlockCode(Element.BlockCode.Type.MIDDLE, strings[it].plus(
-                                    LINE_SEPARATOR))
+                                val element = Element.BlockCode(
+                                    Element.BlockCode.Type.MIDDLE, strings[it].plus(
+                                        LINE_SEPARATOR
+                                    )
+                                )
                                 parents.add(element)
                             }
                         }
@@ -375,6 +384,7 @@ object MarkdownParser {
         return parents
     }
 }
+
 data class MarkdownText(val elements: List<Element>)
 
 sealed class Element() {

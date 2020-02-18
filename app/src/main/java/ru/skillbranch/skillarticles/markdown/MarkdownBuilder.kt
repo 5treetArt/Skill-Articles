@@ -32,7 +32,7 @@ class MarkdownBuilder(context: Context) {
     fun markdownToSpan(string: String): SpannedString {
         val markdown = MarkdownParser.parse(string)
         return buildSpannedString {
-            markdown.elements.forEach{ buildElement(it, this) }
+            markdown.elements.forEach { buildElement(it, this) }
         }
     }
 
@@ -117,12 +117,20 @@ class MarkdownBuilder(context: Context) {
                     }
                 }
                 is Element.BlockCode -> {
-                    inSpans(BlockCodeSpan(colorOnSurface, colorSurface, cornerRadius, gap, element.type)) {
+                    inSpans(
+                        BlockCodeSpan(
+                            colorOnSurface,
+                            colorSurface,
+                            cornerRadius,
+                            gap,
+                            element.type
+                        )
+                    ) {
                         append(element.text)
                     }
                 }
 
-                else -> append(element.text)
+                //else -> append(element.text)
             }
         }
     }
