@@ -8,7 +8,7 @@ import android.text.style.ReplacementSpan
 import androidx.annotation.ColorInt
 import androidx.annotation.Px
 import androidx.annotation.VisibleForTesting
-import ru.skillbranch.skillarticles.markdown.MarkdownParser.Element
+import ru.skillbranch.skillarticles.markdown.Element
 
 
 class BlockCodeSpan(

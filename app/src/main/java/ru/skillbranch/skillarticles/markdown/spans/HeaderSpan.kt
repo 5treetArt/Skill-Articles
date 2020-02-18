@@ -109,7 +109,7 @@ class HeaderSpan constructor(
                 )
             }
         }
-        canvas.drawFontlines(lineTop, lineBottom, lineBaseline, paint)
+        //canvas.drawFontlines(lineTop, lineBottom, lineBaseline, paint)
     }
 
     override fun getLeadingMargin(first: Boolean): Int {
