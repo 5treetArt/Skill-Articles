@@ -1,7 +1,5 @@
 package ru.skillbranch.skillarticles.extensions
 
-import ru.skillbranch.skillarticles.utils.BoyerMoore
-
 
 fun String?.indexesOf(needle: String, ignoreCase: Boolean = true): List<Int> {
 
