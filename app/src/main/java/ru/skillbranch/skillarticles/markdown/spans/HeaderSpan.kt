@@ -135,14 +135,13 @@ class HeaderSpan constructor(
 
 private fun Canvas.drawFontlines(
     top: Int,
-    lineBottom: Int,
-    lineBaseline: Int,
+    bottom: Int,
+    baseline: Int,
     paint: Paint
 ) {
-    //TODO
     drawLine(0f, top + 0f, width + 0f, top + 0f, Paint().apply { color = Color.BLUE })
-    //drawLine(0f, top + 0f, width + 0f, top + 0f, Paint().apply { color = Color.BLUE })
-    //drawLine(0f, top + 0f, width + 0f, top + 0f, Paint().apply { color = Color.BLUE })
-    //drawLine(0f, top + 0f, width + 0f, top + 0f, Paint().apply { color = Color.BLUE })
-    //drawLine(0f, top + 0f, width + 0f, top + 0f, Paint().apply { color = Color.BLUE })
+    drawLine(0f, bottom + 0f, width + 0f, bottom + 0f, Paint().apply { color = Color.GREEN })
+    drawLine(0f, baseline + 0f, width + 0f, baseline + 0f, Paint().apply { color = Color.RED })
+    drawLine(0f, paint.ascent() + baseline + 0f, width + 0f, paint.ascent() + baseline + 0f, Paint().apply { color = Color.BLACK })
+    drawLine(0f, paint.descent() + baseline + 0f, width + 0f, paint.descent() + baseline + 0f, Paint().apply { color = Color.MAGENTA })
 }
