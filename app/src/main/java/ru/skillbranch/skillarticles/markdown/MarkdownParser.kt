@@ -1,7 +1,6 @@
 package ru.skillbranch.skillarticles.markdown
 
 import java.util.regex.Pattern
-import kotlin.math.E
 
 object MarkdownParser {
 
@@ -49,9 +48,7 @@ object MarkdownParser {
         string ?: return null
 
         val result = StringBuilder()
-        val parents = mutableListOf<Element>()
         val matcher = elementsPattern.matcher(string)
-
         var lastStartIndex = 0
 
         loop@ while (matcher.find(lastStartIndex)) {

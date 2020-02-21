@@ -54,20 +54,20 @@ class BlockCodeSpan(
         fm ?: return 0
         when (type) {
             Element.BlockCode.Type.SINGLE -> {
-                fm.ascent = (paint.fontMetricsInt.ascent - 2 * padding).toInt()
-                fm.descent = (paint.fontMetricsInt.descent + 2 * padding).toInt()
+                fm.ascent = (paint.ascent() - 2 * padding).toInt()
+                fm.descent = (paint.descent() + 2 * padding).toInt()
             }
             Element.BlockCode.Type.START -> {
-                fm.ascent = (paint.fontMetricsInt.ascent - 2 * padding).toInt()
-                fm.descent = paint.fontMetricsInt.descent
+                fm.ascent = (paint.ascent() - 2 * padding).toInt()
+                fm.descent = paint.descent().toInt()
             }
             Element.BlockCode.Type.MIDDLE -> {
-                fm.ascent = paint.fontMetricsInt.ascent
-                fm.descent = paint.fontMetricsInt.descent
+                fm.ascent = paint.ascent().toInt()
+                fm.descent = paint.descent().toInt()
             }
             Element.BlockCode.Type.END -> {
-                fm.ascent = paint.fontMetricsInt.ascent
-                fm.descent = (paint.fontMetricsInt.descent + 2 * padding).toInt()
+                fm.ascent = paint.ascent().toInt()
+                fm.descent = (paint.descent() + 2 * padding).toInt()
             }
         }
         return 0
