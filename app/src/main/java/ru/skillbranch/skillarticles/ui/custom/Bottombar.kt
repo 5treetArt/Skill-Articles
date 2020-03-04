@@ -98,11 +98,8 @@ class Bottombar @JvmOverloads constructor(
         }
 
         //lock button presses in min/max positions
-        //TODO а после изменения надо их возвращать в true?
-        when(position) {
-            0 -> btn_result_up.isEnabled = false
-            searchCount - 1 -> btn_result_down.isEnabled = false
-        }
+        if (position == 0) btn_result_up.isEnabled = false
+        if (position == searchCount - 1) btn_result_down.isEnabled = false
     }
 
     private class SavedState : BaseSavedState, Parcelable {
