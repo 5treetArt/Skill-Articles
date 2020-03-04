@@ -36,7 +36,10 @@ import ru.skillbranch.skillarticles.viewmodels.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
-import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
+import kotlin.math.roundToInt
+import android.os.CountDownTimer
+
+
 
 class RootActivity : BaseActivity<ArticleViewModel>(),
     IArticleView {
@@ -129,14 +132,38 @@ class RootActivity : BaseActivity<ArticleViewModel>(),
     override fun renderSearchPosition(searchPosition: Int) {
         val content = tv_text_content.text as Spannable
 
-
         val spans = content.getSpans<SearchSpan>()
         //clear last search position
         content.getSpans<SearchFocusSpan>().forEach { content.removeSpan(it) }
 
         if (spans.isNotEmpty()) {
             val result = spans[searchPosition]
+
+            val spanEnd = content.getSpanEnd(result)
+
+            if (!tv_text_content.hasFocus()) {
+                val layout = tv_text_content.layout
+                //val x = layout.getPrimaryHorizontal(spanEnd)
+                val spacing = layout.spacingAdd.roundToInt()
+                val y = layout.getLineBottom(layout.getLineForOffset(spanEnd))
+                scroll.smoothScrollTo(0, y + dpToIntPx(56))
+            }
+
+
+            //object : CountDownTimer(1000, 20) {
+            //    override fun onTick(millisUntilFinished: Long) {
+            //        // Nothing...
+            //    }
+            //
+            //    // When over, start smoothScroll
+            //    override fun onFinish() {
+            //        scroll.smoothScrollTo(0, y + spacing + dpToIntPx(56))
+            //    }
+            //}.start()
+
+            //tv_text_content.post {
             Selection.setSelection(content, content.getSpanStart(result))
+            //}
             content.setSpan(
                 SearchFocusSpan(bgColor, fgColor),
                 content.getSpanStart(result),
