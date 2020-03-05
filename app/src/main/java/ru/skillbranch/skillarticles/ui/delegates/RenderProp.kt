@@ -21,7 +21,7 @@ class RenderProp<T>(
         if (value == this.value) return
         this.value = value
         onChange?.invoke(this.value)
-        if (listeners.isNotEmpty()) listeners.forEach{ it.invoke() }
+        if (listeners.isNotEmpty()) listeners.forEach { it.invoke() }
     }
 
     //register additional listener

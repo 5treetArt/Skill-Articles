@@ -126,8 +126,7 @@ class MarkdownBuilder(context: Context) {
                             colorOnSurface,
                             colorSurface,
                             cornerRadius,
-                            gap,
-                            element.type
+                            gap
                         )
                     ) {
                         append(element.text)
