@@ -5,12 +5,8 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.marginRight
-import androidx.core.widget.NestedScrollView
-import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.ui.custom.ArticleSubmenu
 import ru.skillbranch.skillarticles.ui.custom.Bottombar
-import kotlin.math.max
-import kotlin.math.min
 
 class SubmenuBehavior() : CoordinatorLayout.Behavior<ArticleSubmenu>() {
 

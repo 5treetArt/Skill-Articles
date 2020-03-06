@@ -1,10 +1,7 @@
 package ru.skillbranch.skillarticles
 
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import ru.skillbranch.skillarticles.data.repositories.Element
-import ru.skillbranch.skillarticles.data.repositories.MarkdownParser
 import ru.skillbranch.skillarticles.extensions.groupByBounds
 
 /**

@@ -45,7 +45,7 @@ object LocalDataHolder {
     }
 
     fun updateArticlePersonalInfo(info: ArticlePersonalInfo) {
-        Log.e("DataHolder", "update personal info: $info");
+        Log.e("DataHolder", "update personal info: $info")
         articleInfo.value = info
     }
 }

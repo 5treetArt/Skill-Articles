@@ -19,7 +19,7 @@ class MarkdownContentView @JvmOverloads constructor(
 ) : ViewGroup(context, attrs, defStyleAttr) {
     private lateinit var elements: List<MarkdownElement>
 
-    //for restore
+    //TODO for restore
     private var ids = arrayListOf<Int>()
 
     var textSize by Delegates.observable(14f) { _, old, value ->
