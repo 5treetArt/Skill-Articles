@@ -9,6 +9,7 @@ import android.text.TextPaint
 import android.text.style.LeadingMarginSpan
 import android.text.style.LineHeightSpan
 import android.text.style.MetricAffectingSpan
+import android.util.Range
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.annotation.Px
@@ -28,6 +29,12 @@ class HeaderSpan constructor(
     private val marginBottom: Float
 ) :
     MetricAffectingSpan(), LineHeightSpan, LeadingMarginSpan {
+
+    val topExtraPadding: Int
+    val bottomExtraPadding: Int
+
+    val firstLineBounds: Range<Int>
+    val lastLineBounds: Range<Int>
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val linePadding = 0.4f

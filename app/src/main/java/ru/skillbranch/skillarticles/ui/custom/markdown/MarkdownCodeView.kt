@@ -140,23 +140,77 @@ class MarkdownCodeView private constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        //TODO implement me
+        var usedHeight = 0
+        val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
+        measureChild(sv_scroll, widthMeasureSpec, heightMeasureSpec)
+        measureChild(iv_copy, widthMeasureSpec, heightMeasureSpec)
+        usedHeight += sv_scroll.measuredHeight + paddingTop + paddingBottom
+        setMeasuredDimension(width, usedHeight)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        //TODO implement me
+        val usedHeight = paddingTop
+        val bodyWidth = r - l - paddingLeft - paddingRight
+        val left = paddingLeft
+        val right = paddingLeft + bodyWidth
+
+        if (isSingleLine) {
+            val iconHeight = (b - t - iconSize) / 2
+            iv_copy.layout(
+                right - iconSize,
+                iconHeight,
+                right,
+                iconHeight + iconSize
+            )
+
+            iv_switch.layout(
+                iv_copy.right - (2.5f * iconSize).toInt(),
+                iconHeight,
+                iv_copy.right - (1.5 * iconSize).toInt(),
+                iconHeight + iconSize
+            )
+
+        } else {
+            iv_copy.layout(
+                right - iconSize,
+                usedHeight,
+                right,
+                usedHeight + iconSize
+            )
+
+            iv_switch.layout(
+                iv_copy.right - (2.5f * iconSize).toInt(),
+                usedHeight,
+                iv_copy.right - (1.5 * iconSize).toInt(),
+                usedHeight + iconSize
+            )
+        }
+
+        sv_scroll.layout(
+            left,
+            usedHeight,
+            right,
+            usedHeight + sv_scroll.measuredHeight
+        )
     }
 
     override fun renderSearchPosition(searchPosition: Pair<Int, Int>, offset: Int) {
-        //TODO implement me
+        super.renderSearchPosition(searchPosition, offset)
+        if ((parent as ViewGroup).hasFocus() && !tv_codeView.hasFocus()) tv_codeView.requestFocus()
+        Selection.setSelection(spannableContent, searchPosition.first.minus(offset))
     }
 
     private fun toggleColors() {
-        //TODO implement me
+        isManual = true
+        isDark = !isDark
+        applyColors()
     }
 
     private fun applyColors() {
-        //TODO implement me
+        iv_switch.imageTintList = ColorStateList.valueOf(textColor)
+        iv_copy.imageTintList = ColorStateList.valueOf(textColor)
+        (background as GradientDrawable).color = ColorStateList.valueOf(bgColor)
+        tv_codeView.setTextColor(textColor)
     }
 }
 
