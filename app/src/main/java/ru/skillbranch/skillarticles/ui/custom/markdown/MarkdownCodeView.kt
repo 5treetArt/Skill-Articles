@@ -52,7 +52,7 @@ class MarkdownCodeView private constructor(
     @ColorInt
     private val lightSurface: Int = context.attrValue(R.attr.lightSurfaceColor)
     @ColorInt
-    private val lightOnSurface: Int= context.attrValue(R.attr.lightOnSurfaceColor)
+    private val lightOnSurface: Int = context.attrValue(R.attr.lightOnSurfaceColor)
 
     //sizes
     private val iconSize = context.dpToIntPx(12)

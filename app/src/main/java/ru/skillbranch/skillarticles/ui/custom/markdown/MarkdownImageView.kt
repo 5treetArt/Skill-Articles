@@ -93,6 +93,7 @@ class MarkdownImageView private constructor(
             typeface = Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL)
             setPaddingOptionally(left = titlePadding, right = titlePadding)
         }
+        addView(tv_title)
     }
 
     constructor(

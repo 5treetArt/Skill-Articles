@@ -15,8 +15,8 @@ import ru.skillbranch.skillarticles.extensions.data.getLineBottomWithoutPadding
 import ru.skillbranch.skillarticles.extensions.data.getLineTopWithoutPadding
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.dpToPx
-import ru.skillbranch.skillarticles.ui.custom.SearchFocusSpan
-import ru.skillbranch.skillarticles.ui.custom.SearchSpan
+import ru.skillbranch.skillarticles.ui.custom.spans.SearchFocusSpan
+import ru.skillbranch.skillarticles.ui.custom.spans.SearchSpan
 import ru.skillbranch.skillarticles.ui.custom.spans.HeaderSpan
 
 class SearchBgHelper(

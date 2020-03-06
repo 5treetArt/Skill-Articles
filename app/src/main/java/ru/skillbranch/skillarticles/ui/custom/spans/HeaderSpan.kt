@@ -9,15 +9,13 @@ import android.text.TextPaint
 import android.text.style.LeadingMarginSpan
 import android.text.style.LineHeightSpan
 import android.text.style.MetricAffectingSpan
-import android.util.Range
 import androidx.annotation.ColorInt
-import androidx.annotation.IntRange
 import androidx.annotation.Px
 import androidx.annotation.VisibleForTesting
 
 
 class HeaderSpan constructor(
-    @IntRange(from = 1, to = 6)
+    @androidx.annotation.IntRange(from = 1, to = 6)
     private val level: Int,
     @ColorInt
     private val textColor: Int,
@@ -30,11 +28,11 @@ class HeaderSpan constructor(
 ) :
     MetricAffectingSpan(), LineHeightSpan, LeadingMarginSpan {
 
-    val topExtraPadding: Int
-    val bottomExtraPadding: Int
+    var topExtraPadding: Int = 0
+    var bottomExtraPadding: Int = 0
 
-    val firstLineBounds: Range<Int>
-    val lastLineBounds: Range<Int>
+    lateinit var firstLineBounds: IntRange
+    lateinit var lastLineBounds: IntRange
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val linePadding = 0.4f
@@ -66,14 +64,19 @@ class HeaderSpan constructor(
         if (spanStart == start) {
             originAscent = fm.ascent
             fm.ascent = (fm.ascent - marginTop).toInt()
+            topExtraPadding = marginTop.toInt()
+            firstLineBounds = start..end.dec()
         } else {
             fm.ascent = originAscent
         }
 
         //line break +1 character
         if (spanEnd == end.dec()) {
+            val originDescent = fm.descent
             val originHeight = fm.descent - originAscent
             fm.descent = (originHeight * linePadding + marginBottom).toInt()
+            bottomExtraPadding = fm.descent - originDescent
+            lastLineBounds = start..end.dec()
         }
 
         fm.top = fm.ascent

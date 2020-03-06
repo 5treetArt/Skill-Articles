@@ -18,18 +18,18 @@ class Homework6Tests {
 
         val input = listOf(
             Pair(2, 5),
-            Pair(8,20),
-            Pair(22,30),
-            Pair(45,50),
-            Pair(70,100)
+            Pair(8, 20),
+            Pair(22, 30),
+            Pair(45, 50),
+            Pair(70, 100)
         )
 
         val bounds = listOf(
-            Pair(0,10),
-            Pair(10,30),
-            Pair(30,50),
-            Pair(50,60),
-            Pair(60,100)
+            Pair(0, 10),
+            Pair(10, 30),
+            Pair(30, 50),
+            Pair(50, 60),
+            Pair(60, 100)
         )
 
         val expected = listOf(

@@ -56,7 +56,7 @@ class MarkdownContentView @JvmOverloads constructor(
                 it.layout(
                     left - paddingLeft / 2,
                     usedHeight,
-                    r- paddingRight / 2,
+                    r - paddingRight / 2,
                     usedHeight + it.measuredHeight
                 )
             } else {
