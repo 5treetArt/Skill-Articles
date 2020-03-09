@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.text.Layout
 import android.text.Spanned
+import androidx.annotation.VisibleForTesting
 import androidx.core.graphics.ColorUtils
 import androidx.core.text.getSpans
 import ru.skillbranch.skillarticles.R
@@ -19,11 +20,21 @@ import ru.skillbranch.skillarticles.ui.custom.spans.SearchFocusSpan
 import ru.skillbranch.skillarticles.ui.custom.spans.SearchSpan
 import ru.skillbranch.skillarticles.ui.custom.spans.HeaderSpan
 
+
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 class SearchBgHelper(
     context: Context,
-    private val focusListener: (Int, Int) -> Unit
+    private val focusListener: ((Int, Int) -> Unit)? = null,
+    mockDrawable: Drawable? = null
 ) {
-    private val padding: Int  = context.dpToIntPx(4)
+
+    constructor(context: Context, focusListener: (Int, Int) -> Unit) : this(
+        context,
+        focusListener,
+        null
+    )
+
+    private val padding: Int = context.dpToIntPx(4)
     private val borderWidth: Int = context.dpToIntPx(1)
     private val radius: Float = context.dpToPx(8)
 
@@ -31,7 +42,7 @@ class SearchBgHelper(
     private val alphaColor: Int = ColorUtils.setAlphaComponent(secondaryColor, 160)
 
     private val drawable: Drawable by lazy {
-        GradientDrawable().apply {
+        mockDrawable ?: GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadii = FloatArray(8).apply { fill(radius, 0, size) }
             color = ColorStateList.valueOf(alphaColor)
@@ -77,7 +88,8 @@ class SearchBgHelper(
 
     private lateinit var render: SearchBgRender
     private val singleLineRender: SearchBgRender = SingleLineRender(padding, drawable)
-    private val multiLineRender: SearchBgRender = MultiLineRender(padding, drawableLeft, drawableMiddle, drawableRight)
+    private val multiLineRender: SearchBgRender =
+        MultiLineRender(padding, drawableLeft, drawableMiddle, drawableRight)
 
     private lateinit var spans: Array<out SearchSpan>
     private lateinit var headerSpans: Array<out HeaderSpan>
@@ -101,7 +113,7 @@ class SearchBgHelper(
 
             if (it is SearchFocusSpan) {
                 //if search focus invoke listener fo focus
-                focusListener.invoke(layout.getLineTop(startLine), layout.getLineBottom(startLine))
+                focusListener?.invoke(layout.getLineTop(startLine), layout.getLineBottom(startLine))
             }
 
             headerSpans = text.getSpans(spanStart, spanEnd, HeaderSpan::class.java)
