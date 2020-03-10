@@ -51,6 +51,7 @@ class SearchBgHelper(
     }
 
     private val drawableLeft: Drawable by lazy {
+        mockDrawable ?:
         GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadii = floatArrayOf(
@@ -65,6 +66,7 @@ class SearchBgHelper(
     }
 
     private val drawableMiddle: Drawable by lazy {
+        mockDrawable ?:
         GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             color = ColorStateList.valueOf(alphaColor)
@@ -73,6 +75,7 @@ class SearchBgHelper(
     }
 
     private val drawableRight: Drawable by lazy {
+        mockDrawable ?:
         GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadii = floatArrayOf(
@@ -110,6 +113,7 @@ class SearchBgHelper(
             spanEnd = text.getSpanEnd(it)
             startLine = layout.getLineForOffset(spanStart)
             endLine = layout.getLineForOffset(spanEnd)
+            val str = layout.getLineContent(startLine)
 
             if (it is SearchFocusSpan) {
                 //if search focus invoke listener fo focus
@@ -150,6 +154,10 @@ class SearchBgHelper(
         }
     }
 }
+
+private fun Layout.getLineContent(line: Int) =
+    text.substring(getLineStart(line), getLineEnd(line))
+
 
 
 abstract class SearchBgRender(
