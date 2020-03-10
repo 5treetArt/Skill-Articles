@@ -55,3 +55,7 @@ fun Layout.getLineBottomWithoutSpacing(line: Int): Int {
         lineBottom - spacingAdd.toInt()
     }
 }
+
+
+fun Layout.getLineContent(line: Int) =
+    text.toString().substring(getLineStart(line), getLineEnd(line))

@@ -13,6 +13,7 @@ import androidx.core.text.getSpans
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.data.getLineBottomWithoutPadding
+import ru.skillbranch.skillarticles.extensions.data.getLineContent
 import ru.skillbranch.skillarticles.extensions.data.getLineTopWithoutPadding
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.dpToPx
@@ -154,11 +155,6 @@ class SearchBgHelper(
         }
     }
 }
-
-private fun Layout.getLineContent(line: Int) =
-    text.substring(getLineStart(line), getLineEnd(line))
-
-
 
 abstract class SearchBgRender(
     val padding: Int
