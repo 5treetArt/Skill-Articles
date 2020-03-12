@@ -1,4 +1,4 @@
-package ru.skillbranch.skillarticles.extensions.data
+package ru.skillbranch.skillarticles.extensions
 
 import android.text.Layout
 
@@ -34,13 +34,6 @@ fun Layout.getLineBottomWithoutPadding(line: Int): Int {
     return lineBottom
 }
 
-private fun Layout.isLastLineWithCarry(line: Int): Boolean {
-    if (line != lineCount.minus(2)) return false
-    val curLineText = text.substring(getLineStart(line), getLineEnd(line))
-    val nextLineText = text.substring(getLineStart(line + 1), getLineEnd(line + 1))
-    return nextLineText == "\n"
-}
-
 /**
  * Get the line bottom discarding the line spacing added
  */
@@ -48,14 +41,22 @@ fun Layout.getLineBottomWithoutSpacing(line: Int): Int {
     val lineBottom = getLineBottom(line)
     val isLastLine = line == lineCount.dec()
     val hasLineSpacing = spacingAdd != 0f
-    if (isLastLine) return lineBottom
-    return if (!hasLineSpacing /*|| isLastLine*/) {
-        lineBottom + spacingAdd.toInt()
+    //if (isLastLine) return lineBottom
+    return if (!hasLineSpacing || isLastLine || isWhitespaceLast(line)) {
+        lineBottom// + spacingAdd.toInt()
     } else {
         lineBottom - spacingAdd.toInt()
     }
 }
 
+private fun Layout.isWhitespaceLast(line: Int): Boolean = getLineEnd(line) != getLineVisibleEnd(line)
 
 fun Layout.getLineContent(line: Int) =
     text.toString().substring(getLineStart(line), getLineEnd(line))
+
+private fun Layout.isLastLineWithCarry(line: Int): Boolean {
+    if (line != lineCount.minus(2)) return false
+    val curLineText = text.toString().substring(getLineStart(line), getLineEnd(line))
+    val nextLineText = text.toString().substring(getLineStart(line + 1), getLineEnd(line + 1))
+    return nextLineText == "\n"
+}

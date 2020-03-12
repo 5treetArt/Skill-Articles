@@ -6,7 +6,7 @@ import android.text.Layout
 import android.text.style.LeadingMarginSpan
 import androidx.annotation.ColorInt
 import androidx.annotation.Px
-import ru.skillbranch.skillarticles.extensions.data.getLineBottomWithoutPadding
+import ru.skillbranch.skillarticles.extensions.getLineBottomWithoutPadding
 
 
 class UnorderedListSpan(

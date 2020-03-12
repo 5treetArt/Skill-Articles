@@ -12,9 +12,8 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.text.getSpans
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.attrValue
-import ru.skillbranch.skillarticles.extensions.data.getLineBottomWithoutPadding
-import ru.skillbranch.skillarticles.extensions.data.getLineContent
-import ru.skillbranch.skillarticles.extensions.data.getLineTopWithoutPadding
+import ru.skillbranch.skillarticles.extensions.getLineBottomWithoutPadding
+import ru.skillbranch.skillarticles.extensions.getLineTopWithoutPadding
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.dpToPx
 import ru.skillbranch.skillarticles.ui.custom.spans.SearchFocusSpan
@@ -114,7 +113,6 @@ class SearchBgHelper(
             spanEnd = text.getSpanEnd(it)
             startLine = layout.getLineForOffset(spanStart)
             endLine = layout.getLineForOffset(spanEnd)
-            val str = layout.getLineContent(startLine)
 
             if (it is SearchFocusSpan) {
                 //if search focus invoke listener fo focus
