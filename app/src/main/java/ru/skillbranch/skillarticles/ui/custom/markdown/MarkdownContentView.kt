@@ -59,7 +59,7 @@ class MarkdownContentView @JvmOverloads constructor(
     override fun onSaveInstanceState(): Parcelable? {
         Log.i("SavedState", "onSaveInstanceState")
         return SavedState(super.onSaveInstanceState()).apply {
-            childrenStates = saveChildViewStates()
+            childrenStates = this@MarkdownContentView.saveChildViewStates()
         }
     }
 
@@ -68,7 +68,7 @@ class MarkdownContentView @JvmOverloads constructor(
         when (state) {
             is SavedState -> {
                 super.onRestoreInstanceState(state.superState)
-                state.childrenStates?.let { restoreChildViewStates(it) }
+                state.childrenStates?.let { this@MarkdownContentView.restoreChildViewStates(it) }
             }
             else -> super.onRestoreInstanceState(state)
         }
@@ -143,8 +143,7 @@ class MarkdownContentView @JvmOverloads constructor(
                         it.image.url,
                         it.image.text,
                         it.image.alt
-                    ).apply {
-                    }
+                    )
                     addView(iv)
                 }
                 is MarkdownElement.Scroll -> {
@@ -214,7 +213,8 @@ class MarkdownContentView @JvmOverloads constructor(
     fun ViewGroup.saveChildViewStates(): SparseArray<Parcelable> {
         val childViewStates = SparseArray<Parcelable>()
         val childs = children.toList()
-        //val codeblocks = childs.filter { ids.contains(id) }.toList()
+        val idss = childs.map { id }
+        val codeblocks = childs.filter { ids.contains(id) }.toList()
         children.forEach { child -> child.saveHierarchyState(childViewStates) }
         return childViewStates
     }

@@ -173,8 +173,6 @@ class MarkdownCodeView private constructor(
         if (state is SavedState) {
             isManual = state.ssIsManual
             isDark = state.ssIsNightMode
-            //TODO restore view state?
-            invalidate()
         }
     }
 
