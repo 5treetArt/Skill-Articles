@@ -216,12 +216,18 @@ class MarkdownContentView @JvmOverloads constructor(
         children
             .filterIsInstance<MarkdownCodeView>()
             .forEach { it.saveHierarchyState(childViewStates) }
+        children
+            .filterIsInstance<MarkdownImageView>()
+            .forEach { it.saveHierarchyState(childViewStates) }
         return childViewStates
     }
 
     fun ViewGroup.restoreChildViewStates(childViewStates: SparseArray<Parcelable>) {
         children
             .filterIsInstance<MarkdownCodeView>()
+            .forEach { it.restoreHierarchyState(childViewStates) }
+        children
+            .filterIsInstance<MarkdownImageView>()
             .forEach { it.restoreHierarchyState(childViewStates) }
     }
 
@@ -245,7 +251,7 @@ class MarkdownContentView @JvmOverloads constructor(
         override fun writeToParcel(out: Parcel, flags: Int) {
             Log.i("SavedState", "Writing children state to sparse array")
             super.writeToParcel(out, flags)
-            out.writeList(ssIds)
+            out.writeList(ssIds as List<Int>)
             out.writeSparseArray(ssChildrenStates as SparseArray<Any>)
         }
 

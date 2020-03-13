@@ -3,7 +3,10 @@ package ru.skillbranch.skillarticles.ui.custom.markdown
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.os.Parcel
+import android.os.Parcelable
 import android.text.Spannable
+import android.util.SparseArray
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -138,6 +141,30 @@ class MarkdownImageView private constructor(
 
     }
 
+    override fun dispatchSaveInstanceState(container: SparseArray<Parcelable>?) {
+        dispatchFreezeSelfOnly(container)
+    }
+
+    override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>?) {
+        dispatchThawSelfOnly(container)
+    }
+
+    //save state
+    override fun onSaveInstanceState(): Parcelable? {
+        val savedState = SavedState(super.onSaveInstanceState())
+        savedState.ssIsAltVisible = tv_alt?.isVisible ?: false
+        return savedState
+    }
+
+    //restore state
+    override fun onRestoreInstanceState(state: Parcelable) {
+        super.onRestoreInstanceState(state)
+        if (state is SavedState) {
+            tv_alt?.isVisible = state.ssIsAltVisible
+            invalidate()
+        }
+    }
+
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     public override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = 0
@@ -235,6 +262,29 @@ class MarkdownImageView private constructor(
         )
         va.doOnEnd { tv_alt?.isVisible = false }
         va.start()
+    }
+
+
+    private class SavedState : BaseSavedState, Parcelable {
+        var ssIsAltVisible: Boolean = false
+
+        constructor(superState: Parcelable?) : super(superState)
+
+        constructor(src: Parcel) : super(src) {
+            ssIsAltVisible = src.readInt() == 1
+        }
+
+        override fun writeToParcel(dst: Parcel, flags: Int) {
+            super.writeToParcel(dst, flags)
+            dst.writeInt(if (ssIsAltVisible) 1 else 0)
+        }
+
+        override fun describeContents() = 0
+
+        companion object CREATOR : Parcelable.Creator<SavedState> {
+            override fun createFromParcel(parcel: Parcel) = SavedState(parcel)
+            override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+        }
     }
 }
 
