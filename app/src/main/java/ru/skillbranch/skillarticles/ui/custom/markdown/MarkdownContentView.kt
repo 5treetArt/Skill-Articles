@@ -244,7 +244,7 @@ class MarkdownContentView @JvmOverloads constructor(
             Log.i("SavedState", "Reading children children state from sparse array")
             ssIds = source.readArrayList(Int::class.java.classLoader) as ArrayList<Int>
             ssChildrenStates =
-                source.readSparseArray(javaClass.classLoader) as SparseArray<Parcelable>?
+                source.readSparseArray<Parcelable>(javaClass.classLoader) as SparseArray<Parcelable>?
         }
 
         @Suppress("UNCHECKED_CAST")
