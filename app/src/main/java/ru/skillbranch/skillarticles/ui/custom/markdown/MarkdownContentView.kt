@@ -13,7 +13,6 @@ import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.groupByBounds
 import ru.skillbranch.skillarticles.extensions.setPaddingOptionally
 import kotlin.properties.Delegates
-import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 
@@ -24,15 +23,10 @@ class MarkdownContentView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
-    companion object {
-        private const val START_ID = 100
-    }
-
     private lateinit var elements: List<MarkdownElement>
 
     //TODO for restore
     private var ids = arrayListOf<Int>()
-
 
     var textSize by Delegates.observable(14f) { _, old, value ->
         if (value == old) return@observable
@@ -59,7 +53,8 @@ class MarkdownContentView @JvmOverloads constructor(
     override fun onSaveInstanceState(): Parcelable? {
         Log.i("SavedState", "onSaveInstanceState")
         return SavedState(super.onSaveInstanceState()).apply {
-            childrenStates = this@MarkdownContentView.saveChildViewStates()
+            ssIds = ids
+            ssChildrenStates = saveChildViewStates()
         }
     }
 
@@ -68,7 +63,9 @@ class MarkdownContentView @JvmOverloads constructor(
         when (state) {
             is SavedState -> {
                 super.onRestoreInstanceState(state.superState)
-                state.childrenStates?.let { this@MarkdownContentView.restoreChildViewStates(it) }
+                ids = state.ssIds
+                children.forEachIndexed { index, view -> view.id = ids[index] }
+                state.ssChildrenStates?.let { restoreChildViewStates(it) }
             }
             else -> super.onRestoreInstanceState(state)
         }
@@ -116,7 +113,6 @@ class MarkdownContentView @JvmOverloads constructor(
     fun setContent(content: List<MarkdownElement>) {
         elements = content
 
-        var currentId = START_ID
         content.forEach {
             when (it) {
                 is MarkdownElement.Text -> {
@@ -126,6 +122,8 @@ class MarkdownContentView @JvmOverloads constructor(
                             right = padding
                         )
                         setLineSpacing(fontSize * 0.5f, 1f)
+                        id = View.generateViewId()
+                        ids.add(id)
                     }
 
                     MarkdownBuilder(context)
@@ -143,7 +141,10 @@ class MarkdownContentView @JvmOverloads constructor(
                         it.image.url,
                         it.image.text,
                         it.image.alt
-                    )
+                    ).apply {
+                        id = View.generateViewId()
+                        ids.add(id)
+                    }
                     addView(iv)
                 }
                 is MarkdownElement.Scroll -> {
@@ -152,7 +153,7 @@ class MarkdownContentView @JvmOverloads constructor(
                         textSize,
                         it.blockCode.text
                     ).apply {
-                        id = currentId++
+                        id = View.generateViewId()
                         ids.add(id)
                     }
                     addView(sv)
@@ -212,30 +213,31 @@ class MarkdownContentView @JvmOverloads constructor(
 
     fun ViewGroup.saveChildViewStates(): SparseArray<Parcelable> {
         val childViewStates = SparseArray<Parcelable>()
-        val childs = children.toList()
-        val idss = childs.map { id }
-        val codeblocks = childs.filter { ids.contains(id) }.toList()
-        children.forEach { child -> child.saveHierarchyState(childViewStates) }
+        children
+            .filterIsInstance<MarkdownCodeView>()
+            .forEach { it.saveHierarchyState(childViewStates) }
         return childViewStates
     }
 
     fun ViewGroup.restoreChildViewStates(childViewStates: SparseArray<Parcelable>) {
-        val childs = children.toList()
-        //val codeblocks = childs.filter { ids.contains(id) }.toList()
-        childs.forEach { child -> child.restoreHierarchyState(childViewStates) }
+        children
+            .filterIsInstance<MarkdownCodeView>()
+            .forEach { it.restoreHierarchyState(childViewStates) }
     }
 
     //https://www.netguru.com/codestories/how-to-correctly-save-the-state-of-a-custom-view-in-android
     internal class SavedState : BaseSavedState {
 
-        internal var childrenStates: SparseArray<Parcelable>? = null
+        internal var ssIds: ArrayList<Int> = arrayListOf()
+        internal var ssChildrenStates: SparseArray<Parcelable>? = null
 
         constructor(superState: Parcelable?) : super(superState)
 
         @Suppress("UNCHECKED_CAST")
         constructor(source: Parcel) : super(source) {
             Log.i("SavedState", "Reading children children state from sparse array")
-            childrenStates =
+            ssIds = source.readArrayList(Int::class.java.classLoader) as ArrayList<Int>
+            ssChildrenStates =
                 source.readSparseArray(javaClass.classLoader) as SparseArray<Parcelable>?
         }
 
@@ -243,7 +245,8 @@ class MarkdownContentView @JvmOverloads constructor(
         override fun writeToParcel(out: Parcel, flags: Int) {
             Log.i("SavedState", "Writing children state to sparse array")
             super.writeToParcel(out, flags)
-            out.writeSparseArray(childrenStates as SparseArray<Any>)
+            out.writeList(ssIds)
+            out.writeSparseArray(ssChildrenStates as SparseArray<Any>)
         }
 
         companion object CREATOR : Parcelable.Creator<SavedState> {
