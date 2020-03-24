@@ -1,16 +1,23 @@
 package ru.skillbranch.skillarticles.ui.custom
 
 import android.content.Context
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.children
-import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
+import com.bumptech.glide.Glide
+import ru.skillbranch.skillarticles.R
+import ru.skillbranch.skillarticles.data.local.ArticleCategory
+import ru.skillbranch.skillarticles.data.local.ArticleItem
+import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
-import ru.skillbranch.skillarticles.extensions.setPaddingOptionally
+import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.custom.markdown.*
-import kotlin.properties.Delegates
 
 
 class ArticleItemView @JvmOverloads constructor(
@@ -19,21 +26,72 @@ class ArticleItemView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
-    var textSize by Delegates.observable(14f) { _, old, value ->
-        if (value == old) return@observable
-        this.children.forEach {
-            it as IMarkdownView
-            it.fontSize = value
+    //var textSize by Delegates.observable(14f) { _, old, value ->
+    //    if (value == old) return@observable
+    //    this.children.forEach {
+    //        it as IMarkdownView
+    //        it.fontSize = value
+    //    }
+    //}
+    //var isLoading: Boolean = true
+
+    private val marginUnit = context.dpToIntPx(8)
+
+    fun setContent(content: ArticleItem) {
+        val date = TextView(context).apply {
+            setTextColor(context.getColor(R.color.color_gray))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            text = content.date
         }
-    }
-    var isLoading: Boolean = true
-    val padding = context.dpToIntPx(8)
+        addView(date)
 
-    init {
-        initViews()
-    }
+        val author = TextView(context).apply {
+            setMarginOptionally(left = marginUnit * 2)
+            setTextColor(context.attrValue(R.attr.colorPrimary))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            text = content.author
+        }
+        addView(author)
 
-    private fun initViews() {
+        val title = TextView(context).apply {
+            setMarginOptionally(top = marginUnit, right = marginUnit * 3, bottom = marginUnit)
+            setTextColor(context.attrValue(R.attr.colorPrimary))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            setTypeface(typeface, Typeface.BOLD)
+            text = content.title
+        }
+        addView(title)
+
+        val poster = ImageView(context).apply {
+            setMarginOptionally(top = marginUnit, bottom = marginUnit)
+        }
+
+        addView(poster)
+        Glide
+            .with(context)
+            .load(content.posterUrl)
+            .transform(AspectRatioResizeTransform())
+            .into(poster)
+
+        val category = ImageView(context).apply {
+            setImageDrawable(content.category.getDrawable())
+        }
+        addView(category)
+
+        val description = TextView(context).apply {
+            setMarginOptionally(top = marginUnit)
+            setTextColor(context.attrValue(R.attr.colorOnBackground))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            text = content.description
+        }
+        addView(description)
+
+        val likes = ImageView(context).apply {
+            setMarginOptionally(top = marginUnit)
+            setImageResource(R.drawable.ic_favorite_black_24dp)
+        }
+
+        /*
         content.forEach {
             when (it) {
                 is MarkdownElement.Text -> {
@@ -80,7 +138,12 @@ class ArticleItemView @JvmOverloads constructor(
                     addView(sv)
                 }
             }
-        }
+        }*/
+    }
+
+    private fun ArticleCategory.getDrawable(): Drawable? {
+        //TODO add category choise
+        context.getDrawable(R.drawable.logo)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
