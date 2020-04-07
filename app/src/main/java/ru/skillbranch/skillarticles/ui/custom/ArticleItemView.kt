@@ -144,6 +144,7 @@ class ArticleItemView @JvmOverloads constructor(
     private fun ArticleCategory.getDrawable(): Drawable? {
         //TODO add category choise
         context.getDrawable(R.drawable.logo)
+        return null
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
