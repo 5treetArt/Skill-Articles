@@ -12,10 +12,10 @@ import android.widget.TextView
 import androidx.core.view.children
 import com.bumptech.glide.Glide
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.data.local.ArticleCategory
-import ru.skillbranch.skillarticles.data.local.ArticleItem
+import ru.skillbranch.skillarticles.data.ArticleItemData
 import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
+import ru.skillbranch.skillarticles.extensions.format
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.custom.markdown.*
 
@@ -37,11 +37,11 @@ class ArticleItemView @JvmOverloads constructor(
 
     private val marginUnit = context.dpToIntPx(8)
 
-    fun setContent(content: ArticleItem) {
+    fun setContent(content: ArticleItemData) {
         val date = TextView(context).apply {
             setTextColor(context.getColor(R.color.color_gray))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            text = content.date
+            text = content.date.format()
         }
         addView(date)
 
@@ -69,7 +69,7 @@ class ArticleItemView @JvmOverloads constructor(
         addView(poster)
         Glide
             .with(context)
-            .load(content.posterUrl)
+            .load(content.poster)
             .transform(AspectRatioResizeTransform())
             .into(poster)
 
@@ -141,7 +141,7 @@ class ArticleItemView @JvmOverloads constructor(
         }*/
     }
 
-    private fun ArticleCategory.getDrawable(): Drawable? {
+    private fun String.getDrawable(): Drawable? {
         //TODO add category choise
         context.getDrawable(R.drawable.logo)
         return null

@@ -151,31 +151,6 @@ class MarkdownCodeView private constructor(
         isSaveEnabled = true
     }
 
-    override fun dispatchSaveInstanceState(container: SparseArray<Parcelable>?) {
-        dispatchFreezeSelfOnly(container)
-    }
-
-    override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>?) {
-        dispatchThawSelfOnly(container)
-    }
-
-    //save state
-    override fun onSaveInstanceState(): Parcelable? {
-        val savedState = SavedState(super.onSaveInstanceState())
-        savedState.ssIsManual = isManual
-        savedState.ssIsNightMode = isDark
-        return savedState
-    }
-
-    //restore state
-    override fun onRestoreInstanceState(state: Parcelable) {
-        super.onRestoreInstanceState(state)
-        if (state is SavedState) {
-            isManual = state.ssIsManual
-            isDark = state.ssIsNightMode
-        }
-    }
-
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     public override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = 0
@@ -239,6 +214,31 @@ class MarkdownCodeView private constructor(
         Selection.setSelection(spannableContent, searchPosition.first.minus(offset))
     }
 
+    override fun dispatchSaveInstanceState(container: SparseArray<Parcelable>?) {
+        dispatchFreezeSelfOnly(container)
+    }
+
+    override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>?) {
+        dispatchThawSelfOnly(container)
+    }
+
+    //save state
+    override fun onSaveInstanceState(): Parcelable? {
+        val savedState = SavedState(super.onSaveInstanceState())
+        savedState.ssIsManual = isManual
+        savedState.ssIsDark = isDark
+        return savedState
+    }
+
+    //restore state
+    override fun onRestoreInstanceState(state: Parcelable) {
+        super.onRestoreInstanceState(state)
+        if (state is SavedState) {
+            isManual = state.ssIsManual
+            isDark = state.ssIsDark
+        }
+    }
+
     private fun toggleColors() {
         isManual = true
         isDark = !isDark
@@ -253,19 +253,19 @@ class MarkdownCodeView private constructor(
 
 
     private class SavedState : BaseSavedState, Parcelable {
-        var ssIsNightMode: Boolean = false
+        var ssIsDark: Boolean = false
         var ssIsManual: Boolean = false
 
         constructor(superState: Parcelable?) : super(superState)
 
         constructor(src: Parcel) : super(src) {
-            ssIsNightMode = src.readInt() == 1
+            ssIsDark = src.readInt() == 1
             ssIsManual = src.readInt() == 1
         }
 
         override fun writeToParcel(dst: Parcel, flags: Int) {
             super.writeToParcel(dst, flags)
-            dst.writeInt(if (ssIsNightMode) 1 else 0)
+            dst.writeInt(if (ssIsDark) 1 else 0)
             dst.writeInt(if (ssIsManual) 1 else 0)
         }
 
