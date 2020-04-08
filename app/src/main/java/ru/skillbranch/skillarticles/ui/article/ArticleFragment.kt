@@ -48,6 +48,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
     override val prepareToolbar: (ToolbarBuilder.() -> Unit)? = {
         this.setTitle(args.title)
             .setSubtitle(args.category)
+            .setLogo(args.categoryIcon)
             .addMenuItem(
                 MenuItemHolder(
                     "search",

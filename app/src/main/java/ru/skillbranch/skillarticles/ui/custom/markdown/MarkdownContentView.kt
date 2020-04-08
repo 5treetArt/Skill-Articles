@@ -209,7 +209,7 @@ class MarkdownContentView @JvmOverloads constructor(
         }
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeIntArray(ids.toIntArray())
+            parcel.writeList(ids.toList())
             parcel.writeSparseArray(container)
         }
 

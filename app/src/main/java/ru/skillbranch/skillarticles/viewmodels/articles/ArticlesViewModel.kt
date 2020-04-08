@@ -17,13 +17,4 @@ class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>
     }
 }
 
-data class ArticlesState(val articles: List<ArticleItemData> = emptyList()) : IViewModelState {
-    override fun save(outState: SavedStateHandle) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun restore(savedState: SavedStateHandle): IViewModelState {
-        return this
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-}
+data class ArticlesState(val articles: List<ArticleItemData> = emptyList()) : IViewModelState

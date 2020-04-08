@@ -24,14 +24,4 @@ class AuthViewModel(handle: SavedStateHandle) :
     }
 }
 
-data class AuthState(val isAuth: Boolean = false) : IViewModelState {
-    override fun save(outState: SavedStateHandle) {
-        //TODO
-    }
-
-    override fun restore(savedState: SavedStateHandle): IViewModelState {
-        //TODO
-        return this
-    }
-
-}
+data class AuthState(val isAuth: Boolean = false) : IViewModelState

@@ -51,8 +51,7 @@ class SearchBgHelper(
     }
 
     private val drawableLeft: Drawable by lazy {
-        mockDrawable ?:
-        GradientDrawable().apply {
+        mockDrawable ?: GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadii = floatArrayOf(
                 radius, radius, //Top left radius in px

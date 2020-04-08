@@ -10,8 +10,8 @@ import ru.skillbranch.skillarticles.viewmodels.article.ArticleViewModel
 //https://proandroiddev.com/saving-ui-state-with-viewmodel-savedstate-and-dagger-f77bcaeb8b08
 class ViewModelFactory(
     owner: SavedStateRegistryOwner,
-    private val params: Any?,
-    defaultArgs: Bundle? = null
+    defaultArgs: Bundle? = null,
+    private val params: Any?
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
     @Suppress("UNCHECKED_CAST")
