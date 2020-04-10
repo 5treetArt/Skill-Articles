@@ -80,42 +80,41 @@ class ArticleSubmenu @JvmOverloads constructor(
         anim.start()
     }
 
-    //save state
-    override fun onSaveInstanceState(): Parcelable? {
-        val savedState = SavedState(super.onSaveInstanceState())
-        savedState.ssIsOpen = isOpen
-        return savedState
-    }
+    ////save state
+    //override fun onSaveInstanceState(): Parcelable? {
+    //    val savedState = SavedState(super.onSaveInstanceState())
+    //    savedState.ssIsOpen = isOpen
+    //    return savedState
+    //}
 
-    //restore state
-    override fun onRestoreInstanceState(state: Parcelable) {
-        super.onRestoreInstanceState(state)
-        if (state is SavedState) {
-            isOpen = state.ssIsOpen
-            visibility = if (isOpen) View.VISIBLE else View.GONE
-        }
-    }
+    ////restore state
+    //override fun onRestoreInstanceState(state: Parcelable) {
+    //    super.onRestoreInstanceState(state)
+    //    if (state is SavedState) {
+    //        isOpen = state.ssIsOpen
+    //        visibility = if (isOpen) View.VISIBLE else View.GONE
+    //    }
+    //}
 
-    private class SavedState : BaseSavedState, Parcelable {
-        var ssIsOpen: Boolean = false
-
-        constructor(superState: Parcelable?) : super(superState)
-
-        constructor(src: Parcel) : super(src) {
-            ssIsOpen = src.readInt() == 1
-        }
-
-        override fun writeToParcel(dst: Parcel, flags: Int) {
-            super.writeToParcel(dst, flags)
-            dst.writeInt(if (ssIsOpen) 1 else 0)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<SavedState> {
-            override fun createFromParcel(parcel: Parcel) = SavedState(parcel)
-            override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
-        }
-    }
-
+    //private class SavedState : BaseSavedState, Parcelable {
+    //    var ssIsOpen: Boolean = false
+    //
+    //    constructor(superState: Parcelable?) : super(superState)
+    //
+    //    constructor(src: Parcel) : super(src) {
+    //        ssIsOpen = src.readInt() == 1
+    //    }
+    //
+    //    override fun writeToParcel(dst: Parcel, flags: Int) {
+    //        super.writeToParcel(dst, flags)
+    //        dst.writeInt(if (ssIsOpen) 1 else 0)
+    //    }
+    //
+    //    override fun describeContents() = 0
+    //
+    //    companion object CREATOR : Parcelable.Creator<SavedState> {
+    //        override fun createFromParcel(parcel: Parcel) = SavedState(parcel)
+    //        override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+    //    }
+    //}
 }

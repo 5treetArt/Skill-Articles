@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.layout_bottombar.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.selectDestination
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
+import ru.skillbranch.skillarticles.ui.custom.Bottombar
 import ru.skillbranch.skillarticles.viewmodels.RootViewModel
 import ru.skillbranch.skillarticles.viewmodels.article.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
@@ -51,7 +52,8 @@ class RootActivity : BaseActivity<RootViewModel>() {
     override fun renderNotification(notify: Notify) {
         val snackbar = Snackbar.make(container, notify.message, Snackbar.LENGTH_LONG)
 
-        snackbar.anchorView = if (bottombar != null) bottombar else nav_view
+        val bb = findViewById<Bottombar?>(R.id.bottombar)
+        snackbar.anchorView = bb ?: nav_view
 
         when (notify) {
             is Notify.TextMessage -> {
