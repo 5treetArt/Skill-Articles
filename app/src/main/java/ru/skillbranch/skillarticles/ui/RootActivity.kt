@@ -23,6 +23,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.Notify
 class RootActivity : BaseActivity<RootViewModel>() {
     override val layout: Int = R.layout.activity_root
     public override val viewModel: RootViewModel by viewModels()
+    private lateinit var currentDestination: NavDestination
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,11 @@ class RootActivity : BaseActivity<RootViewModel>() {
         }
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            //TODO if destination change set select bottom navigation item
+            //TODO move to viewModel?
+            if (viewModel.currentState.isAuth && destination.id == R.id.nav_auth) {
+                controller.popBackStack()
+                viewModel.navigate(NavigationCommand.To(R.id.nav_profile, arguments))
+            }
             nav_view.selectDestination(destination)
         }
     }

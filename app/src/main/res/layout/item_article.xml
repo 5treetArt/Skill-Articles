@@ -101,10 +101,11 @@
         android:layout_height="16dp"
         android:tint="@color/color_gray"
         app:layout_constraintBottom_toBottomOf="@+id/tv_likes_count"
-        app:layout_constraintTop_toTopOf="@+id/tv_likes_count"
-        app:srcCompat="@drawable/ic_favorite_black_24dp"
+        app:layout_constraintEnd_toStartOf="@id/tv_likes_count"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_likes_count"/>
+        app:layout_constraintTop_toTopOf="@+id/tv_likes_count"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_favorite_black_24dp" />
 
     <TextView
         android:id="@+id/tv_likes_count"

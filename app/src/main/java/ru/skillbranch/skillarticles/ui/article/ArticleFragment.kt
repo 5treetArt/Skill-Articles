@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import kotlinx.android.synthetic.main.layout_submenu.view.*
-import kotlinx.android.synthetic.main.search_view_layout.*
+import kotlinx.android.synthetic.main.layout_search_view.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
@@ -54,7 +54,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
                     "search",
                     R.id.action_search,
                     R.drawable.ic_search_black_24dp,
-                    R.layout.search_view_layout
+                    R.layout.layout_search_view
                 )
             )
     }
