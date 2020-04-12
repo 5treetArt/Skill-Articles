@@ -37,7 +37,7 @@ class ArticleItemView @JvmOverloads constructor(
 
     private val marginUnit = context.dpToIntPx(8)
 
-    fun setContent(content: ArticleItemData) {
+    fun bind(content: ArticleItemData) {
         val date = TextView(context).apply {
             setTextColor(context.getColor(R.color.color_gray))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
@@ -87,9 +87,56 @@ class ArticleItemView @JvmOverloads constructor(
         addView(description)
 
         val likes = ImageView(context).apply {
-            setMarginOptionally(top = marginUnit)
             setImageResource(R.drawable.ic_favorite_black_24dp)
+            setColorFilter(
+                context.getColor(R.color.color_gray),
+                android.graphics.PorterDuff.Mode.MULTIPLY
+            )
         }
+        addView(likes)
+
+        val likesCount = TextView(context).apply {
+            setMarginOptionally(left = marginUnit, top = marginUnit)
+            setTextColor(context.getColor(R.color.color_gray))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            text = "${content.likeCount}"
+        }
+        addView(likesCount)
+
+        val comments = ImageView(context).apply {
+            setMarginOptionally(left = marginUnit * 2)
+            setImageResource(R.drawable.ic_insert_comment_black_24dp)
+            setColorFilter(
+                context.getColor(R.color.color_gray),
+                android.graphics.PorterDuff.Mode.MULTIPLY
+            )
+        }
+        addView(comments)
+
+        val commentsCount = TextView(context).apply {
+            setMarginOptionally(left = marginUnit, top = marginUnit)
+            setTextColor(context.getColor(R.color.color_gray))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            text = "${content.commentCount}"
+        }
+        addView(commentsCount)
+
+        val readDuration = TextView(context).apply {
+            setMarginOptionally(left = marginUnit * 2, top = marginUnit, right = marginUnit * 2)
+            setTextColor(context.getColor(R.color.color_gray))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            text = "${content.readDuration} min read"
+        }
+        addView(readDuration)
+
+        val isBookmark = ImageView(context).apply {
+            setImageResource(R.drawable.bookmark_states)
+            setColorFilter(
+                context.getColor(R.color.color_gray),
+                android.graphics.PorterDuff.Mode.MULTIPLY
+            )
+        }
+        addView(isBookmark)
 
         /*
         content.forEach {
