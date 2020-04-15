@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_article_new.*
+//import kotlinx.android.synthetic.main.item_article_new.*
 //import kotlinx.android.synthetic.main.item_article.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.ArticleItemData
