@@ -18,7 +18,6 @@ import ru.skillbranch.skillarticles.data.ArticleItemData
 import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.format
-import ru.skillbranch.skillarticles.ui.custom.markdown.*
 import kotlin.math.max
 
 
@@ -37,14 +36,20 @@ class ArticleItemView @JvmOverloads constructor(
     //}
     //var isLoading: Boolean = true
 
+    private val spacingUnit_4 = context.dpToIntPx(4)
     private val spacingUnit_8 = context.dpToIntPx(8)
+    private val spacingUnit_16 = context.dpToIntPx(16)
+    private val spacingUnit_24 = context.dpToIntPx(24)
 
     private var dateId: Int? = null
-    private var titleId: Int? = null
     private var authorId: Int? = null
+
+    private var titleId: Int? = null
     private var posterId: Int? = null
     private var categoryId: Int? = null
+
     private var descriptionId: Int? = null
+
     private var likesId: Int? = null
     private var likesCountId: Int? = null
     private var commentsId: Int? = null
@@ -196,58 +201,43 @@ class ArticleItemView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = paddingTop
-        //var usedWidth = paddingLeft
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
 
         val date = children.first { it.id == dateId }
-        measureChild(date, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+        measureChild(date, widthMeasureSpec, heightMeasureSpec)
         val author = children.first { it.id == authorId }
-        measureChild(author, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+        measureChild(author, widthMeasureSpec, heightMeasureSpec)
         usedHeight += max(date.measuredHeight, author.measuredHeight)
+        usedHeight += spacingUnit_8
 
         val title = children.first { it.id == titleId }
-        measureChild(title, MeasureSpec.AT_MOST, MeasureSpec.EXACTLY)
-        //val poster = children.first { it.id == posterId }
-        //measureChild(poster, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
-        //val category = children.first { it.id == categoryId }
-        //measureChild(category, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+        val titleWidth =
+            width - paddingLeft - paddingRight - posterSize - categorySize / 2 - spacingUnit_4
+        val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
+        measureChild(title, titleWms, heightMeasureSpec)
         usedHeight += max(title.measuredHeight, posterSize + categorySize / 2)
+        usedHeight += spacingUnit_8
 
         val description = children.first { it.id == descriptionId }
-        measureChild(date, MeasureSpec.AT_MOST, MeasureSpec.EXACTLY)
+        measureChild(description, widthMeasureSpec, heightMeasureSpec)
         usedHeight += description.measuredHeight
+        usedHeight += spacingUnit_8
 
-        //val likes = children.first { it.id == likesId }
-        //measureChild(likes, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
         val likesCount = children.first { it.id == likesCountId }
-        measureChild(likesCount, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
-        //val comments = children.first { it.id == commentsId }
-        //measureChild(comments, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+        measureChild(likesCount, widthMeasureSpec, heightMeasureSpec)
         val commentsCount = children.first { it.id == commentsCountId }
-        measureChild(commentsCount, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+        measureChild(commentsCount, widthMeasureSpec, heightMeasureSpec)
         val readDuration = children.first { it.id == readDurationId }
-        measureChild(readDuration, MeasureSpec.AT_MOST, MeasureSpec.EXACTLY)
-        //val isBookmark = children.first { it.id == isBookmarkId }
-        //measureChild(isBookmark, MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+        measureChild(readDuration, widthMeasureSpec, heightMeasureSpec)
 
         usedHeight += listOf(
-            //likes.measuredHeight,
             likesCount.measuredHeight,
-            //comments.measuredHeight,
             commentsCount.measuredHeight,
             readDuration.measuredHeight,
             iconSize
-            //isBookmark.measuredHeight
         ).max() ?: 0
 
-        //children.forEach {
-        //    measureChild(it, widthMeasureSpec, heightMeasureSpec)
-        //    usedHeight += it.measuredHeight
-        //    //usedWidth += it.measuredHeight
-        //}
-
         usedHeight += paddingBottom
-        //usedWidth += paddingRight
         setMeasuredDimension(width, usedHeight)
     }
 
@@ -259,61 +249,66 @@ class ArticleItemView @JvmOverloads constructor(
 
         val date = children.first { it.id == dateId }
         date.layout(
-            left - paddingLeft,
+            left,
             paddingTop,
             date.measuredWidth,
             date.measuredHeight + paddingTop
         )
         val author = children.first { it.id == authorId }
         author.layout(
-            date.measuredWidth,
+            date.measuredWidth + spacingUnit_16,
             paddingTop,
-            date.measuredWidth + 2 * spacingUnit_8 + author.measuredWidth,
+            date.measuredWidth + spacingUnit_16 + author.measuredWidth,
             author.measuredHeight + paddingTop
         )
 
-        val titleTop = max(date.measuredHeight, author.measuredHeight) + spacingUnit_8
+
+        val title = children.first { it.id == titleId }
+        val barrierTop = paddingTop + max(date.measuredHeight, author.measuredHeight)
+        val barrierTopWithSpacing = barrierTop + spacingUnit_8
+        val barrierBottom = barrierTopWithSpacing +
+                max(title.measuredHeight, posterSize + categorySize / 2) +
+                spacingUnit_8
+        val titleTop = barrierTop + (barrierBottom - barrierTop) / 2 - title.measuredHeight / 2
+        title.layout(
+            left,
+            titleTop,
+            right - posterSize - categorySize / 2 - spacingUnit_24,
+            titleTop + title.measuredHeight
+        )
         val poster = children.first { it.id == posterId }
         poster.layout(
             right - posterSize,
-            titleTop,
+            barrierTopWithSpacing,
             right,
-            titleTop + posterSize
+            barrierTopWithSpacing + posterSize
         )
         val category = children.first { it.id == categoryId }
         category.layout(
             right - posterSize - categorySize / 2,
-            titleTop + posterSize - categorySize / 2,
+            barrierTopWithSpacing + posterSize - categorySize / 2,
             right - posterSize + categorySize / 2,
-            titleTop + posterSize + categorySize / 2
-        )
-        val title = children.first { it.id == titleId }
-        title.layout(
-            left - paddingLeft,
-            titleTop,
-            right - posterSize - categorySize / 2 - spacingUnit_8 * 3,
-            titleTop + title.measuredHeight
+            barrierTopWithSpacing + posterSize + categorySize / 2
         )
 
-        val descriptionTop =
-            titleTop + max(title.measuredHeight, posterSize + categorySize / 2) + spacingUnit_8
         val description = children.first { it.id == descriptionId }
         description.layout(
-            left - paddingLeft,
-            descriptionTop,
+            left,
+            barrierBottom,
             right,
-            description.measuredHeight
+            barrierBottom + description.measuredHeight
         )
-        val descriptionBottom = descriptionTop + description.measuredHeight + spacingUnit_8
+        val descriptionBottom =
+            barrierBottom + description.measuredHeight + spacingUnit_8
         val likes = children.first { it.id == likesId }
         likes.layout(
-            left - paddingLeft,
+            left,
             descriptionBottom,
-            left - paddingLeft + iconSize,
+            left + iconSize,
             descriptionBottom + iconSize
         )
         val likesCount = children.first { it.id == likesCountId }
-        val likesCountLeft = left - paddingLeft + iconSize + spacingUnit_8
+        val likesCountLeft = left + iconSize + spacingUnit_8
         likesCount.layout(
             likesCountLeft,
             descriptionBottom,
@@ -321,7 +316,7 @@ class ArticleItemView @JvmOverloads constructor(
             descriptionBottom + likesCount.measuredHeight
         )
         val comments = children.first { it.id == commentsId }
-        val commentsLeft = likesCountLeft + likesCount.measuredWidth + spacingUnit_8 * 2
+        val commentsLeft = likesCountLeft + likesCount.measuredWidth + spacingUnit_16
         comments.layout(
             commentsLeft,
             descriptionBottom,
@@ -345,9 +340,9 @@ class ArticleItemView @JvmOverloads constructor(
         )
         val readDuration = children.first { it.id == readDurationId }
         readDuration.layout(
-            commentCountLeft + commentsCount.measuredWidth + spacingUnit_8 * 2,
+            commentCountLeft + commentsCount.measuredWidth + spacingUnit_16,
             descriptionBottom,
-            right - iconSize - spacingUnit_8 * 2,
+            right - iconSize - spacingUnit_16,
             descriptionBottom + readDuration.measuredHeight
         )
         //children.forEach {
