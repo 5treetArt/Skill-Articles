@@ -44,17 +44,17 @@ class ArticleItemView @JvmOverloads constructor(
     private var dateId: Int? = null
     private var authorId: Int? = null
 
-    private var titleId: Int? = null
-    private var posterId: Int? = null
+    //private var titleId: Int? = null
+    //private var posterId: Int? = null
     private var categoryId: Int? = null
 
-    private var descriptionId: Int? = null
+    //private var descriptionId: Int? = null
 
     private var likesId: Int? = null
     private var likesCountId: Int? = null
     private var commentsId: Int? = null
     private var commentsCountId: Int? = null
-    private var readDurationId: Int? = null
+    //private var readDurationId: Int? = null
     private var isBookmarkId: Int? = null
 
     private val posterSize = context.dpToIntPx(64)
@@ -88,15 +88,13 @@ class ArticleItemView @JvmOverloads constructor(
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
             setTypeface(typeface, Typeface.BOLD)
             text = content.title
-            id = ViewCompat.generateViewId()
-            titleId = id
+            id = R.id.tv_title
         }
         addView(title)
 
         val poster = ImageView(context).apply {
             //setMarginOptionally(top = marginUnit, bottom = marginUnit)
-            id = ViewCompat.generateViewId()
-            posterId = id
+            id = R.id.iv_poster
         }
         addView(poster)
 
@@ -123,8 +121,7 @@ class ArticleItemView @JvmOverloads constructor(
             setTextColor(context.attrValue(R.attr.colorOnBackground))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
             text = content.description
-            id = ViewCompat.generateViewId()
-            descriptionId = id
+            id = R.id.tv_description
         }
         addView(description)
 
@@ -176,8 +173,7 @@ class ArticleItemView @JvmOverloads constructor(
             setTextColor(context.getColor(R.color.color_gray))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             text = "${content.readDuration} min read"
-            id = ViewCompat.generateViewId()
-            readDurationId = id
+            id = R.id.tv_read_duration
         }
         addView(readDuration)
 
@@ -210,7 +206,7 @@ class ArticleItemView @JvmOverloads constructor(
         usedHeight += max(date.measuredHeight, author.measuredHeight)
         usedHeight += spacingUnit_8
 
-        val title = children.first { it.id == titleId }
+        val title = children.first { it.id == R.id.tv_title }
         val titleWidth =
             width - paddingLeft - paddingRight - posterSize - categorySize / 2 - spacingUnit_4
         val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
@@ -218,7 +214,7 @@ class ArticleItemView @JvmOverloads constructor(
         usedHeight += max(title.measuredHeight, posterSize + categorySize / 2)
         usedHeight += spacingUnit_8
 
-        val description = children.first { it.id == descriptionId }
+        val description = children.first { it.id == R.id.tv_description }
         measureChild(description, widthMeasureSpec, heightMeasureSpec)
         usedHeight += description.measuredHeight
         usedHeight += spacingUnit_8
@@ -227,7 +223,7 @@ class ArticleItemView @JvmOverloads constructor(
         measureChild(likesCount, widthMeasureSpec, heightMeasureSpec)
         val commentsCount = children.first { it.id == commentsCountId }
         measureChild(commentsCount, widthMeasureSpec, heightMeasureSpec)
-        val readDuration = children.first { it.id == readDurationId }
+        val readDuration = children.first { it.id == R.id.tv_read_duration }
         measureChild(readDuration, widthMeasureSpec, heightMeasureSpec)
 
         usedHeight += listOf(
@@ -263,7 +259,7 @@ class ArticleItemView @JvmOverloads constructor(
         )
 
 
-        val title = children.first { it.id == titleId }
+        val title = children.first { it.id == R.id.tv_title }
         val barrierTop = paddingTop + max(date.measuredHeight, author.measuredHeight)
         val barrierTopWithSpacing = barrierTop + spacingUnit_8
         val barrierBottom = barrierTopWithSpacing +
@@ -276,7 +272,7 @@ class ArticleItemView @JvmOverloads constructor(
             right - posterSize - categorySize / 2 - spacingUnit_24,
             titleTop + title.measuredHeight
         )
-        val poster = children.first { it.id == posterId }
+        val poster = children.first { it.id == R.id.iv_poster }
         poster.layout(
             right - posterSize,
             barrierTopWithSpacing,
@@ -291,7 +287,7 @@ class ArticleItemView @JvmOverloads constructor(
             barrierTopWithSpacing + posterSize + categorySize / 2
         )
 
-        val description = children.first { it.id == descriptionId }
+        val description = children.first { it.id == R.id.tv_description }
         description.layout(
             left,
             barrierBottom,
@@ -338,7 +334,7 @@ class ArticleItemView @JvmOverloads constructor(
             right,
             descriptionBottom + iconSize
         )
-        val readDuration = children.first { it.id == readDurationId }
+        val readDuration = children.first { it.id == R.id.tv_read_duration }
         readDuration.layout(
             commentCountLeft + commentsCount.measuredWidth + spacingUnit_16,
             descriptionBottom,
