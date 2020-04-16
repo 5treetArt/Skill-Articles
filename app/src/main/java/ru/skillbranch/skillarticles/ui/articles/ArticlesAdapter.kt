@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import kotlinx.android.extensions.LayoutContainer
-//import kotlinx.android.synthetic.main.item_article_new.*
 //import kotlinx.android.synthetic.main.item_article.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.ArticleItemData
@@ -23,10 +22,8 @@ class ArticlesAdapter(private val listener: (ArticleItemData) -> Unit) :
     ListAdapter<ArticleItemData, ArticleVH>(ArticleDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleVH {
         //val containerView =
-        //    LayoutInflater.from(parent.context).inflate(R.layout.item_article_new, parent, false)
-        val containerView = ArticleItemView(parent.context).apply {
-            setPadding(parent.context.dpToIntPx(16))
-        }
+        //    LayoutInflater.from(parent.context).inflate(R.layout.item_article, parent, false)
+        val containerView = ArticleItemView(parent.context)
         return ArticleVH(containerView)
     }
 
@@ -48,6 +45,7 @@ class ArticleVH(override val containerView: View) : RecyclerView.ViewHolder(cont
     fun bind(item: ArticleItemData, listener: (ArticleItemData) -> Unit) {
         containerView as ArticleItemView
         containerView.bind(item)
+
         //val posterSize = containerView.context.dpToIntPx(64)
         //val cornerRadius = containerView.context.dpToIntPx(8)
         //val categorySize = containerView.context.dpToIntPx(40)

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
+import androidx.core.view.setPadding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -61,6 +62,10 @@ class ArticleItemView @JvmOverloads constructor(
     private val cornerRadius = context.dpToIntPx(8)
     private val iconSize = context.dpToIntPx(16)
     private val categorySize = context.dpToIntPx(40)
+
+    init {
+        setPadding(spacingUnit_16)
+    }
 
     fun bind(content: ArticleItemData) {
         val date = TextView(context).apply {
@@ -189,6 +194,8 @@ class ArticleItemView @JvmOverloads constructor(
         addView(isBookmark)
     }
 
+
+
     //private fun String.getDrawable(): Drawable? {
     //    //TODO add category choise
     //    context.getDrawable(R.drawable.logo)
@@ -237,7 +244,6 @@ class ArticleItemView @JvmOverloads constructor(
         setMeasuredDimension(width, usedHeight)
     }
 
-
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val bodyWidth = right - left - paddingLeft - paddingRight
         val left = paddingLeft
@@ -247,15 +253,17 @@ class ArticleItemView @JvmOverloads constructor(
         date.layout(
             left,
             paddingTop,
-            date.measuredWidth,
+            left + date.measuredWidth,
             date.measuredHeight + paddingTop
         )
         val author = children.first { it.id == authorId }
+        val authorWidth = bodyWidth - date.measuredWidth - spacingUnit_16
+
         author.layout(
-            date.measuredWidth + spacingUnit_16,
+            left + date.measuredWidth + spacingUnit_16,
             paddingTop,
-            date.measuredWidth + spacingUnit_16 + author.measuredWidth,
-            author.measuredHeight + paddingTop
+            authorWidth,//left + date.measuredWidth + spacingUnit_16 + author.measuredWidth,
+            paddingTop + author.measuredHeight
         )
 
 
@@ -263,7 +271,7 @@ class ArticleItemView @JvmOverloads constructor(
         val barrierTop = paddingTop + max(date.measuredHeight, author.measuredHeight)
         val barrierTopWithSpacing = barrierTop + spacingUnit_8
         val barrierBottom = barrierTopWithSpacing +
-                max(title.measuredHeight, posterSize + categorySize / 2) +
+                max( + spacingUnit_8 + title.measuredHeight + spacingUnit_8, posterSize + categorySize / 2) +
                 spacingUnit_8
         val titleTop = barrierTop + (barrierBottom - barrierTop) / 2 - title.measuredHeight / 2
         title.layout(
