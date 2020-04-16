@@ -187,7 +187,7 @@ class ArticleItemView @JvmOverloads constructor(
         }
         addView(isBookmark)
     }
-    
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = paddingTop
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
@@ -270,7 +270,7 @@ class ArticleItemView @JvmOverloads constructor(
             titleTop + title.measuredHeight
         )
         val poster = children.first { it.id == R.id.iv_poster }
-        val posterTop = barrierBottom - (posterSize + categorySize / 2)
+        val posterTop = barrierTop + (barrierBottom - barrierTop) / 2 - (posterSize + categorySize / 2) / 2
         poster.layout(
             right - posterSize,
             posterTop,
