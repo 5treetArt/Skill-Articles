@@ -194,8 +194,8 @@ class ArticleItemView @JvmOverloads constructor(
         val titleWidth =
             width - paddingLeft - paddingRight - posterSize - categorySize / 2 - spacingUnit_4
         val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
-        val titleHms = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
-        measureChild(tv_title, titleWms, titleHms)
+       // val titleHms = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        measureChild(tv_title, titleWms, heightMeasureSpec)
         usedHeight += spacingUnit_8
         usedHeight += max(
             tv_title.measuredHeight + spacingUnit_8,
