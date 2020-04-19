@@ -41,192 +41,180 @@ class ArticleItemView @JvmOverloads constructor(
     private val spacingUnit_8 = context.dpToIntPx(8)
     private val spacingUnit_16 = context.dpToIntPx(16)
 
-    private var dateId: Int? = null
-    private var authorId: Int? = null
-
-    private var categoryId: Int? = null
-
-    private var likesId: Int? = null
-    private var likesCountId: Int? = null
-    private var commentsId: Int? = null
-    private var commentsCountId: Int? = null
-    private var isBookmarkId: Int? = null
-
     private val posterSize = context.dpToIntPx(64)
     private val cornerRadius = context.dpToIntPx(8)
     private val iconSize = context.dpToIntPx(16)
     private val categorySize = context.dpToIntPx(40)
 
+    private val tv_date: TextView
+    private val tv_author: TextView
+    private val tv_title: TextView
+    private val iv_poster: ImageView
+    private val iv_category: ImageView
+    private val tv_description: TextView
+    private val iv_likes: ImageView
+    private val tv_likes_count: TextView
+    private val iv_comments: ImageView
+    private val tv_comments_count: TextView
+    private val tv_read_duration: TextView
+    private val iv_bookmark: ImageView
+
     init {
         setPadding(spacingUnit_16)
-    }
 
-    fun bind(content: ArticleItemData) {
-        val date = TextView(context).apply {
+        tv_date = TextView(context).apply {
             setTextColor(context.getColor(R.color.color_gray))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            text = content.date.format()
-            id = ViewCompat.generateViewId()
-            dateId = id
+            //id = ViewCompat.generateViewId()
         }
-        addView(date)
+        addView(tv_date)
 
-        val author = TextView(context).apply {
-            //setMarginOptionally(left = marginUnit * 2)
+        tv_author = TextView(context).apply {
             setTextColor(context.attrValue(R.attr.colorPrimary))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            text = content.author
-            id = ViewCompat.generateViewId()
-            authorId = id
+            //id = ViewCompat.generateViewId()
         }
-        addView(author)
+        addView(tv_author)
 
-        val title = TextView(context).apply {
+        tv_title = TextView(context).apply {
             //setMarginOptionally(top = marginUnit, right = marginUnit * 3, bottom = marginUnit)
             setTextColor(context.attrValue(R.attr.colorPrimary))
-            textSize = 18f
+            textSize = 16f
             //setTextSize(/*TypedValue.COMPLEX_UNIT_SP, */18f)
-            setTypeface(typeface, Typeface.BOLD)
-            text = content.title
+            setTypeface(this.typeface, Typeface.BOLD)
             id = R.id.tv_title
         }
-        addView(title)
+        addView(tv_title)
 
-        val poster = ImageView(context).apply {
+        iv_poster = ImageView(context).apply {
             //setMarginOptionally(top = marginUnit, bottom = marginUnit)
             id = R.id.iv_poster
         }
-        addView(poster)
+        addView(iv_poster)
 
-        Glide.with(context)
-            .load(content.poster)
-            .transform(CenterCrop(), RoundedCorners(cornerRadius))
-            .override(posterSize)
-            .into(poster)
-
-        val category = ImageView(context).apply {
-            id = ViewCompat.generateViewId()
-            categoryId = id
+        iv_category = ImageView(context).apply {
+            //id = ViewCompat.generateViewId()
         }
-        addView(category)
+        addView(iv_category)
 
-        Glide.with(context)
-            .load(content.categoryIcon)
-            .transform(CenterCrop(), RoundedCorners(cornerRadius))
-            .override(categorySize)
-            .into(category)
-
-        val description = TextView(context).apply {
+        tv_description = TextView(context).apply {
             //setMarginOptionally(top = marginUnit)
             setTextColor(context.attrValue(R.attr.colorOnBackground))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-            text = content.description
             id = R.id.tv_description
         }
-        addView(description)
+        addView(tv_description)
 
-        val likes = ImageView(context).apply {
+        iv_likes = ImageView(context).apply {
             setImageResource(R.drawable.ic_favorite_black_24dp)
             setColorFilter(
                 context.getColor(R.color.color_gray),
                 android.graphics.PorterDuff.Mode.MULTIPLY
             )
-            id = ViewCompat.generateViewId()
-            likesId = id
+            //id = ViewCompat.generateViewId()
         }
-        addView(likes)
+        addView(iv_likes)
 
-        val likesCount = TextView(context).apply {
+        tv_likes_count = TextView(context).apply {
             //setMarginOptionally(left = marginUnit, top = marginUnit)
             setTextColor(context.getColor(R.color.color_gray))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            text = "${content.likeCount}"
-            id = ViewCompat.generateViewId()
-            likesCountId = id
+            //id = ViewCompat.generateViewId()
         }
-        addView(likesCount)
+        addView(tv_likes_count)
 
-        val comments = ImageView(context).apply {
+        iv_comments = ImageView(context).apply {
             //setMarginOptionally(left = marginUnit * 2)
             setImageResource(R.drawable.ic_insert_comment_black_24dp)
             setColorFilter(
                 context.getColor(R.color.color_gray),
                 android.graphics.PorterDuff.Mode.MULTIPLY
             )
-            id = ViewCompat.generateViewId()
-            commentsId = id
+            //id = ViewCompat.generateViewId()
         }
-        addView(comments)
+        addView(iv_comments)
 
-        val commentsCount = TextView(context).apply {
+        tv_comments_count = TextView(context).apply {
             //setMarginOptionally(left = marginUnit, top = marginUnit)
             setTextColor(context.getColor(R.color.color_gray))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            text = "${content.commentCount}"
-            id = ViewCompat.generateViewId()
-            commentsCountId = id
+            //id = ViewCompat.generateViewId()
         }
-        addView(commentsCount)
+        addView(tv_comments_count)
 
-        val readDuration = TextView(context).apply {
+        tv_read_duration = TextView(context).apply {
             //setMarginOptionally(left = marginUnit * 2, top = marginUnit, right = marginUnit * 2)
             setTextColor(context.getColor(R.color.color_gray))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            text = "${content.readDuration} min read"
             id = R.id.tv_read_duration
         }
-        addView(readDuration)
+        addView(tv_read_duration)
 
-        val isBookmark = ImageView(context).apply {
+        iv_bookmark = ImageView(context).apply {
             setImageResource(R.drawable.bookmark_states)
             setColorFilter(
                 context.getColor(R.color.color_gray),
                 android.graphics.PorterDuff.Mode.MULTIPLY
             )
-            id = ViewCompat.generateViewId()
-            isBookmarkId = id
+            //id = ViewCompat.generateViewId()
         }
-        addView(isBookmark)
+        addView(iv_bookmark)
+    }
+
+    fun bind(content: ArticleItemData) {
+        tv_date.text = content.date.format()
+        tv_author.text = content.author
+        tv_title.text = content.title
+        tv_description.text = content.description
+        tv_likes_count.text = "${content.likeCount}"
+        tv_comments_count.text = "${content.commentCount}"
+        tv_read_duration.text = "${content.readDuration} min read"
+
+        Glide.with(context)
+            .load(content.poster)
+            .transform(CenterCrop(), RoundedCorners(cornerRadius))
+            .override(posterSize)
+            .into(iv_poster)
+
+        Glide.with(context)
+            .load(content.categoryIcon)
+            .transform(CenterCrop(), RoundedCorners(cornerRadius))
+            .override(categorySize)
+            .into(iv_category)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = paddingTop
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
 
-        val date = children.first { it.id == dateId }
-        measureChild(date, widthMeasureSpec, heightMeasureSpec)
-        val author = children.first { it.id == authorId }
-        measureChild(author, widthMeasureSpec, heightMeasureSpec)
-        usedHeight += max(date.measuredHeight, author.measuredHeight)
+        measureChild(tv_date, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)
+        usedHeight += max(tv_date.measuredHeight, tv_author.measuredHeight)
 
-        val title = children.first { it.id == R.id.tv_title }
         val titleWidth =
             width - paddingLeft - paddingRight - posterSize - categorySize / 2 - spacingUnit_4
         val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
-        measureChild(title, titleWms, heightMeasureSpec)
+        val titleHms = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        measureChild(tv_title, titleWms, titleHms)
         usedHeight += spacingUnit_8
         usedHeight += max(
-            title.measuredHeight + spacingUnit_8,
+            tv_title.measuredHeight + spacingUnit_8,
             posterSize + categorySize / 2
         )
 
-        val description = children.first { it.id == R.id.tv_description }
-        measureChild(description, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)
         usedHeight += spacingUnit_8
-        usedHeight += description.measuredHeight
+        usedHeight += tv_description.measuredHeight
         usedHeight += spacingUnit_8
 
-        val likesCount = children.first { it.id == likesCountId }
-        measureChild(likesCount, widthMeasureSpec, heightMeasureSpec)
-        val commentsCount = children.first { it.id == commentsCountId }
-        measureChild(commentsCount, widthMeasureSpec, heightMeasureSpec)
-        val readDuration = children.first { it.id == R.id.tv_read_duration }
-        measureChild(readDuration, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_likes_count, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_comments_count, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_read_duration, widthMeasureSpec, heightMeasureSpec)
 
         usedHeight += listOf(
-            likesCount.measuredHeight,
-            commentsCount.measuredHeight,
-            readDuration.measuredHeight,
+            tv_likes_count.measuredHeight,
+            tv_comments_count.measuredHeight,
+            tv_read_duration.measuredHeight,
             iconSize
         ).max() ?: 0
 
@@ -239,126 +227,97 @@ class ArticleItemView @JvmOverloads constructor(
         val left = paddingLeft
         val right = paddingLeft + bodyWidth
 
-        val date = children.first { it.id == dateId }
-        date.layout(
+        tv_date.layout(
             left,
             paddingTop,
-            left + date.measuredWidth,
-            date.measuredHeight + paddingTop
+            left + tv_date.measuredWidth,
+            tv_date.measuredHeight + paddingTop
         )
-        val author = children.first { it.id == authorId }
 
-        author.layout(
-            left + date.measuredWidth + spacingUnit_16,
+        tv_author.layout(
+            left + tv_date.measuredWidth + spacingUnit_16,
             paddingTop,
             right,
-            paddingTop + author.measuredHeight
+            paddingTop + tv_author.measuredHeight
         )
 
-
-        val title = children.first { it.id == R.id.tv_title }
-        val barrierTop = paddingTop + max(date.measuredHeight, author.measuredHeight)
+        val barrierTop = paddingTop + max(tv_date.measuredHeight, tv_author.measuredHeight)
         val barrierBottom = barrierTop +
                 max(
-                    spacingUnit_8 + title.measuredHeight + spacingUnit_8,
+                    spacingUnit_8 + tv_title.measuredHeight + spacingUnit_8,
                     spacingUnit_8 + posterSize + categorySize / 2
                 ) + spacingUnit_8
-        val titleTop = barrierTop + (barrierBottom - barrierTop - title.measuredHeight) / 2
+        val titleTop = barrierTop + (barrierBottom - barrierTop - tv_title.measuredHeight) / 2
         val titleWidth = width - (paddingRight + paddingLeft + posterSize + (categorySize / 2) + context.dpToIntPx(8))
-        title.layout(
+        tv_title.layout(
             left,
             titleTop,
             left + titleWidth, //right - posterSize - (categorySize / 2 + spacingUnit_4),
-            titleTop + title.measuredHeight
+            titleTop + tv_title.measuredHeight
         )
-        val poster = children.first { it.id == R.id.iv_poster }
+
         val posterTop = barrierTop + (barrierBottom - barrierTop) / 2 - (posterSize + categorySize / 2) / 2
-        poster.layout(
+        iv_poster.layout(
             right - posterSize,
             posterTop,
             right,
             posterTop + posterSize
         )
-        val category = children.first { it.id == categoryId }
+
         val categoryTop = posterTop + posterSize - categorySize / 2
-        category.layout(
+        iv_category.layout(
             right - posterSize - categorySize / 2,
             categoryTop,
             right - posterSize + categorySize / 2,
             categoryTop + categorySize
         )
 
-        val description = children.first { it.id == R.id.tv_description }
-        description.layout(
+        tv_description.layout(
             left,
             barrierBottom,
             right,
-            barrierBottom + description.measuredHeight
+            barrierBottom + tv_description.measuredHeight
         )
         val descriptionBottom =
-            barrierBottom + description.measuredHeight + spacingUnit_8
-        val likes = children.first { it.id == likesId }
-        likes.layout(
+            barrierBottom + tv_description.measuredHeight + spacingUnit_8
+        iv_likes.layout(
             left,
             descriptionBottom,
             left + iconSize,
             descriptionBottom + iconSize
         )
-        val likesCount = children.first { it.id == likesCountId }
         val likesCountLeft = left + iconSize + spacingUnit_8
-        likesCount.layout(
+        tv_likes_count.layout(
             likesCountLeft,
             descriptionBottom,
-            likesCountLeft + likesCount.measuredWidth,
-            descriptionBottom + likesCount.measuredHeight
+            likesCountLeft + tv_likes_count.measuredWidth,
+            descriptionBottom + tv_likes_count.measuredHeight
         )
-        val comments = children.first { it.id == commentsId }
-        val commentsLeft = likesCountLeft + likesCount.measuredWidth + spacingUnit_16
-        comments.layout(
+        val commentsLeft = likesCountLeft + tv_likes_count.measuredWidth + spacingUnit_16
+        iv_comments.layout(
             commentsLeft,
             descriptionBottom,
             commentsLeft + iconSize,
             descriptionBottom + iconSize
         )
-        val commentsCount = children.first { it.id == commentsCountId }
         val commentCountLeft = commentsLeft + iconSize + spacingUnit_8
-        commentsCount.layout(
+        tv_comments_count.layout(
             commentCountLeft,
             descriptionBottom,
-            commentCountLeft + commentsCount.measuredWidth,
-            descriptionBottom + commentsCount.measuredHeight
+            commentCountLeft + tv_comments_count.measuredWidth,
+            descriptionBottom + tv_comments_count.measuredHeight
         )
-        val isBookmark = children.first { it.id == isBookmarkId }
-        isBookmark.layout(
+        iv_bookmark.layout(
             right - iconSize,
             descriptionBottom,
             right,
             descriptionBottom + iconSize
         )
-        val readDuration = children.first { it.id == R.id.tv_read_duration }
-        readDuration.layout(
-            commentCountLeft + commentsCount.measuredWidth + spacingUnit_16,
+        tv_read_duration.layout(
+            commentCountLeft + tv_comments_count.measuredWidth + spacingUnit_16,
             descriptionBottom,
             right - iconSize - spacingUnit_16,
-            descriptionBottom + readDuration.measuredHeight
+            descriptionBottom + tv_read_duration.measuredHeight
         )
-        //children.forEach {
-        //    if (it is MarkdownTextView) {
-        //        it.layout(
-        //            left - paddingLeft / 2,
-        //            usedHeight,
-        //            r - paddingRight / 2,
-        //            usedHeight + it.measuredHeight
-        //        )
-        //    } else {
-        //        it.layout(
-        //            left,
-        //            usedHeight,
-        //            right,
-        //            usedHeight + it.measuredHeight
-        //        )
-        //    }
-        //    usedHeight += it.measuredHeight
-        //}
     }
 }
