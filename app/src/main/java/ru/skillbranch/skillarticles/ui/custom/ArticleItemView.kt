@@ -79,7 +79,7 @@ class ArticleItemView @JvmOverloads constructor(
         tv_title = TextView(context).apply {
             //setMarginOptionally(top = marginUnit, right = marginUnit * 3, bottom = marginUnit)
             setTextColor(context.attrValue(R.attr.colorPrimary))
-            textSize = 17f
+            textSize = 17.2f
             //setTextSize(/*TypedValue.COMPLEX_UNIT_SP, */18f)
             setTypeface(this.typeface, Typeface.BOLD)
             id = R.id.tv_title
