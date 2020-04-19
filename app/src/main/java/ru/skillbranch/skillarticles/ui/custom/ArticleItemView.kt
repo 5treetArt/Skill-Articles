@@ -84,7 +84,8 @@ class ArticleItemView @JvmOverloads constructor(
         val title = TextView(context).apply {
             //setMarginOptionally(top = marginUnit, right = marginUnit * 3, bottom = marginUnit)
             setTextColor(context.attrValue(R.attr.colorPrimary))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            textSize = 18f
+            //setTextSize(/*TypedValue.COMPLEX_UNIT_SP, */18f)
             setTypeface(typeface, Typeface.BOLD)
             text = content.title
             id = R.id.tv_title
@@ -261,12 +262,13 @@ class ArticleItemView @JvmOverloads constructor(
                 max(
                     spacingUnit_8 + title.measuredHeight + spacingUnit_8,
                     spacingUnit_8 + posterSize + categorySize / 2
-                )
-        val titleTop = barrierTop + (barrierBottom - barrierTop) / 2 - title.measuredHeight / 2
+                ) + spacingUnit_8
+        val titleTop = barrierTop + (barrierBottom - barrierTop - title.measuredHeight) / 2
+        val titleWidth = width - (paddingRight + paddingLeft + posterSize + (categorySize / 2) + context.dpToIntPx(8))
         title.layout(
             left,
             titleTop,
-            right - posterSize - (categorySize / 2 + spacingUnit_4),
+            left + titleWidth, //right - posterSize - (categorySize / 2 + spacingUnit_4),
             titleTop + title.measuredHeight
         )
         val poster = children.first { it.id == R.id.iv_poster }
@@ -289,12 +291,12 @@ class ArticleItemView @JvmOverloads constructor(
         val description = children.first { it.id == R.id.tv_description }
         description.layout(
             left,
-            barrierBottom + spacingUnit_8,
+            barrierBottom,
             right,
-            barrierBottom + spacingUnit_8 + description.measuredHeight
+            barrierBottom + description.measuredHeight
         )
         val descriptionBottom =
-            barrierBottom + spacingUnit_8 + description.measuredHeight + spacingUnit_8
+            barrierBottom + description.measuredHeight + spacingUnit_8
         val likes = children.first { it.id == likesId }
         likes.layout(
             left,
