@@ -63,100 +63,96 @@ class ArticleItemView @JvmOverloads constructor(
         setPadding(spacingUnit_16)
 
         tv_date = TextView(context).apply {
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            //id = ViewCompat.generateViewId()
+            textSize = 12f
         }
         addView(tv_date)
 
         tv_author = TextView(context).apply {
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorPrimary))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            //id = ViewCompat.generateViewId()
+            textSize = 12f
         }
         addView(tv_author)
 
         tv_title = TextView(context).apply {
-            //setMarginOptionally(top = marginUnit, right = marginUnit * 3, bottom = marginUnit)
-            setTextColor(context.attrValue(R.attr.colorPrimary))
-            textSize = 16.8f
-            //setTextSize(/*TypedValue.COMPLEX_UNIT_SP, */18f)
-            setTypeface(this.typeface, Typeface.BOLD)
             id = R.id.tv_title
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            setTextColor(context.attrValue(R.attr.colorPrimary))
+            textSize = 18f
+            setTypeface(this.typeface, Typeface.BOLD)
         }
         addView(tv_title)
 
         iv_poster = ImageView(context).apply {
-            //setMarginOptionally(top = marginUnit, bottom = marginUnit)
             id = R.id.iv_poster
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
         addView(iv_poster)
 
         iv_category = ImageView(context).apply {
-            //id = ViewCompat.generateViewId()
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
         addView(iv_category)
 
         tv_description = TextView(context).apply {
-            //setMarginOptionally(top = marginUnit)
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorOnBackground))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            textSize = 14f
             id = R.id.tv_description
         }
         addView(tv_description)
 
         iv_likes = ImageView(context).apply {
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.ic_favorite_black_24dp)
             setColorFilter(
                 context.getColor(R.color.color_gray),
                 android.graphics.PorterDuff.Mode.MULTIPLY
             )
-            //id = ViewCompat.generateViewId()
         }
         addView(iv_likes)
 
         tv_likes_count = TextView(context).apply {
-            //setMarginOptionally(left = marginUnit, top = marginUnit)
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            //id = ViewCompat.generateViewId()
+            textSize = 12f
         }
         addView(tv_likes_count)
 
         iv_comments = ImageView(context).apply {
-            //setMarginOptionally(left = marginUnit * 2)
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.ic_insert_comment_black_24dp)
             setColorFilter(
                 context.getColor(R.color.color_gray),
                 android.graphics.PorterDuff.Mode.MULTIPLY
             )
-            //id = ViewCompat.generateViewId()
         }
         addView(iv_comments)
 
         tv_comments_count = TextView(context).apply {
-            //setMarginOptionally(left = marginUnit, top = marginUnit)
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            //id = ViewCompat.generateViewId()
+            textSize = 12f
         }
         addView(tv_comments_count)
 
         tv_read_duration = TextView(context).apply {
-            //setMarginOptionally(left = marginUnit * 2, top = marginUnit, right = marginUnit * 2)
-            setTextColor(context.getColor(R.color.color_gray))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             id = R.id.tv_read_duration
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+            setTextColor(context.getColor(R.color.color_gray))
+            textSize = 12f
         }
         addView(tv_read_duration)
 
         iv_bookmark = ImageView(context).apply {
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.bookmark_states)
             setColorFilter(
                 context.getColor(R.color.color_gray),
                 android.graphics.PorterDuff.Mode.MULTIPLY
             )
-            //id = ViewCompat.generateViewId()
         }
         addView(iv_bookmark)
     }
