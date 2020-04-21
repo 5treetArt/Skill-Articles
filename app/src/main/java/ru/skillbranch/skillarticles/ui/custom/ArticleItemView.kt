@@ -59,20 +59,24 @@ class ArticleItemView @JvmOverloads constructor(
     private val tv_read_duration: TextView
     private val iv_bookmark: ImageView
 
+    private val smallTextSize = 12f
+    private val regularTextSize = 14f
+    private val bigTextSize = 18f
+
     init {
         setPadding(spacingUnit_16)
 
         tv_date = TextView(context).apply {
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
-            textSize = 12f
+            textSize = smallTextSize
         }
         addView(tv_date)
 
         tv_author = TextView(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorPrimary))
-            textSize = 12f
+            textSize = smallTextSize
         }
         addView(tv_author)
 
@@ -80,7 +84,7 @@ class ArticleItemView @JvmOverloads constructor(
             id = R.id.tv_title
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorPrimary))
-            textSize = 18f
+            textSize = bigTextSize
             setTypeface(this.typeface, Typeface.BOLD)
         }
         addView(tv_title)
@@ -99,7 +103,7 @@ class ArticleItemView @JvmOverloads constructor(
         tv_description = TextView(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorOnBackground))
-            textSize = 14f
+            textSize = regularTextSize
             id = R.id.tv_description
         }
         addView(tv_description)
@@ -117,7 +121,7 @@ class ArticleItemView @JvmOverloads constructor(
         tv_likes_count = TextView(context).apply {
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
-            textSize = 12f
+            textSize = smallTextSize
         }
         addView(tv_likes_count)
 
@@ -134,7 +138,7 @@ class ArticleItemView @JvmOverloads constructor(
         tv_comments_count = TextView(context).apply {
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
-            textSize = 12f
+            textSize = smallTextSize
         }
         addView(tv_comments_count)
 
@@ -142,7 +146,7 @@ class ArticleItemView @JvmOverloads constructor(
             id = R.id.tv_read_duration
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
-            textSize = 12f
+            textSize = smallTextSize
         }
         addView(tv_read_duration)
 
