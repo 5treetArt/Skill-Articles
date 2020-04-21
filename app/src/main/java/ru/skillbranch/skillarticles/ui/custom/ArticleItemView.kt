@@ -244,9 +244,10 @@ class ArticleItemView @JvmOverloads constructor(
 
         val barrierTop = paddingTop + max(tv_date.measuredHeight, tv_author.measuredHeight)
         val barrierBottom = barrierTop +
+                spacingUnit_8 +
                 max(
-                    spacingUnit_8 + tv_title.measuredHeight + spacingUnit_8,
-                    spacingUnit_8 + posterSize + categorySize / 2
+                    tv_title.measuredHeight,// + spacingUnit_8,
+                    posterSize + categorySize / 2
                 ) + spacingUnit_8
         val titleTop = barrierTop + (barrierBottom - barrierTop - tv_title.measuredHeight) / 2
         val titleWidth = width - (paddingRight + paddingLeft + posterSize + (categorySize / 2) + context.dpToIntPx(8))
