@@ -74,6 +74,7 @@ class ArticleItemView @JvmOverloads constructor(
         addView(tv_date)
 
         tv_author = TextView(context).apply {
+            id = R.id.tv_author
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorPrimary))
             textSize = smallTextSize
@@ -278,8 +279,7 @@ class ArticleItemView @JvmOverloads constructor(
             right,
             barrierBottom + tv_description.measuredHeight
         )
-        val descriptionBottom =
-            barrierBottom + tv_description.measuredHeight + spacingUnit_8
+        val descriptionBottom = barrierBottom + tv_description.measuredHeight + spacingUnit_8
         iv_likes.layout(
             left,
             descriptionBottom,
