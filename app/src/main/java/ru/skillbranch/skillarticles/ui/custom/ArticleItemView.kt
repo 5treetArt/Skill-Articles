@@ -3,13 +3,10 @@ package ru.skillbranch.skillarticles.ui.custom
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.ViewCompat
-import androidx.core.view.children
 import androidx.core.view.setPadding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -28,15 +25,6 @@ class ArticleItemView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
-    //var textSize by Delegates.observable(14f) { _, old, value ->
-    //    if (value == old) return@observable
-    //    this.children.forEach {
-    //        it as IMarkdownView
-    //        it.fontSize = value
-    //    }
-    //}
-    //var isLoading: Boolean = true
-
     private val spacingUnit_4 = context.dpToIntPx(4)
     private val spacingUnit_8 = context.dpToIntPx(8)
     private val spacingUnit_16 = context.dpToIntPx(16)
@@ -45,6 +33,7 @@ class ArticleItemView @JvmOverloads constructor(
     private val cornerRadius = context.dpToIntPx(8)
     private val iconSize = context.dpToIntPx(16)
     private val categorySize = context.dpToIntPx(40)
+    private val posterAndCategorySize = posterSize + categorySize / 2
 
     private val tv_date: TextView
     private val tv_author: TextView
@@ -199,8 +188,8 @@ class ArticleItemView @JvmOverloads constructor(
         measureChild(tv_title, titleWms, heightMeasureSpec)
         usedHeight += spacingUnit_8
         usedHeight += max(
-            tv_title.measuredHeight + spacingUnit_8,
-            posterSize + categorySize / 2
+            tv_title.measuredHeight/* + spacingUnit_8*/,
+            posterAndCategorySize
         )
 
         measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)
@@ -228,97 +217,89 @@ class ArticleItemView @JvmOverloads constructor(
         val left = paddingLeft
         val right = paddingLeft + bodyWidth
 
-        tv_date.layout(
-            left,
-            paddingTop,
-            left + tv_date.measuredWidth,
-            tv_date.measuredHeight + paddingTop
-        )
+        val dateLeft = left
+        val dateRight = dateLeft + tv_date.measuredWidth
+        val dateTop = paddingTop
+        val dateBottom = dateTop + tv_date.measuredHeight
+        tv_date.layout(dateLeft, dateTop, dateRight, dateBottom)
 
-        tv_author.layout(
-            left + tv_date.measuredWidth + spacingUnit_16,
-            paddingTop,
-            right,
-            paddingTop + tv_author.measuredHeight
-        )
+        val authorLeft = dateRight + spacingUnit_16
+        val authorRight = right
+        val authorTop = paddingTop
+        val authorBottom = authorTop + tv_author.measuredHeight
+        tv_author.layout(authorLeft, authorTop, authorRight, authorBottom)
 
-        val barrierTop = paddingTop + max(tv_date.measuredHeight, tv_author.measuredHeight)
+        val barrierTop = max(dateBottom, authorBottom)
         val barrierBottom = barrierTop +
                 spacingUnit_8 +
                 max(
                     tv_title.measuredHeight,// + spacingUnit_8,
-                    posterSize + categorySize / 2
-                ) + spacingUnit_8
-        val titleTop = barrierTop + (barrierBottom - barrierTop - tv_title.measuredHeight) / 2
-        val titleWidth = width - (paddingRight + paddingLeft + posterSize + (categorySize / 2) + context.dpToIntPx(8))
-        tv_title.layout(
-            left,
-            titleTop,
-            left + titleWidth, //right - posterSize - (categorySize / 2 + spacingUnit_4),
-            titleTop + tv_title.measuredHeight
-        )
+                    posterAndCategorySize
+                ) +
+                spacingUnit_8
+        val centerBetweenBarriers = barrierTop + (barrierBottom - barrierTop) / 2
 
-        val posterTop = barrierTop + (barrierBottom - barrierTop) / 2 - (posterSize + categorySize / 2) / 2
-        iv_poster.layout(
-            right - posterSize,
-            posterTop,
-            right,
-            posterTop + posterSize
-        )
+        val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - spacingUnit_8 //TODO wtf why 8?
+        val titleLeft = left
+        val titleRight = titleLeft + titleWidth //right - posterAndCategorySize - spacingUnit_4,
+        val titleTop = centerBetweenBarriers - tv_title.measuredHeight / 2
+        val titleBottom = titleTop + tv_title.measuredHeight
+        tv_title.layout(titleLeft, titleTop, titleRight, titleBottom)
 
-        val categoryTop = posterTop + posterSize - categorySize / 2
-        iv_category.layout(
-            right - posterSize - categorySize / 2,
-            categoryTop,
-            right - posterSize + categorySize / 2,
-            categoryTop + categorySize
-        )
+        val posterLeft = right - posterSize
+        val posterRight = right
+        val posterTop = centerBetweenBarriers - posterAndCategorySize / 2
+        val posterBottom = posterTop + posterSize
+        iv_poster.layout(posterLeft, posterTop, posterRight, posterBottom)
 
-        tv_description.layout(
-            left,
-            barrierBottom,
-            right,
-            barrierBottom + tv_description.measuredHeight
-        )
-        val descriptionBottom = barrierBottom + tv_description.measuredHeight + spacingUnit_8
-        iv_likes.layout(
-            left,
-            descriptionBottom,
-            left + iconSize,
-            descriptionBottom + iconSize
-        )
-        val likesCountLeft = left + iconSize + spacingUnit_8
-        tv_likes_count.layout(
-            likesCountLeft,
-            descriptionBottom,
-            likesCountLeft + tv_likes_count.measuredWidth,
-            descriptionBottom + tv_likes_count.measuredHeight
-        )
-        val commentsLeft = likesCountLeft + tv_likes_count.measuredWidth + spacingUnit_16
-        iv_comments.layout(
-            commentsLeft,
-            descriptionBottom,
-            commentsLeft + iconSize,
-            descriptionBottom + iconSize
-        )
-        val commentCountLeft = commentsLeft + iconSize + spacingUnit_8
-        tv_comments_count.layout(
-            commentCountLeft,
-            descriptionBottom,
-            commentCountLeft + tv_comments_count.measuredWidth,
-            descriptionBottom + tv_comments_count.measuredHeight
-        )
-        iv_bookmark.layout(
-            right - iconSize,
-            descriptionBottom,
-            right,
-            descriptionBottom + iconSize
-        )
-        tv_read_duration.layout(
-            commentCountLeft + tv_comments_count.measuredWidth + spacingUnit_16,
-            descriptionBottom,
-            right - iconSize - spacingUnit_16,
-            descriptionBottom + tv_read_duration.measuredHeight
-        )
+        val categoryLeft = posterLeft - categorySize / 2
+        val categoryRight = categoryLeft + categorySize
+        val categoryTop = posterBottom - categorySize / 2
+        val categoryBottom = categoryTop + categorySize
+        iv_category.layout(categoryLeft, categoryTop, categoryRight, categoryBottom)
+
+        val descriptionLeft = left
+        val descriptionRight = right
+        val descriptionTop = barrierBottom
+        val descriptionBottom = barrierBottom + tv_description.measuredHeight
+        tv_description.layout(descriptionLeft, descriptionTop, descriptionRight, descriptionBottom)
+
+        val descriptionBottomWithSpacing = barrierBottom + tv_description.measuredHeight + spacingUnit_8
+
+        val likesLeft = left
+        val likesRight = likesLeft + iconSize
+        val likesTop = descriptionBottomWithSpacing
+        val likesBottom = likesTop + iconSize
+        iv_likes.layout(likesLeft, likesTop, likesRight, likesBottom)
+
+        val likesCountLeft = likesRight + spacingUnit_8
+        val likesCountRight = likesCountLeft + tv_likes_count.measuredWidth
+        val likesCountTop = descriptionBottomWithSpacing
+        val likesCountBottom = likesCountTop + tv_likes_count.measuredHeight
+        tv_likes_count.layout(likesCountLeft, likesCountTop, likesCountRight, likesCountBottom)
+
+        val commentsLeft = likesCountRight + spacingUnit_16
+        val commentsRight = commentsLeft + iconSize
+        val commentsTop = descriptionBottomWithSpacing
+        val commentsBottom = commentsTop + iconSize
+        iv_comments.layout(commentsLeft, commentsTop, commentsRight, commentsBottom)
+
+        val commentCountLeft = commentsRight + spacingUnit_8
+        val commentsCountRight = commentCountLeft + tv_comments_count.measuredWidth
+        val commentsCountTop = descriptionBottomWithSpacing
+        val commentsCountBottom = commentsCountTop + tv_comments_count.measuredHeight
+        tv_comments_count.layout(commentCountLeft, commentsCountTop, commentsCountRight, commentsCountBottom)
+
+        val bookmarkLeft = right - iconSize
+        val bookmarkRight = right
+        val bookmarkTop = descriptionBottomWithSpacing
+        val bookmarkBottom = bookmarkTop + iconSize
+        iv_bookmark.layout(bookmarkLeft, bookmarkTop, bookmarkRight, bookmarkBottom)
+
+        val readDurationLeft = commentsCountRight + spacingUnit_16
+        val readDurationRight = bookmarkLeft - spacingUnit_16
+        val readDurationTop = descriptionBottomWithSpacing
+        val readDurationBottom = readDurationTop + tv_read_duration.measuredHeight
+        tv_read_duration.layout(readDurationLeft, readDurationTop, readDurationRight, readDurationBottom)
     }
 }
