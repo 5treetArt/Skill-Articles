@@ -151,28 +151,6 @@ class ArticleItemView @JvmOverloads constructor(
         addView(iv_bookmark)
     }
 
-    fun bind(content: ArticleItemData) {
-        tv_date.text = content.date.format()
-        tv_author.text = content.author
-        tv_title.text = content.title
-        tv_description.text = content.description
-        tv_likes_count.text = "${content.likeCount}"
-        tv_comments_count.text = "${content.commentCount}"
-        tv_read_duration.text = "${content.readDuration} min read"
-
-        Glide.with(context)
-            .load(content.poster)
-            .transform(CenterCrop(), RoundedCorners(cornerRadius))
-            .override(posterSize)
-            .into(iv_poster)
-
-        Glide.with(context)
-            .load(content.categoryIcon)
-            .transform(CenterCrop(), RoundedCorners(cornerRadius))
-            .override(categorySize)
-            .into(iv_category)
-    }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = paddingTop
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
@@ -191,9 +169,9 @@ class ArticleItemView @JvmOverloads constructor(
             tv_title.measuredHeight/* + spacingUnit_8*/,
             posterAndCategorySize
         )
+        usedHeight += spacingUnit_8
 
         measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)
-        usedHeight += spacingUnit_8
         usedHeight += tv_description.measuredHeight
         usedHeight += spacingUnit_8
 
@@ -239,9 +217,9 @@ class ArticleItemView @JvmOverloads constructor(
                 spacingUnit_8
         val centerBetweenBarriers = barrierTop + (barrierBottom - barrierTop) / 2
 
-        val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - spacingUnit_8 //TODO wtf why 8?
+        //val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - spacingUnit_8 //TODO wtf why 8?
         val titleLeft = left
-        val titleRight = titleLeft + titleWidth //right - posterAndCategorySize - spacingUnit_4,
+        val titleRight = /*titleLeft + titleWidth*/ right - posterAndCategorySize - spacingUnit_8
         val titleTop = centerBetweenBarriers - tv_title.measuredHeight / 2
         val titleBottom = titleTop + tv_title.measuredHeight
         tv_title.layout(titleLeft, titleTop, titleRight, titleBottom)
@@ -301,5 +279,27 @@ class ArticleItemView @JvmOverloads constructor(
         val readDurationTop = descriptionBottomWithSpacing
         val readDurationBottom = readDurationTop + tv_read_duration.measuredHeight
         tv_read_duration.layout(readDurationLeft, readDurationTop, readDurationRight, readDurationBottom)
+    }
+
+    fun bind(content: ArticleItemData) {
+        tv_date.text = content.date.format()
+        tv_author.text = content.author
+        tv_title.text = content.title
+        tv_description.text = content.description
+        tv_likes_count.text = "${content.likeCount}"
+        tv_comments_count.text = "${content.commentCount}"
+        tv_read_duration.text = "${content.readDuration} min read"
+
+        Glide.with(context)
+            .load(content.poster)
+            .transform(CenterCrop(), RoundedCorners(cornerRadius))
+            .override(posterSize)
+            .into(iv_poster)
+
+        Glide.with(context)
+            .load(content.categoryIcon)
+            .transform(CenterCrop(), RoundedCorners(cornerRadius))
+            .override(categorySize)
+            .into(iv_category)
     }
 }
