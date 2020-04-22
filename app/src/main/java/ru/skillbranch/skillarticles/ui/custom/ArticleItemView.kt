@@ -153,12 +153,9 @@ class ArticleItemView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val bodyWidth = right - left - paddingLeft - paddingRight
-        val left = paddingLeft
-        val right = paddingLeft + bodyWidth
-
-        var usedHeight = paddingTop
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
+        val bodyWidth = right - left - paddingLeft - paddingRight
+        var usedHeight = paddingTop
 
         measureChild(tv_date, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)
@@ -169,7 +166,6 @@ class ArticleItemView @JvmOverloads constructor(
         // val titleHms = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
         measureChild(tv_title, titleWms, heightMeasureSpec)
         usedHeight += spacingUnit_8
-        usedHeight += spacingUnit_8 //TODO remove
         usedHeight += max(
             tv_title.measuredHeight/* + spacingUnit_8*/,
             posterAndCategorySize
