@@ -75,7 +75,8 @@ class ArticleItemView @JvmOverloads constructor(
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorPrimary))
             textSize = bigTextSize
-            setTypeface(this.typeface, Typeface.BOLD)
+            typeface = Typeface.DEFAULT_BOLD
+            //setTypeface(this.typeface, Typeface.BOLD)
         }
         addView(tv_title)
 
