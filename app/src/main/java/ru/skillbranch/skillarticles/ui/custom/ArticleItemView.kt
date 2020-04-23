@@ -154,7 +154,7 @@ class ArticleItemView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
-        val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - spacing_8
+        val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - spacing_4 //TODO wtf why 8?
         val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
         tv_title.maxWidth = titleWidth
 
@@ -209,7 +209,7 @@ class ArticleItemView @JvmOverloads constructor(
         val centerBetweenBarriers = barrierTop + (barrierBottom - barrierTop) / 2
 
         val titleLeft = left
-        val titleRight = titleLeft + tv_title.measuredWidth//right - posterAndCategorySize - spacing_8 //TODO wtf why 8?
+        val titleRight = titleLeft + tv_title.measuredWidth//right - posterAndCategorySize - spacing_8
         val titleTop = centerBetweenBarriers - tv_title.measuredHeight / 2
         val titleBottom = titleTop + tv_title.measuredHeight
         tv_title.layout(titleLeft, titleTop, titleRight, titleBottom)
