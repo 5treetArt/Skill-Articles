@@ -154,13 +154,13 @@ class ArticleItemView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
-        val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - context.dpToIntPx(36) //TODO wtf why 8?
+        val titleWidth = width/* - paddingLeft - paddingRight*/ - posterAndCategorySize - context.dpToIntPx(8) //TODO wtf why 8?
         val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
-        tv_title.maxWidth = titleWidth
+        //tv_title.maxWidth = titleWidth
 
         measureChild(tv_date, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)
-        measureChild(tv_title, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_title, titleWms, heightMeasureSpec)
         measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_likes_count, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_comments_count, widthMeasureSpec, heightMeasureSpec)
