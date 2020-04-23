@@ -56,7 +56,6 @@ class ArticleItemView @JvmOverloads constructor(
         setPadding(spacing_16)
 
         tv_date = TextView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
             textSize = smallTextSize
         }
@@ -64,7 +63,6 @@ class ArticleItemView @JvmOverloads constructor(
 
         tv_author = TextView(context).apply {
             id = R.id.tv_author
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorPrimary))
             textSize = smallTextSize
         }
@@ -72,27 +70,21 @@ class ArticleItemView @JvmOverloads constructor(
 
         tv_title = TextView(context).apply {
             id = R.id.tv_title
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorPrimary))
             textSize = bigTextSize
-            typeface = Typeface.DEFAULT_BOLD
-            //setTypeface(this.typeface, Typeface.BOLD)
+            setTypeface(this.typeface, Typeface.BOLD)
         }
         addView(tv_title)
 
         iv_poster = ImageView(context).apply {
             id = R.id.iv_poster
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
         addView(iv_poster)
 
-        iv_category = ImageView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        }
+        iv_category = ImageView(context)
         addView(iv_category)
 
         tv_description = TextView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.attrValue(R.attr.colorOnBackground))
             textSize = regularTextSize
             id = R.id.tv_description
@@ -100,7 +92,6 @@ class ArticleItemView @JvmOverloads constructor(
         addView(tv_description)
 
         iv_likes = ImageView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.ic_favorite_black_24dp)
             setColorFilter(
                 context.getColor(R.color.color_gray),
@@ -110,14 +101,12 @@ class ArticleItemView @JvmOverloads constructor(
         addView(iv_likes)
 
         tv_likes_count = TextView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
             textSize = smallTextSize
         }
         addView(tv_likes_count)
 
         iv_comments = ImageView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.ic_insert_comment_black_24dp)
             setColorFilter(
                 context.getColor(R.color.color_gray),
@@ -127,7 +116,6 @@ class ArticleItemView @JvmOverloads constructor(
         addView(iv_comments)
 
         tv_comments_count = TextView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
             textSize = smallTextSize
         }
@@ -135,14 +123,12 @@ class ArticleItemView @JvmOverloads constructor(
 
         tv_read_duration = TextView(context).apply {
             id = R.id.tv_read_duration
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setTextColor(context.getColor(R.color.color_gray))
             textSize = smallTextSize
         }
         addView(tv_read_duration)
 
         iv_bookmark = ImageView(context).apply {
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.bookmark_states)
             setColorFilter(
                 context.getColor(R.color.color_gray),
@@ -154,9 +140,8 @@ class ArticleItemView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
-        val titleWidth = width/* - paddingLeft - paddingRight*/ - posterAndCategorySize - context.dpToIntPx(8) //TODO wtf why 8?
+        val titleWidth = width - posterAndCategorySize - spacing_8 //TODO wtf why 8?
         val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
-        //tv_title.maxWidth = titleWidth
 
         measureChild(tv_date, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)
