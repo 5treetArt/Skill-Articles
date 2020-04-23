@@ -154,7 +154,7 @@ class ArticleItemView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
-        val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - spacing_4 //TODO wtf why 8?
+        val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - context.dpToIntPx(24) //TODO wtf why 8?
         val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
         tv_title.maxWidth = titleWidth
 
