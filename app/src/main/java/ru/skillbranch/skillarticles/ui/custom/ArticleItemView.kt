@@ -161,7 +161,7 @@ class ArticleItemView @JvmOverloads constructor(
 
         measureChild(tv_date, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)
-        measureChild(tv_title, titleWms, heightMeasureSpec)
+        measureChild(tv_title, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_likes_count, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_comments_count, widthMeasureSpec, heightMeasureSpec)
