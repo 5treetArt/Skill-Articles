@@ -25,9 +25,9 @@ class ArticleItemView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
-    private val spacingUnit_4 = context.dpToIntPx(4)
-    private val spacingUnit_8 = context.dpToIntPx(8)
-    private val spacingUnit_16 = context.dpToIntPx(16)
+    private val spacing_4 = context.dpToIntPx(4)
+    private val spacing_8 = context.dpToIntPx(8)
+    private val spacing_16 = context.dpToIntPx(16)
 
     private val posterSize = context.dpToIntPx(64)
     private val cornerRadius = context.dpToIntPx(8)
@@ -53,7 +53,7 @@ class ArticleItemView @JvmOverloads constructor(
     private val bigTextSize = 18f
 
     init {
-        setPadding(spacingUnit_16)
+        setPadding(spacing_16)
 
         tv_date = TextView(context).apply {
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
@@ -155,39 +155,33 @@ class ArticleItemView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
         val bodyWidth = width - paddingLeft - paddingRight
-        var usedHeight = paddingTop
+        val titleWidth = bodyWidth - posterAndCategorySize - spacing_8
+        val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
+        tv_title.maxWidth = titleWidth
 
         measureChild(tv_date, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)
-        usedHeight += max(tv_date.measuredHeight, tv_author.measuredHeight)
-
-        val titleWidth = bodyWidth - posterAndCategorySize - spacingUnit_8
-        val titleWms = MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.AT_MOST)
-        // val titleHms = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
         measureChild(tv_title, titleWms, heightMeasureSpec)
-        usedHeight += spacingUnit_8
-        usedHeight += max(
-            tv_title.measuredHeight/* + spacingUnit_8*/,
-            posterAndCategorySize
-        )
-        usedHeight += spacingUnit_8
-
         measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)
-        usedHeight += tv_description.measuredHeight
-        usedHeight += spacingUnit_8
-
         measureChild(tv_likes_count, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_comments_count, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_read_duration, widthMeasureSpec, heightMeasureSpec)
 
+        var usedHeight = paddingTop
+        usedHeight += max(tv_date.measuredHeight, tv_author.measuredHeight)
+        usedHeight += spacing_8
+        usedHeight += max(tv_title.measuredHeight, posterAndCategorySize)
+        usedHeight += spacing_8
+        usedHeight += tv_description.measuredHeight
+        usedHeight += spacing_8
         usedHeight += listOf(
             tv_likes_count.measuredHeight,
             tv_comments_count.measuredHeight,
             tv_read_duration.measuredHeight,
             iconSize
         ).max() ?: 0
-
         usedHeight += paddingBottom
+
         setMeasuredDimension(width, usedHeight)
     }
 
@@ -202,7 +196,7 @@ class ArticleItemView @JvmOverloads constructor(
         val dateBottom = dateTop + tv_date.measuredHeight
         tv_date.layout(dateLeft, dateTop, dateRight, dateBottom)
 
-        val authorLeft = dateRight + spacingUnit_16
+        val authorLeft = dateRight + spacing_16
         val authorRight = right
         val authorTop = paddingTop
         val authorBottom = authorTop + tv_author.measuredHeight
@@ -210,17 +204,13 @@ class ArticleItemView @JvmOverloads constructor(
 
         val barrierTop = max(dateBottom, authorBottom)
         val barrierBottom = barrierTop +
-                spacingUnit_8 +
-                max(
-                    tv_title.measuredHeight,// + spacingUnit_8,
-                    posterAndCategorySize
-                ) +
-                spacingUnit_8
+                spacing_8 +
+                max(tv_title.measuredHeight, posterAndCategorySize) +
+                spacing_8
         val centerBetweenBarriers = barrierTop + (barrierBottom - barrierTop) / 2
 
-        //val titleWidth = width - paddingLeft - paddingRight - posterAndCategorySize - spacingUnit_8 //TODO wtf why 8?
         val titleLeft = left
-        val titleRight = /*titleLeft + titleWidth*/ right - posterAndCategorySize - spacingUnit_8
+        val titleRight = right - posterAndCategorySize - spacing_8 //TODO wtf why 8?
         val titleTop = centerBetweenBarriers - tv_title.measuredHeight / 2
         val titleBottom = titleTop + tv_title.measuredHeight
         tv_title.layout(titleLeft, titleTop, titleRight, titleBottom)
@@ -243,7 +233,7 @@ class ArticleItemView @JvmOverloads constructor(
         val descriptionBottom = barrierBottom + tv_description.measuredHeight
         tv_description.layout(descriptionLeft, descriptionTop, descriptionRight, descriptionBottom)
 
-        val descriptionBottomWithSpacing = barrierBottom + tv_description.measuredHeight + spacingUnit_8
+        val descriptionBottomWithSpacing = descriptionBottom + spacing_8
 
         val likesLeft = left
         val likesRight = likesLeft + iconSize
@@ -251,19 +241,19 @@ class ArticleItemView @JvmOverloads constructor(
         val likesBottom = likesTop + iconSize
         iv_likes.layout(likesLeft, likesTop, likesRight, likesBottom)
 
-        val likesCountLeft = likesRight + spacingUnit_8
+        val likesCountLeft = likesRight + spacing_8
         val likesCountRight = likesCountLeft + tv_likes_count.measuredWidth
         val likesCountTop = descriptionBottomWithSpacing
         val likesCountBottom = likesCountTop + tv_likes_count.measuredHeight
         tv_likes_count.layout(likesCountLeft, likesCountTop, likesCountRight, likesCountBottom)
 
-        val commentsLeft = likesCountRight + spacingUnit_16
+        val commentsLeft = likesCountRight + spacing_16
         val commentsRight = commentsLeft + iconSize
         val commentsTop = descriptionBottomWithSpacing
         val commentsBottom = commentsTop + iconSize
         iv_comments.layout(commentsLeft, commentsTop, commentsRight, commentsBottom)
 
-        val commentCountLeft = commentsRight + spacingUnit_8
+        val commentCountLeft = commentsRight + spacing_8
         val commentsCountRight = commentCountLeft + tv_comments_count.measuredWidth
         val commentsCountTop = descriptionBottomWithSpacing
         val commentsCountBottom = commentsCountTop + tv_comments_count.measuredHeight
@@ -275,8 +265,8 @@ class ArticleItemView @JvmOverloads constructor(
         val bookmarkBottom = bookmarkTop + iconSize
         iv_bookmark.layout(bookmarkLeft, bookmarkTop, bookmarkRight, bookmarkBottom)
 
-        val readDurationLeft = commentsCountRight + spacingUnit_16
-        val readDurationRight = bookmarkLeft - spacingUnit_16
+        val readDurationLeft = commentsCountRight + spacing_16
+        val readDurationRight = bookmarkLeft - spacing_16
         val readDurationTop = descriptionBottomWithSpacing
         val readDurationBottom = readDurationTop + tv_read_duration.measuredHeight
         tv_read_duration.layout(readDurationLeft, readDurationTop, readDurationRight, readDurationBottom)
