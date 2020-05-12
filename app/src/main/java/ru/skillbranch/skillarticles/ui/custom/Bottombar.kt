@@ -1,5 +1,6 @@
 package ru.skillbranch.skillarticles.ui.custom
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
@@ -48,9 +49,14 @@ class Bottombar @JvmOverloads constructor(
         }
     }
 
-    fun show() {}
+    fun show() {
+        ObjectAnimator.ofFloat(this, "translationY", 0f).start()
+    }
 
-    fun hide() {}
+    fun hide() {
+
+        ObjectAnimator.ofFloat(this, "translationY", height.toFloat()).start()
+    }
 
     fun setSearchState(search: Boolean) {
         if (isSearchMode == search || !isAttachedToWindow) return
