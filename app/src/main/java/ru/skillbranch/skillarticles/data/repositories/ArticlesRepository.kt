@@ -19,6 +19,12 @@ object ArticlesRepository {
     fun searchArticles(searchQuery: String) =
         ArticlesDataFactory(ArticleStrategy.SearchArticle(::findArticlesByTitle, searchQuery))
 
+    fun allBookmark() =
+        ArticlesDataFactory(ArticleStrategy.BookmarkArticles(::findArticlesBookmark))
+
+    fun searchBookmark(searchQuery: String) =
+        ArticlesDataFactory(ArticleStrategy.SearchBookmark(::findBookmarkArticlesByTitle, searchQuery))
+
     private fun findArticlesByRange(start: Int, size: Int) = local.localArticleItems
         .drop(start)
         .take(size)
@@ -26,6 +32,20 @@ object ArticlesRepository {
     private fun findArticlesByTitle(start: Int, size: Int, queryTitle: String) = local.localArticleItems
         .asSequence()
         .filter { it.title.contains(queryTitle, true) }
+        .drop(start)
+        .take(size)
+        .toList()
+
+    private fun findArticlesBookmark(start: Int, size: Int) = local.localArticleItems
+        .asSequence()
+        .filter { it.isBookmark }
+        .drop(start)
+        .take(size)
+        .toList()
+
+    private fun findBookmarkArticlesByTitle(start: Int, size: Int, queryTitle: String) = local.localArticleItems
+        .asSequence()
+        .filter { it.isBookmark && it.title.contains(queryTitle, true) }
         .drop(start)
         .take(size)
         .toList()
@@ -38,6 +58,19 @@ object ArticlesRepository {
     fun insertArticlesToDb(articles: List<ArticleItemData>) {
         local.localArticleItems.addAll(articles)
             .apply { sleep(100) }
+    }
+
+    fun updateBookmark(articleId: String, bookmark: Boolean) {
+
+        val articleItemIndex = local.localArticleItems
+            .indexOfFirst { it.id == articleId }
+            .takeIf { it != -1 }
+            ?: error("Local article with id: $articleId not found")
+        local.localArticleItems[articleItemIndex] = local.localArticleItems[articleItemIndex].copy(isBookmark = bookmark)
+
+        val old =
+            local.localArticles[articleId]?.value ?: error("Local article with id: $articleId not found")
+        local.localArticles[articleId]!!.postValue(old)
     }
 }
 
@@ -87,5 +120,19 @@ sealed class ArticleStrategy() {
             itemProvider(start, size, query)
     }
 
-    //TODO bookmarks Strategy
+    class BookmarkArticles(
+        private val itemProvider: (Int, Int) -> List<ArticleItemData>
+    ) : ArticleStrategy() {
+        override fun getItems(start: Int, size: Int): List<ArticleItemData> =
+            itemProvider(start, size)
+    }
+
+    class SearchBookmark(
+        private val itemProvider: (Int, Int, String) -> List<ArticleItemData>,
+        private val query: String
+    ) : ArticleStrategy() {
+        override fun getItems(start: Int, size: Int): List<ArticleItemData> =
+            itemProvider(start, size, query)
+    }
+
 }

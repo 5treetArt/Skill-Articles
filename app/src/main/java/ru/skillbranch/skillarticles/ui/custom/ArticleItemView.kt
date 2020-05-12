@@ -359,7 +359,7 @@ class ArticleItemView @JvmOverloads constructor(
         )*/
     }
 
-    fun bind(item: ArticleItemData, toggleBookmarkListener: (String, Boolean) -> Unit) {
+    fun bind(item: ArticleItemData, toggleBookmarkListener: (articleId: String, isBookmark: Boolean) -> Unit) {
         tv_date.text = item.date.format()
         tv_author.text = item.author
         tv_title.text = item.title
