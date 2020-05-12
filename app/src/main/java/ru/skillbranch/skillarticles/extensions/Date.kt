@@ -3,17 +3,22 @@ package ru.skillbranch.skillarticles.extensions
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
-    val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
-    return dateFormat.format(this)
-}
-
-
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
 const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 
+fun Date.format(pattern:String="HH:mm:ss dd.MM.yy"):String =
+    SimpleDateFormat(pattern, Locale("ru")).format(this)
+
+fun Date.add(value:Int, units: TimeUnits = TimeUnits.SECOND):Date = apply{
+    this.time += when(units){
+        TimeUnits.SECOND-> value * SECOND
+        TimeUnits.MINUTE-> value * MINUTE
+        TimeUnits.HOUR-> value * HOUR
+        TimeUnits.DAY-> value * DAY
+    }
+}
 
 fun Date.humanizeDiff(date: Date = Date()): String {
 
@@ -26,7 +31,17 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     }
 }
 
-private fun getFormat(diff: Long): String = if (diff >= 0) "%s назад" else "через %s"
+fun Date.shortFormat(): String? {
+    val pattern = if (this.isSameDay(Date())) "HH:mm" else "dd.MM.yy"
+    return format(pattern)
+}
+
+fun Date.isSameDay(date: Date): Boolean = this.time/ DAY == date.time/ DAY
+
+private fun getFormat(diff: Long): String = when (diff) {
+    in 0..Long.MAX_VALUE -> "%s назад"
+    else -> "через %s"
+}
 
 private fun toUnitsString(millis: Long): String = when(millis) {
     in (1 * SECOND)..(45 * SECOND) -> "несколько секунд"
@@ -38,7 +53,6 @@ private fun toUnitsString(millis: Long): String = when(millis) {
     in (26 * HOUR)..(360 * DAY) -> TimeUnits.DAY.pluralMillis(millis)
     else -> ""
 }
-
 
 enum class TimeUnits{
     SECOND,

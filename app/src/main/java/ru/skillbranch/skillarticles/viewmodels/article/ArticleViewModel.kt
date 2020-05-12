@@ -209,15 +209,15 @@ class ArticleViewModel(
             .build()
     }
 
-    fun handleCommentFocus(hasFocus: Boolean) {
+    override fun handleCommentFocus(hasFocus: Boolean) {
         updateState { it.copy(showBottomBar = !hasFocus) }
     }
 
-    fun handleClearComment() {
+    override fun handleClearComment() {
         updateState { it.copy(answerTo = null, answerToSlug = null) }
     }
 
-    fun handleReplyTo(slug: String, name: String) {
+    override fun handleReplyTo(slug: String, name: String) {
         updateState { it.copy(answerToSlug = slug, answerTo = "Reply to $name") }
     }
 }
