@@ -48,6 +48,10 @@ class Bottombar @JvmOverloads constructor(
         }
     }
 
+    fun show() {}
+
+    fun hide() {}
+
     fun setSearchState(search: Boolean) {
         if (isSearchMode == search || !isAttachedToWindow) return
         isSearchMode = search
