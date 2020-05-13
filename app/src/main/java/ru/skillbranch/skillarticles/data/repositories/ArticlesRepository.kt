@@ -62,14 +62,16 @@ object ArticlesRepository {
 
     fun updateBookmark(articleId: String, bookmark: Boolean) {
 
+        val old = local.findArticle(articleId).value ?: error("Local article with id: $articleId not found")
+
         val articleItemIndex = local.localArticleItems
             .indexOfFirst { it.id == articleId }
             .takeIf { it != -1 }
             ?: error("Local article with id: $articleId not found")
         local.localArticleItems[articleItemIndex] = local.localArticleItems[articleItemIndex].copy(isBookmark = bookmark)
 
-        val old =
-            local.localArticles[articleId]?.value ?: error("Local article with id: $articleId not found")
+        //val old =
+        //    local.localArticles[articleId]?.value ?: error("Local article with id: $articleId not found")
         local.localArticles[articleId]!!.postValue(old)
     }
 }

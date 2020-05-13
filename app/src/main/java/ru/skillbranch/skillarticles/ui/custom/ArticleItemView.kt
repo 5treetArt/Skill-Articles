@@ -381,6 +381,6 @@ class ArticleItemView @JvmOverloads constructor(
         tv_comments_count.text = "${item.commentCount}"
         tv_read_duration.text = "${item.readDuration} min read"
         iv_bookmark.isChecked = item.isBookmark
-        iv_bookmark.setOnClickListener { toggleBookmarkListener.invoke(item.id, item.isBookmark) }
+        iv_bookmark.setOnClickListener { toggleBookmarkListener.invoke(item.id, !item.isBookmark) }
     }
 }
