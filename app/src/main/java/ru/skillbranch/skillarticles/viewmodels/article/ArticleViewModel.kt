@@ -214,11 +214,15 @@ class ArticleViewModel(
     }
 
     override fun handleClearComment() {
-        updateState { it.copy(answerTo = null, answerToSlug = null) }
+        updateState { it.copy(answerTo = null, answerToSlug = null, comment = null) }
     }
 
     override fun handleReplyTo(slug: String, name: String) {
         updateState { it.copy(answerToSlug = slug, answerTo = "Reply to $name") }
+    }
+
+    fun handleCommentChanged(comment: String) {
+        updateState { it.copy(comment = comment) }
     }
 }
 
@@ -243,6 +247,7 @@ data class ArticleState(
     val author: Any? = null,
     val poster: String? = null,
     val content: List<MarkdownElement> = emptyList(),
+    val comment: String? = null,
     val commentsCount: Int = 0,
     val answerTo: String? = null,
     val answerToSlug: String? = null,
