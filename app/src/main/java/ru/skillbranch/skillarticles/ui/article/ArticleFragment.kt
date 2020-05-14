@@ -21,9 +21,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions.circleCropTransform
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_article.*
-import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_bottombar.view.*
-import kotlinx.android.synthetic.main.layout_submenu.*
 import kotlinx.android.synthetic.main.layout_submenu.view.*
 import kotlinx.android.synthetic.main.layout_search_view.*
 import ru.skillbranch.skillarticles.R
@@ -121,7 +119,7 @@ class  ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
         et_comment.setOnEditorActionListener { view, _, _ ->
             root.hideKeyboard(view)
             viewModel.handleSendComment(view.text.toString())
-            view.text = null
+            //view.text = null
             view.clearFocus()
             true
         }
@@ -295,6 +293,10 @@ class  ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
             if (it.isNotEmpty()) setupCopyListener()
         }
 
+        var clearComment by RenderProp("", false) {
+            if (it == "") et_comment.text = null
+        }
+
         private var answerTo by RenderProp("Comment") { wrap_comments.hint = it }
         private var isShowBottombar by RenderProp(true) {
             if(it) bottombar.show() else bottombar.hide()
@@ -302,7 +304,6 @@ class  ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
         }
 
         override val afterInflated: (() -> Unit)? = {
-            et_comment.setText(viewModel.currentState.comment)
 
             dependsOn<Boolean, Boolean, List<Pair<Int, Int>>, Int>(
                 ::isLoadingContent,
@@ -339,6 +340,7 @@ class  ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
             searchResults = data.searchResults
             answerTo = data.answerTo ?: "Comment"
             isShowBottombar = data.showBottomBar
+            clearComment = data.comment ?: ""
         }
 
         override fun saveUi(outState: Bundle) {

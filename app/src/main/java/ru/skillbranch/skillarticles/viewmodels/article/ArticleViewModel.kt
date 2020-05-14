@@ -181,11 +181,14 @@ class ArticleViewModel(
     }
 
     override fun handleSendComment(comment: String) {
-        if (!currentState.isAuth) navigate(NavigationCommand.StartLogin())
+        if (!currentState.isAuth) {
+            navigate(NavigationCommand.StartLogin())
+        }
         else {
             viewModelScope.launch {
                 repository.sendComment(articleId, comment, currentState.answerToSlug)
                 withContext(Dispatchers.Main) {
+                    handleClearComment()
                     updateState { it.copy(answerTo = null, answerToSlug = null) }
                 }
             }
