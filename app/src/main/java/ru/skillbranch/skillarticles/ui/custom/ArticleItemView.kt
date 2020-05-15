@@ -147,12 +147,12 @@ class ArticleItemView @JvmOverloads constructor(
         //TODO calc author width like "width - (tv_date.measuredWidth + 3 * defaultPadding)"
 
         measureChild(tv_date, widthMeasureSpec, heightMeasureSpec)
-        measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_author, widthMeasureSpec, heightMeasureSpec)        //TODO measure author correctly(check width)?
         measureChild(tv_title, titleWms, heightMeasureSpec)
-        measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_description, widthMeasureSpec, heightMeasureSpec)        //TODO measure description correctly(check width)?
         measureChild(tv_likes_count, widthMeasureSpec, heightMeasureSpec)
         measureChild(tv_comments_count, widthMeasureSpec, heightMeasureSpec)
-        measureChild(tv_read_duration, widthMeasureSpec, heightMeasureSpec)
+        measureChild(tv_read_duration, widthMeasureSpec, heightMeasureSpec)        //TODO measure read duration correctly(check width)?
 
         var usedHeight = paddingTop
         usedHeight += max(tv_date.measuredHeight, tv_author.measuredHeight)
@@ -197,7 +197,7 @@ class ArticleItemView @JvmOverloads constructor(
         val centerBetweenBarriers = barrierTop + (barrierBottom - barrierTop) / 2
 
         val titleLeft = left
-        val titleRight = titleLeft + tv_title.measuredWidth//right - posterAndCategorySize - spacing_8
+        val titleRight = titleLeft + tv_title.measuredWidth
         val titleTop = centerBetweenBarriers - tv_title.measuredHeight / 2
         val titleBottom = titleTop + tv_title.measuredHeight
         tv_title.layout(titleLeft, titleTop, titleRight, titleBottom)

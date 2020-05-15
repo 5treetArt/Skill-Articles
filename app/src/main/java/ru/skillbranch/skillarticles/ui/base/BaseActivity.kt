@@ -144,6 +144,7 @@ class ToolbarBuilder() {
         with(context.toolbar) {
             if (this@ToolbarBuilder.title != null) title = this@ToolbarBuilder.title
             subtitle = this@ToolbarBuilder.subtitle
+            visibility = if (this@ToolbarBuilder.visibility) View.VISIBLE else View.GONE
             if (this@ToolbarBuilder.logo != null) {
                 val logoSize = context.dpToIntPx(40)
                 val logoMargin = context.dpToIntPx(16)
