@@ -12,7 +12,6 @@ import ru.skillbranch.skillarticles.ui.custom.spans.UnderlineSpan
 import ru.skillbranch.skillarticles.viewmodels.auth.AuthViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 
-//TODO вычищать из бэкстека, если авторизация уже прошла
 class AuthFragment : BaseFragment<AuthViewModel>() {
     override val viewModel: AuthViewModel by viewModels()
     override val layout = R.layout.fragment_auth

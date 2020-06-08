@@ -117,9 +117,8 @@ class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>
     }
 
     fun handleToggleBookmark(articleId: String, isBookmark: Boolean) {
-        updateState { it.copy(isLoading = true) }
         repository.updateBookmark(articleId, isBookmark)
-        updateState { it.copy(isLoading = false) }
+        listData.value?.dataSource?.invalidate()
     }
 }
 

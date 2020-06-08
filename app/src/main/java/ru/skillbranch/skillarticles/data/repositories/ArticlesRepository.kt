@@ -25,6 +25,24 @@ object ArticlesRepository {
     fun searchBookmark(searchQuery: String) =
         ArticlesDataFactory(ArticleStrategy.SearchBookmark(::findBookmarkArticlesByTitle, searchQuery))
 
+    fun loadArticlesFromNetwork(start: Int, size: Int): List<ArticleItemData> = network.networkArticleItems
+        .drop(start)
+        .take(size)
+        .apply { sleep(500) }
+
+    fun insertArticlesToDb(articles: List<ArticleItemData>) {
+        local.localArticleItems.addAll(articles)
+            .apply { sleep(100) }
+    }
+
+    fun updateBookmark(articleId: String, bookmark: Boolean) {
+        val articleItemIndex = local.localArticleItems
+            .indexOfFirst { it.id == articleId }
+            .takeIf { it != -1 }
+            ?: error("Local article with id: $articleId not found")
+        local.localArticleItems[articleItemIndex] = local.localArticleItems[articleItemIndex].copy(isBookmark = bookmark)
+    }
+
     private fun findArticlesByRange(start: Int, size: Int) = local.localArticleItems
         .drop(start)
         .take(size)
@@ -49,31 +67,6 @@ object ArticlesRepository {
         .drop(start)
         .take(size)
         .toList()
-
-    fun loadArticlesFromNetwork(start: Int, size: Int): List<ArticleItemData> = network.networkArticleItems
-        .drop(start)
-        .take(size)
-        .apply { sleep(500) }
-
-    fun insertArticlesToDb(articles: List<ArticleItemData>) {
-        local.localArticleItems.addAll(articles)
-            .apply { sleep(100) }
-    }
-
-    fun updateBookmark(articleId: String, bookmark: Boolean) {
-
-        val old = local.findArticle(articleId).value ?: error("Local article with id: $articleId not found")
-
-        val articleItemIndex = local.localArticleItems
-            .indexOfFirst { it.id == articleId }
-            .takeIf { it != -1 }
-            ?: error("Local article with id: $articleId not found")
-        local.localArticleItems[articleItemIndex] = local.localArticleItems[articleItemIndex].copy(isBookmark = bookmark)
-
-        //val old =
-        //    local.localArticles[articleId]?.value ?: error("Local article with id: $articleId not found")
-        local.localArticles[articleId]!!.postValue(old)
-    }
 }
 
 class ArticlesDataFactory(val strategy: ArticleStrategy) :
