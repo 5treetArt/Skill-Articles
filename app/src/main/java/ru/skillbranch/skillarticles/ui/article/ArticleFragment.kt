@@ -138,7 +138,7 @@ class  ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
             adapter = commentsAdapter
         }
 
-        viewModel.observeList(viewLifecycleOwner) {commentsAdapter.submitList(it)}
+        viewModel.observeList(viewLifecycleOwner) { commentsAdapter.submitList(it) }
     }
 
     override fun onDestroyView() {
