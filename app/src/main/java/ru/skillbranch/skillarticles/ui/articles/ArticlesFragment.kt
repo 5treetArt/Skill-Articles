@@ -10,7 +10,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_articles.*
-import kotlinx.android.synthetic.main.search_view_layout.view.*
+import kotlinx.android.synthetic.main.layout_search_view.view.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.ui.base.BaseFragment
 import ru.skillbranch.skillarticles.ui.base.Binding
@@ -34,7 +34,7 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
                 "Search",
                 R.id.action_search,
                 R.drawable.ic_search_black_24dp,
-                R.layout.search_view_layout
+                R.layout.layout_search_view
             )
         )
     }
