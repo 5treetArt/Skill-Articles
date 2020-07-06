@@ -28,8 +28,8 @@ class HeaderSpan constructor(
 ) :
     MetricAffectingSpan(), LineHeightSpan, LeadingMarginSpan {
 
-    var topExtraPadding: Int = 0
-    var bottomExtraPadding: Int = 0
+    var topExtraPadding = 0
+    var bottomExtraPadding = 0
 
     lateinit var firstLineBounds: IntRange
     lateinit var lastLineBounds: IntRange
@@ -96,7 +96,6 @@ class HeaderSpan constructor(
             isFakeBoldText = true
             color = textColor
         }
-
     }
 
     override fun drawLeadingMargin(
@@ -104,7 +103,7 @@ class HeaderSpan constructor(
         lineTop: Int, lineBaseline: Int, lineBottom: Int, text: CharSequence?, lineStart: Int,
         lineEnd: Int, isFirstLine: Boolean, layout: Layout?
     ) {
-        //For 1 or 2 level or last line
+        //for 1 or 2 level and last line
         if ((level == 1 || level == 2) && (text as Spanned).getSpanEnd(this) == lineEnd) {
             paint.forLine {
                 val lh = (paint.descent() - paint.ascent()) * sizes.getOrElse(level) { 1f }
@@ -119,7 +118,7 @@ class HeaderSpan constructor(
                 )
             }
         }
-        //canvas.drawFontlines(lineTop, lineBottom, lineBaseline, paint)
+        //canvas.drawFontLines(lineTop, lineBottom, lineBaseline, paint)
     }
 
     override fun getLeadingMargin(first: Boolean): Int {
@@ -141,17 +140,18 @@ class HeaderSpan constructor(
         style = oldStyle
         strokeWidth = oldWidth
     }
-}
 
-private fun Canvas.drawFontlines(
-    top: Int,
-    bottom: Int,
-    baseline: Int,
-    paint: Paint
-) {
-    drawLine(0f, top + 0f, width + 0f, top + 0f, Paint().apply { color = Color.BLUE })
-    drawLine(0f, bottom + 0f, width + 0f, bottom + 0f, Paint().apply { color = Color.GREEN })
-    drawLine(0f, baseline + 0f, width + 0f, baseline + 0f, Paint().apply { color = Color.RED })
-    drawLine(0f, paint.ascent() + baseline + 0f, width + 0f, paint.ascent() + baseline + 0f, Paint().apply { color = Color.BLACK })
-    drawLine(0f, paint.descent() + baseline + 0f, width + 0f, paint.descent() + baseline + 0f, Paint().apply { color = Color.MAGENTA })
+    private fun Canvas.drawFontLines(
+        top: Int,
+        bottom: Int,
+        lineBaseline: Int,
+        paint: Paint
+    ) {
+        drawLine(0f, top + 0f, width + 0f, top + 0f, Paint().apply { color = Color.BLUE })
+        drawLine(0f, bottom + 0f, width + 0f, bottom + 0f, Paint().apply { color = Color.GREEN })
+        drawLine(0f,lineBaseline + 0f,width + 0f,lineBaseline + 0f,Paint().apply { color = Color.RED })
+//        drawLine(0f,paint.ascent() + lineBaseline,width + 0f,paint.ascent() + lineBaseline,Paint().apply { color = Color.BLACK })
+//        drawLine(0f,paint.descent() + lineBaseline,width + 0f,paint.descent() + lineBaseline,Paint().apply { color = Color.MAGENTA })
+    }
+
 }

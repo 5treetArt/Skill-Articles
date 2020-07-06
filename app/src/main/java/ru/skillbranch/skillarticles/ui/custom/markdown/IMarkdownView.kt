@@ -1,12 +1,10 @@
 package ru.skillbranch.skillarticles.ui.custom.markdown
 
-import android.text.ParcelableSpan
 import android.text.Spannable
 import android.text.SpannableString
 import androidx.core.text.getSpans
 import ru.skillbranch.skillarticles.ui.custom.spans.SearchFocusSpan
 import ru.skillbranch.skillarticles.ui.custom.spans.SearchSpan
-import java.lang.Exception
 
 interface IMarkdownView {
     var fontSize: Float
@@ -30,9 +28,9 @@ interface IMarkdownView {
                 )
             }
         } catch (e: Exception) {
+
         }
     }
-
 
     fun renderSearchPosition(
         searchPosition: Pair<Int, Int>,
@@ -47,11 +45,7 @@ interface IMarkdownView {
         )
     }
 
-    fun clearSearchResult() {
-        spannableContent.removeSpans<SearchSpan>()
-    }
-
-    private inline fun <reified T : ParcelableSpan> Spannable.removeSpans() {
-        getSpans<T>().forEach { removeSpan(it) }
+    fun clearSearchResult(){
+        spannableContent.getSpans<SearchSpan>().forEach { spannableContent.removeSpan(it) }
     }
 }

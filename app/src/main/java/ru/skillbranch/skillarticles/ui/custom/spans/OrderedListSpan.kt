@@ -28,13 +28,18 @@ class OrderedListSpan(
         lineEnd: Int, isFirstLine: Boolean, layout: Layout?
     ) {
         if (isFirstLine) {
-            paint.forText {
-                canvas.drawText(order, currentMarginLocation + gapWidth, lineBaseline.toFloat(), paint)
+            paint.withCustomColor {
+                canvas.drawText(
+                    order,
+                    currentMarginLocation + gapWidth,
+                    lineBaseline.toFloat(),
+                    paint
+                )
             }
         }
     }
 
-    private inline fun Paint.forText(block: () -> Unit) {
+    private inline fun Paint.withCustomColor(block: () -> Unit) {
         val oldColor = color
 
         color = orderColor

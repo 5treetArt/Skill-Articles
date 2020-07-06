@@ -11,6 +11,7 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.children
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
@@ -19,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions.circleCropTransform
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import kotlinx.android.synthetic.main.activity_root.*
+import kotlinx.android.synthetic.main.activity_root.view.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
@@ -112,11 +114,6 @@ class ToolbarBuilder() {
         return this
     }
 
-    fun setVisibility(isVisible: Boolean): ToolbarBuilder {
-        this.visibility = isVisible
-        return this
-    }
-
     fun addMenuItem(item: MenuItemHolder): ToolbarBuilder {
         this.items.add(item)
         return this
@@ -144,16 +141,15 @@ class ToolbarBuilder() {
         with(context.toolbar) {
             if (this@ToolbarBuilder.title != null) title = this@ToolbarBuilder.title
             subtitle = this@ToolbarBuilder.subtitle
-            visibility = if (this@ToolbarBuilder.visibility) View.VISIBLE else View.GONE
             if (this@ToolbarBuilder.logo != null) {
                 val logoSize = context.dpToIntPx(40)
                 val logoMargin = context.dpToIntPx(16)
                 val logoPlaceholder = getDrawable(context, R.drawable.logo_placeholder)
 
                 logo = logoPlaceholder
-
-                val logo = children.last() as? ImageView
-                if (logo != null) {
+                toolbar.logoDescription = "logo"
+                toolbar.doOnNextLayout {
+                    val logo =children.filter { it.contentDescription == "logo" }.first() as ImageView
                     logo.scaleType = ImageView.ScaleType.CENTER_CROP
                     (logo.layoutParams as? Toolbar.LayoutParams)?.let {
                         it.width = logoSize
@@ -217,7 +213,9 @@ class BottombarBuilder() {
                 val view = context.container.findViewById<View>(it)
                 context.container.removeView(view)
             }
+
             tempViews.clear()
+//            context.clearFindViewByIdCache()
         }
 
         //add new bottom bar views
@@ -236,6 +234,7 @@ class BottombarBuilder() {
             ((layoutParams as CoordinatorLayout.LayoutParams).behavior as HideBottomViewOnScrollBehavior)
                 .slideUp(this)
         }
+
     }
 
 }

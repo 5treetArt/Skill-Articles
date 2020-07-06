@@ -3,7 +3,6 @@ package ru.skillbranch.skillarticles.ui.custom
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Typeface
-import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -16,18 +15,15 @@ import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.models.ArticleItemData
 import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
-import ru.skillbranch.skillarticles.extensions.format
+import ru.skillbranch.skillarticles.extensions.shortFormat
 import kotlin.math.max
 
+class ArticleItemView constructor(
+    context: Context
+) : ViewGroup(context, null, 0) {
 
-class ArticleItemView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : ViewGroup(context, attrs, defStyleAttr) {
-
-    private val spacing_8 = context.dpToIntPx(8)
     private val spacing_16 = context.dpToIntPx(16)
+    private val spacing_8 = context.dpToIntPx(8)
 
     private val posterSize = context.dpToIntPx(64)
     private val cornerRadius = context.dpToIntPx(8)
@@ -56,17 +52,17 @@ class ArticleItemView @JvmOverloads constructor(
 
     init {
         setPadding(spacing_16)
-
         tv_date = TextView(context).apply {
             id = R.id.tv_date
-            setTextColor(context.getColor(R.color.color_gray))
+            setTextColor(grayColor)
             textSize = smallTextSize
         }
+
         addView(tv_date)
 
         tv_author = TextView(context).apply {
             id = R.id.tv_author
-            setTextColor(context.attrValue(R.attr.colorPrimary))
+            setTextColor(primaryColor)
             textSize = smallTextSize
         }
         addView(tv_author)
@@ -75,7 +71,7 @@ class ArticleItemView @JvmOverloads constructor(
             id = R.id.tv_title
             setTextColor(context.attrValue(R.attr.colorPrimary))
             textSize = bigTextSize
-            setTypeface(this.typeface, Typeface.BOLD)
+            setTypeface(typeface, Typeface.BOLD)
         }
         addView(tv_title)
 
@@ -257,110 +253,10 @@ class ArticleItemView @JvmOverloads constructor(
         val readDurationTop = descriptionBottomWithSpacing
         val readDurationBottom = readDurationTop + tv_read_duration.measuredHeight
         tv_read_duration.layout(readDurationLeft, readDurationTop, readDurationRight, readDurationBottom)
-
-
-/*        var usedHeight = paddingTop
-        val bodyWidth = right - left - paddingLeft - paddingRight
-        var left = paddingLeft
-
-        tv_date.layout(
-            left,
-            usedHeight,
-            left + tv_date.measuredWidth,
-            usedHeight + tv_date.measuredHeight
-        )
-        left = tv_date.right + defaultPadding
-        tv_author.layout(
-            left,
-            usedHeight,
-            left + tv_author.measuredWidth,
-            usedHeight + tv_author.measuredHeight
-        )
-        usedHeight += tv_author.measuredHeight + defaultSpace
-        left = paddingLeft
-
-        val rh = posterSize + categorySize / 2
-        val leftTop = if (rh > tv_title.measuredHeight) (rh - tv_title.measuredHeight) / 2 else 0
-        val rightTop = if (rh < tv_title.measuredHeight) (tv_title.measuredHeight - rh) / 2 else 0
-
-        tv_title.layout(
-            left,
-            usedHeight + leftTop,
-            left + tv_title.measuredWidth,
-            usedHeight + leftTop + tv_title.measuredHeight
-        )
-        iv_poster.layout(
-            left + bodyWidth - posterSize,
-            usedHeight + rightTop,
-            left + bodyWidth,
-            usedHeight + rightTop + posterSize
-        )
-        iv_category.layout(
-            iv_poster.left - categorySize / 2,
-            iv_poster.bottom - categorySize / 2,
-            iv_poster.left + categorySize / 2,
-            iv_poster.bottom + categorySize / 2
-        )
-        usedHeight += if (rh > tv_title.measuredHeight) rh else tv_title.measuredHeight
-        usedHeight += defaultSpace
-
-        tv_description.layout(
-            left,
-            usedHeight,
-            left + bodyWidth,
-            usedHeight + tv_description.measuredHeight
-        )
-        usedHeight += tv_description.measuredHeight + defaultSpace
-
-        val fontDiff = iconSize - tv_likes_count.measuredHeight
-        iv_likes.layout(
-            left,
-            usedHeight - fontDiff,
-            left + iconSize,
-            usedHeight + iconSize - fontDiff
-        )
-
-        left = iv_likes.right + defaultSpace
-        tv_likes_count.layout(
-            left,
-            usedHeight,
-            left + tv_likes_count.measuredWidth,
-            usedHeight + tv_likes_count.measuredHeight
-        )
-        left = tv_likes_count.right + defaultPadding
-
-        iv_comments.layout(
-            left,
-            usedHeight - fontDiff,
-            left + iconSize,
-            usedHeight + iconSize - fontDiff
-        )
-        left = iv_comments.right + defaultSpace
-        tv_comments_count.layout(
-            left,
-            usedHeight,
-            left + tv_comments_count.measuredWidth,
-            usedHeight + tv_comments_count.measuredHeight
-        )
-        left = tv_comments_count.right + defaultPadding
-        tv_read_duration.layout(
-            left,
-            usedHeight,
-            left + tv_read_duration.measuredWidth,
-            usedHeight + tv_read_duration.measuredHeight
-        )
-
-        left = defaultPadding
-        iv_bookmark.layout(
-            left + bodyWidth - iconSize,
-            usedHeight - fontDiff,
-            left + bodyWidth,
-            usedHeight + iconSize - fontDiff
-        )*/
     }
 
-    fun bind(item: ArticleItemData, toggleBookmarkListener: (articleId: String, isBookmark: Boolean) -> Unit) {
-        tv_date.text = item.date.format()
+    fun bind(item: ArticleItemData, listener: (ArticleItemData, Boolean) -> Unit) {
+        tv_date.text = item.date.shortFormat()
         tv_author.text = item.author
         tv_title.text = item.title
 
@@ -381,6 +277,7 @@ class ArticleItemView @JvmOverloads constructor(
         tv_comments_count.text = "${item.commentCount}"
         tv_read_duration.text = "${item.readDuration} min read"
         iv_bookmark.isChecked = item.isBookmark
-        iv_bookmark.setOnClickListener { toggleBookmarkListener.invoke(item.id, !item.isBookmark) }
+        iv_bookmark.setOnClickListener { listener.invoke(item, true) }
+        this.setOnClickListener { listener.invoke(item, false) }
     }
 }

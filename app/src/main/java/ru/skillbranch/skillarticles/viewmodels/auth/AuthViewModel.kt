@@ -7,9 +7,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 
 class AuthViewModel(handle: SavedStateHandle) :
-    BaseViewModel<AuthState>(handle, AuthState()),
-    IAuthViewModel {
-
+    BaseViewModel<AuthState>(handle, AuthState()), IAuthViewModel {
     private val repository = RootRepository
 
     init {

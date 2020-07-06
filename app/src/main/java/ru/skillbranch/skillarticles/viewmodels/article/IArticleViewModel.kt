@@ -100,20 +100,5 @@ interface IArticleViewModel {
     /**
      * обрабока отправки комментария, если пользователь не авторизован отобразить экран авторизации
      **/
-    fun handleSendComment(comment: String)
-
-    /**
-     * обработка фокуса на поле ввода комментария
-     */
-    fun handleCommentFocus(hasFocus: Boolean)
-
-    /**
-     * обработка очистки поля ввода комментария
-     */
-    fun handleClearComment()
-
-    /**
-     * обработка ответа на комментарий
-     */
-    fun handleReplyTo(slug: String, name: String)
+    fun handleSendComment(comment: String?)
 }

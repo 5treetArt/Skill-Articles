@@ -11,8 +11,7 @@ import ru.skillbranch.skillarticles.ui.custom.CommentItemView
 
 class CommentsAdapter(private val listener: (CommentItemData) -> Unit) :
     PagedListAdapter<CommentItemData, CommentVH>(CommentDiffCallback()) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentVH =
-        CommentVH(CommentItemView(parent.context), listener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentVH = CommentVH(CommentItemView(parent.context), listener)
 
     override fun onBindViewHolder(holder: CommentVH, position: Int) {
         holder.bind(getItem(position))

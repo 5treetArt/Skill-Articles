@@ -2,13 +2,10 @@ package ru.skillbranch.skillarticles.ui
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.navigation.NavDestination
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
-import kotlinx.android.synthetic.main.layout_bottombar.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.selectDestination
 import ru.skillbranch.skillarticles.extensions.selectItem
@@ -16,22 +13,19 @@ import ru.skillbranch.skillarticles.ui.base.BaseActivity
 import ru.skillbranch.skillarticles.ui.custom.Bottombar
 import ru.skillbranch.skillarticles.viewmodels.RootState
 import ru.skillbranch.skillarticles.viewmodels.RootViewModel
-import ru.skillbranch.skillarticles.viewmodels.article.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
-
-class RootActivity : BaseActivity<RootViewModel>() {
+class RootActivity : BaseActivity<RootViewModel>(){
+    var isAuth : Boolean = false
     override val layout: Int = R.layout.activity_root
     public override val viewModel: RootViewModel by viewModels()
-    private lateinit var currentDestination: NavDestination
-    private var isAuth: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //top level destination
-        val appBarConfiguration = AppBarConfiguration(
+        val appbarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_articles,
                 R.id.nav_bookmarks,
@@ -40,15 +34,15 @@ class RootActivity : BaseActivity<RootViewModel>() {
             )
         )
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        setupActionBarWithNavController(navController, appbarConfiguration)
         nav_view.setOnNavigationItemSelectedListener {
-            //if click on bottom navigtion view -> navigate to destination by item id
+            //if click on bottom navigation item -> navigate to destination by item id
             viewModel.navigate(NavigationCommand.To(it.itemId))
             true
         }
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            //TODO move to viewModel?
+            //if destination change set select bottom navigation item
             nav_view.selectDestination(destination)
 
             val privateDestination = arguments?.get("private_destination") as Int?
@@ -57,7 +51,6 @@ class RootActivity : BaseActivity<RootViewModel>() {
 
             if (isAuth && destination.id == R.id.nav_auth) {
                 controller.popBackStack()
-                //viewModel.navigate(NavigationCommand.To(R.id.nav_profile, arguments))
                 privateDestination?.let { controller.navigate(it) }
             }
         }
@@ -68,23 +61,24 @@ class RootActivity : BaseActivity<RootViewModel>() {
         snackbar.anchorView = findViewById<Bottombar>(R.id.bottombar) ?: nav_view
 
         when (notify) {
-            is Notify.TextMessage -> {
-                /* nothing */
-            }
-
             is Notify.ActionMessage -> {
+                val (_, label, handler) = notify
+
                 with(snackbar) {
                     setActionTextColor(getColor(R.color.color_accent_dark))
-                    setAction(notify.actionLabel) { notify.actionHandler() }
+                    setAction(label) { handler.invoke() }
                 }
             }
 
             is Notify.ErrorMessage -> {
+                val (_, label, handler) = notify
+
                 with(snackbar) {
                     setBackgroundTint(getColor(R.color.design_default_color_error))
                     setTextColor(getColor(android.R.color.white))
                     setActionTextColor(getColor(android.R.color.white))
-                    setAction(notify.errLabel) { notify.errHandler?.invoke() }
+                    handler ?: return@with
+                    setAction(label) { handler.invoke() }
                 }
             }
         }
@@ -94,7 +88,6 @@ class RootActivity : BaseActivity<RootViewModel>() {
 
     override fun subscribeOnState(state: IViewModelState) {
         state as RootState
-
-        this.isAuth = state.isAuth
+        isAuth = state.isAuth
     }
 }

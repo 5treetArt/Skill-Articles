@@ -39,7 +39,7 @@ abstract class BaseViewModel<T : IViewModelState>(
      * модифицированное состояние, которое присваивается текущему состоянию
      */
     @UiThread
-    protected inline fun updateState(update: (currentState: T) -> T) {
+    inline fun updateState(update: (currentState: T) -> T) {
         val updatedState: T = update(currentState)
         state.value = updatedState
     }
@@ -93,12 +93,14 @@ abstract class BaseViewModel<T : IViewModelState>(
         }
     }
 
-    fun saveState() {
+    open fun saveState() {
         currentState.save(handleState)
     }
 
     @Suppress("UNCHECKED_CAST")
     fun restoreState() {
+        val restoredState = currentState.restore(handleState) as T
+        if(currentState == restoredState) return
         state.value = currentState.restore(handleState) as T
     }
 }
@@ -135,8 +137,7 @@ class EventObserver<E>(private val onEventUnhandledContent: (E) -> Unit) : Obser
     }
 }
 
-sealed class Notify {
-
+sealed class Notify() {
     abstract val message: String
 
     data class TextMessage(override val message: String) : Notify()
@@ -154,7 +155,7 @@ sealed class Notify {
     ) : Notify()
 }
 
-sealed class NavigationCommand {
+sealed class NavigationCommand() {
     data class To(
         val destination: Int,
         val args: Bundle? = null,

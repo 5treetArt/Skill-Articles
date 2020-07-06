@@ -9,7 +9,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.Selection
 import android.text.Spannable
-import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
@@ -72,10 +71,6 @@ class MarkdownCodeView private constructor(
     //for layout
     private var isSingleLine = false
     private var isDark = false
-    set(value) {
-        field = value
-        applyColors()
-    }
     private var isManual = false
     private val bgColor
         get() = when {
@@ -138,7 +133,6 @@ class MarkdownCodeView private constructor(
                 copyListener?.invoke(codeString.toString())
             }
         }
-
         addView(iv_copy)
 
         iv_switch = ImageView(context).apply {
@@ -147,14 +141,12 @@ class MarkdownCodeView private constructor(
             setOnClickListener { toggleColors() }
         }
         addView(iv_switch)
-
-        isSaveEnabled = true
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     public override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = 0
-        val width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
+        val width = getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
         measureChild(sv_scroll, widthMeasureSpec, heightMeasureSpec)
         measureChild(iv_copy, widthMeasureSpec, heightMeasureSpec)
         usedHeight += sv_scroll.measuredHeight + paddingTop + paddingBottom
@@ -178,9 +170,9 @@ class MarkdownCodeView private constructor(
             )
 
             iv_switch.layout(
-                iv_copy.right - (2.5f * iconSize).toInt(),
+                iv_copy.right - (2.5f*iconSize).toInt(),
                 iconHeight,
-                iv_copy.right - (1.5 * iconSize).toInt(),
+                iv_copy.right - (1.5f*iconSize).toInt(),
                 iconHeight + iconSize
             )
 
@@ -193,9 +185,9 @@ class MarkdownCodeView private constructor(
             )
 
             iv_switch.layout(
-                iv_copy.right - (2.5f * iconSize).toInt(),
+                iv_copy.right - (2.5f*iconSize).toInt(),
                 usedHeight,
-                iv_copy.right - (1.5 * iconSize).toInt(),
+                iv_copy.right - (1.5f*iconSize).toInt(),
                 usedHeight + iconSize
             )
         }
@@ -214,15 +206,6 @@ class MarkdownCodeView private constructor(
         Selection.setSelection(spannableContent, searchPosition.first.minus(offset))
     }
 
-    override fun dispatchSaveInstanceState(container: SparseArray<Parcelable>?) {
-        dispatchFreezeSelfOnly(container)
-    }
-
-    override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>?) {
-        dispatchThawSelfOnly(container)
-    }
-
-    //save state
     override fun onSaveInstanceState(): Parcelable? {
         val savedState = SavedState(super.onSaveInstanceState())
         savedState.ssIsManual = isManual
@@ -230,18 +213,19 @@ class MarkdownCodeView private constructor(
         return savedState
     }
 
-    //restore state
     override fun onRestoreInstanceState(state: Parcelable) {
         super.onRestoreInstanceState(state)
         if (state is SavedState) {
             isManual = state.ssIsManual
             isDark = state.ssIsDark
+            applyColors()
         }
     }
 
     private fun toggleColors() {
         isManual = true
         isDark = !isDark
+        applyColors()
     }
 
     private fun applyColors() {
@@ -253,20 +237,22 @@ class MarkdownCodeView private constructor(
 
 
     private class SavedState : BaseSavedState, Parcelable {
-        var ssIsDark: Boolean = false
         var ssIsManual: Boolean = false
+        var ssIsDark: Boolean = false
 
         constructor(superState: Parcelable?) : super(superState)
 
         constructor(src: Parcel) : super(src) {
-            ssIsDark = src.readInt() == 1
+            //restore state from parcel
             ssIsManual = src.readInt() == 1
+            ssIsDark = src.readInt() == 1
         }
 
         override fun writeToParcel(dst: Parcel, flags: Int) {
+            //write state to parcel
             super.writeToParcel(dst, flags)
-            dst.writeInt(if (ssIsDark) 1 else 0)
             dst.writeInt(if (ssIsManual) 1 else 0)
+            dst.writeInt(if (ssIsDark) 1 else 0)
         }
 
         override fun describeContents() = 0
@@ -277,4 +263,3 @@ class MarkdownCodeView private constructor(
         }
     }
 }
-

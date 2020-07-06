@@ -20,11 +20,9 @@ class ArticleSubmenu @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), CoordinatorLayout.AttachedBehavior {
-
     override fun getBehavior(): CoordinatorLayout.Behavior<ArticleSubmenu> {
         return SubmenuBehavior()
     }
-
     var isOpen = false
     private var centerX: Float = context.dpToPx(200)
     private var centerY: Float = context.dpToPx(96)
@@ -80,14 +78,14 @@ class ArticleSubmenu @JvmOverloads constructor(
         anim.start()
     }
 
-    ////save state
+    //save state
     override fun onSaveInstanceState(): Parcelable? {
         val savedState = SavedState(super.onSaveInstanceState())
         savedState.ssIsOpen = isOpen
         return savedState
     }
 
-    ////restore state
+    //restore state
     override fun onRestoreInstanceState(state: Parcelable) {
         super.onRestoreInstanceState(state)
         if (state is SavedState) {

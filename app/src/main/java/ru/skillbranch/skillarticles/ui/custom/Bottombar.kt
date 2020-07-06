@@ -54,7 +54,6 @@ class Bottombar @JvmOverloads constructor(
     }
 
     fun hide() {
-
         ObjectAnimator.ofFloat(this, "translationY", height.toFloat()).start()
     }
 

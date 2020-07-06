@@ -15,7 +15,7 @@
         style="@style/BottombarIcon"
         android:src="@drawable/like_states"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_bookmark"
+        app:layout_constraintEnd_toStartOf="@+id/btn_bookmark"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,9 +26,9 @@
         style="@style/BottombarIcon"
         android:src="@drawable/bookmark_states"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_share"
+        app:layout_constraintEnd_toStartOf="@+id/btn_share"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/btn_like"
+        app:layout_constraintStart_toEndOf="@+id/btn_like"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -38,7 +38,7 @@
         android:focusable="true"
         android:src="@drawable/ic_share_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_bookmark"
+        app:layout_constraintStart_toEndOf="@+id/btn_bookmark"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ru.skillbranch.skillarticles.ui.custom.CheckableImageView

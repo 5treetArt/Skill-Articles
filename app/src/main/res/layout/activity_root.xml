@@ -32,7 +32,6 @@
         app:navGraph="@navigation/mobile_navigation"
         app:layout_behavior=".ui.custom.behaviors.ContainerBehavior"/>
 
-    <!--TODO add custom behavior like bottombar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         style="@style/NavBarStyle"

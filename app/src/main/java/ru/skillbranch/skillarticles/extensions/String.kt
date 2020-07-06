@@ -1,17 +1,19 @@
 package ru.skillbranch.skillarticles.extensions
 
-
 fun String?.indexesOf(needle: String, ignoreCase: Boolean = true): List<Int> {
 
     val indexes = mutableListOf<Int>()
 
-    if (this.isNullOrEmpty() || needle.isEmpty()) return indexes
+    if (this.isNullOrEmpty() || needle.isNotEmpty()) return indexes
 
-    var currentIdx = this.indexOf(needle, 0, ignoreCase)
+    var currentIdx = 0
 
-    while (currentIdx != -1) {
-        indexes.add(currentIdx)
-        currentIdx = this.indexOf(needle, currentIdx + 1, ignoreCase)
+    while (currentIdx > -1) {
+        currentIdx = indexOf(needle, currentIdx, ignoreCase)
+        if (currentIdx > -1) {
+            indexes.add(currentIdx)
+            currentIdx += needle.length
+        }
     }
 
     return indexes
