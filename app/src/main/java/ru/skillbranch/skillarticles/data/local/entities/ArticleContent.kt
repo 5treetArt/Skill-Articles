@@ -7,20 +7,20 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "article_contents",
-    foreignKeys = [ForeignKey(
-        entity = Article::class,
-        parentColumns = ["id"],
-        childColumns = ["articleId"],
-        onDelete = ForeignKey.CASCADE
-    )])
-data class ArticleContent(
+foreignKeys = [ForeignKey(
+    entity = Article::class,
+    parentColumns = ["id"],
+    childColumns = ["article_id"],
+    onDelete = ForeignKey.CASCADE
+)])
+data class ArticleContent (
     @PrimaryKey
     @ColumnInfo(name = "article_id")
-    val articleId: String,
-    val content: String,
-    val source: String? = null,
+    val articleId:String,
+    val content:String,
+    val source:String?=null,
     @ColumnInfo(name = "share_link")
-    val shareLink: String,
+    val shareLink:String,
     @ColumnInfo(name = "updated_at")
-    val updatedAt: Date = Date()
+    val updatedAt:Date= Date()
 )

@@ -40,7 +40,7 @@ class ArticleViewModel(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val listData: LiveData<PagedList<CommentItemData>> =
         Transformations.switchMap(getArticleData()) {
-            buildPagedList(repository.allComments(articleId, it?.commentCount ?: 0))
+            buildPagedList(repository.loadAllComments(articleId, it?.commentCount ?: 0))
         }
 
     init {
@@ -194,7 +194,7 @@ class ArticleViewModel(
             navigate(NavigationCommand.StartLogin())
         } else {
             viewModelScope.launch {
-                repository.sendComment(
+                repository.sendMessage(
                     articleId,
                     currentState.commentText!!,
                     currentState.answerToSlug

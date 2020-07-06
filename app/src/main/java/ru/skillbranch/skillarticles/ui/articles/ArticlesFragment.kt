@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -27,12 +28,21 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
     override val layout: Int = R.layout.fragment_articles
     override val binding: ArticlesBinding by lazy { ArticlesBinding() }
     private val args: ArticlesFragmentArgs by navArgs()
+    private lateinit var suggestionAdapter: SimpleCursorAdapter
 
     override val prepareToolbar: (ToolbarBuilder.() -> Unit) = {
         addMenuItem(
             MenuItemHolder(
                 "Search",
                 R.id.action_search,
+                R.drawable.ic_search_black_24dp,
+                R.layout.layout_search_view
+            )
+        )
+        addMenuItem(
+            MenuItemHolder(
+                "Filter",
+                R.id.action_filter,
                 R.drawable.ic_search_black_24dp,
                 R.layout.layout_search_view
             )
