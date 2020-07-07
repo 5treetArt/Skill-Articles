@@ -2,6 +2,7 @@ package ru.skillbranch.skillarticles.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.annotation.UiThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
@@ -18,21 +19,30 @@ object PrefManager {
         preferences.edit().clear().apply()
     }
 
-    fun getAppSettings(): LiveData<AppSettings> {
-        //TODO implement me
-        return MutableLiveData(AppSettings())
+
+    private var isAuthLive = MutableLiveData(false)
+    private var isAuth by PrefDelegate(false)
+
+    fun isAuth(): LiveData<Boolean> = isAuthLive
+
+    @UiThread
+    fun setAuth(auth: Boolean) {
+        isAuth = auth
+        isAuthLive.value = auth
     }
 
-    fun isAuth(): MutableLiveData<Boolean> {
-        //TODO implement me
-        return MutableLiveData(false)
-    }
 
-    fun setAuth(auth: Boolean): Unit {
-        //TODO implement me
-    }
+    private var appSettingsLive = MutableLiveData(AppSettings())
+    private var isDarkMode by PrefDelegate(false)
+    private var isBigText by PrefDelegate(false)
 
+    fun getAppSettings(): LiveData<AppSettings> = appSettingsLive
+
+    @UiThread
     fun updateAppSettings(appSettings: AppSettings) {
-        //TODO implement me
+        isDarkMode = appSettings.isDarkMode
+        isBigText = appSettings.isBigText
+        appSettingsLive.value = appSettings
     }
+
 }

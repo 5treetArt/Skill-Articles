@@ -1,5 +1,6 @@
 package ru.skillbranch.skillarticles.data.local.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -8,6 +9,16 @@ import ru.skillbranch.skillarticles.data.local.entities.ArticlePersonalInfo
 
 @Dao
 interface ArticlePersonalInfosDao: BaseDao<ArticlePersonalInfo> {
+
+    @Query("""SELECT * FROM article_personal_infos""")
+    fun findPersonalInfos(): LiveData<List<ArticlePersonalInfo>>
+
+    @Query("""
+        SELECT * 
+        FROM article_personal_infos
+        WHERE article_id = :articleId
+    """)
+    fun findPersonalInfos(articleId: String): LiveData<ArticlePersonalInfo>
 
     @Transaction
     fun upsert(list: List<ArticlePersonalInfo>) {

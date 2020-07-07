@@ -123,11 +123,11 @@ class InstrumentalTest1 {
 
         testDb.articlesDao().upsert(expectedArticles)
         testDb.articleCountsDao().upsert(expectedCounts)
-        testDb.articlePersonalInfosDao().upsert(expectedPersonal)
+        testDb.articlePersonalInfos().upsert(expectedPersonal)
 
         val actualArticles = testDb.articlesDao().findArticles()
         val actualArticleCounts = testDb.articleCountsDao().findArticleCounts()
-        val actualPersonalInfos = testDb.articlePersonalInfosDao().findPersonalInfos()
+        val actualPersonalInfos = testDb.articlePersonalInfos().findPersonalInfos()
 
         val testArticles = TestObserver.test(actualArticles)
         val testCounts = TestObserver.test(actualArticleCounts)
@@ -191,13 +191,13 @@ class InstrumentalTest1 {
             .assertHasValue()
             .assertValue { it.size == 1 }
 
-        TestObserver.test(testDb.articlePersonalInfosDao().findPersonalInfos())
+        TestObserver.test(testDb.articlePersonalInfos().findPersonalInfos())
             .assertHasValue()
             .assertValue { it.isEmpty() }
 
         val testCounts = TestObserver.test(testDb.articleCountsDao().findArticleCounts("0"))
         val testPersonal =
-            TestObserver.test(testDb.articlePersonalInfosDao().findPersonalInfos("0"))
+            TestObserver.test(testDb.articlePersonalInfos().findPersonalInfos("0"))
 
         testCounts
             .assertHasValue()
@@ -239,25 +239,25 @@ class InstrumentalTest1 {
         testPersonal
             .assertValue(null)
 
-        testDb.articlePersonalInfosDao().toggleLikeOrInsert("0")
+        testDb.articlePersonalInfos().toggleLikeOrInsert("0")
 
         testPersonal
             .assertHistorySize(2)
             .assertValue { it.isLike }
 
-        testDb.articlePersonalInfosDao().toggleLikeOrInsert("0")
+        testDb.articlePersonalInfos().toggleLikeOrInsert("0")
 
         testPersonal
             .assertHistorySize(3)
             .assertValue { !it.isLike }
 
-        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("0")
+        testDb.articlePersonalInfos().toggleBookmarkOrInsert("0")
 
         testPersonal
             .assertHistorySize(4)
             .assertValue { it.isBookmark }
 
-        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("0")
+        testDb.articlePersonalInfos().toggleBookmarkOrInsert("0")
 
         testPersonal
             .assertHistorySize(5)
@@ -302,10 +302,10 @@ class InstrumentalTest1 {
             .assertValue { !it[1].isBookmark }
             .assertValue { it[2].commentCount == expectedCounts[0].comments }
 
-        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("0")
-        testDb.articlePersonalInfosDao().toggleLikeOrInsert("0")
-        testDb.articlePersonalInfosDao().toggleLikeOrInsert("0")
-        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("1")
+        testDb.articlePersonalInfos().toggleBookmarkOrInsert("0")
+        testDb.articlePersonalInfos().toggleLikeOrInsert("0")
+        testDb.articlePersonalInfos().toggleLikeOrInsert("0")
+        testDb.articlePersonalInfos().toggleBookmarkOrInsert("1")
 
         testDb.articleCountsDao().incrementCommentsCount("2")
         testDb.articleCountsDao().incrementLike("0")
@@ -355,7 +355,7 @@ class InstrumentalTest1 {
                 ArticleTagXRef(articleId = "0", tagId = "#iOS")
             )
         )
-        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("0")
+        testDb.articlePersonalInfos().toggleBookmarkOrInsert("0")
         var actualArticleItems =
             testDb.articlesDao().findArticlesByRaw(SimpleSQLiteQuery(ArticleFilter().toQuery()))
                 .toTestList()
@@ -472,7 +472,7 @@ class InstrumentalTest1 {
                 articleCountsDao = testDb.articleCountsDao(),
                 categoriesDao = testDb.categoriesDao(),
                 tagsDao = testDb.tagsDao(),
-                articlePersonalDao = testDb.articlePersonalInfosDao()
+                articlePersonalDao = testDb.articlePersonalInfos()
             )
         }
 
@@ -519,7 +519,7 @@ class InstrumentalTest1 {
             "#Swift Programming",
             "#Development",
             "#Flutter",
-            "Native App"
+            "#Native App"
         )
         val expectedCategories = listOf(
             CategoryData(
@@ -617,7 +617,7 @@ class InstrumentalTest1 {
                 articlesDao = testDb.articlesDao(),
                 articleCountsDao = testDb.articleCountsDao(),
                 articleContentDao = testDb.articleContentsDao(),
-                articlePersonalDao = testDb.articlePersonalInfosDao()
+                articlePersonalDao = testDb.articlePersonalInfos()
             )
         }
         val expectedArticleRes = NetworkDataHolder.findArticlesItem(0, 1).first()
@@ -669,7 +669,7 @@ class InstrumentalTest1 {
 
 
         val testPersonal =
-            TestObserver.test(testDb.articlePersonalInfosDao().findPersonalInfos("0"))
+            TestObserver.test(testDb.articlePersonalInfos().findPersonalInfos("0"))
         testPersonal
             .assertHasValue()
             .assertValue(null)

@@ -23,7 +23,7 @@ interface IArticleRepository {
     fun getAppSettings(): LiveData<AppSettings>
     fun toggleLike(articleId: String)
     fun toggleBookmark(articleId: String)
-    fun isAuth(): MutableLiveData<Boolean>
+    fun isAuth(): LiveData<Boolean>
     fun loadCommentsByRange(slug: String?, size: Int, articleId: String): List<CommentItemData>
     fun sendMessage(articleId: String, text: String, answerToSlug: String?)
     fun loadAllComments(articleId: String, total: Int): CommentsDataFactory
@@ -38,7 +38,7 @@ object ArticleRepository: IArticleRepository {
     private val network = NetworkDataHolder
     private val preferences = PrefManager
     private var articlesDao = db.articlesDao()
-    private var articlePersonalDao = db.articlePersonalInfosDao()
+    private var articlePersonalDao = db.articlePersonalInfos()
     private var articleCountsDao = db.articleCountsDao()
     private var articleContentsDao = db.articleContentsDao()
 
@@ -47,12 +47,12 @@ object ArticleRepository: IArticleRepository {
         articlesDao: ArticlesDao,
         articlePersonalDao: ArticlePersonalInfosDao,
         articleCountsDao: ArticleCountsDao,
-        articleContentsDao: ArticleContentDao
+        articleContentDao: ArticleContentDao
     ) {
         this.articlesDao = articlesDao
         this.articlePersonalDao = articlePersonalDao
         this.articleCountsDao = articleCountsDao
-        this.articleContentsDao = articleContentsDao
+        this.articleContentsDao = articleContentDao
     }
 
     override fun findArticle(articleId: String): LiveData<ArticleFull> {
@@ -82,7 +82,7 @@ object ArticleRepository: IArticleRepository {
         return articleCountsDao.getCommentsCount(articleId)
     }
 
-    override fun isAuth(): MutableLiveData<Boolean> = preferences.isAuth()
+    override fun isAuth(): LiveData<Boolean> = preferences.isAuth()
 
     override fun loadAllComments(articleId: String, totalCount: Int) = CommentsDataFactory(
         itemProvider = ::loadCommentsByRange,
@@ -117,7 +117,7 @@ object ArticleRepository: IArticleRepository {
     }
 
     override fun incrementLike(articleId: String) {
-        articleCountsDao.decrementLike(articleId)
+        articleCountsDao.incrementLike(articleId)
     }
 
     override fun sendMessage(articleId: String, comment: String, answerToSlug: String?) {
