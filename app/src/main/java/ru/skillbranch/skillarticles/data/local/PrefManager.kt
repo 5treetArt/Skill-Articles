@@ -32,9 +32,9 @@ object PrefManager {
     }
 
 
-    private var appSettingsLive = MutableLiveData(AppSettings())
     private var isDarkMode by PrefDelegate(false)
     private var isBigText by PrefDelegate(false)
+    private var appSettingsLive = MutableLiveData(AppSettings(isDarkMode ?: false, isBigText ?: false))
 
     fun getAppSettings(): LiveData<AppSettings> = appSettingsLive
 
