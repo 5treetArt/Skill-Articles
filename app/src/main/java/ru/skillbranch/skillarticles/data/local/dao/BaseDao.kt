@@ -16,5 +16,8 @@ interface BaseDao<T: Any> {
     fun update(obj: T)
 
     @Delete
+    fun delete(list: List<T>)
+
+    @Delete
     fun delete(obj: T)
 }

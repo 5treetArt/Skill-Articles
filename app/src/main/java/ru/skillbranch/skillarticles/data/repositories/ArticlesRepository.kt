@@ -1,5 +1,6 @@
 package ru.skillbranch.skillarticles.data.repositories
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -156,6 +157,7 @@ class ArticleFilter(
         if (categories.isNotEmpty()) qb.appendWhere("category_id IN (${categories.joinToString(",")})")
 
         qb.orderBy("date")
+        Log.d("TAG_ArticleFilter", "toQuery: ${qb.build()}")
         return qb.build()
     }
 }

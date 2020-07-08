@@ -43,7 +43,7 @@ class ArticleViewModel(
     init {
         //subscribe on mutable data
         subscribeOnDataSource(repository.findArticle(articleId)) { article, state ->
-            article ?: return@subscribeOnDataSource null
+            article.content ?: fetchContent()
             state.copy(
                 shareLink = article.shareLink,
                 title = article.title,

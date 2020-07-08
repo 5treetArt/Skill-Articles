@@ -75,7 +75,7 @@ class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>
     private fun isEmptyFilter() = currentState.searchQuery.isNullOrEmpty()
             && !currentState.isBookmark
             && currentState.selectedCategories.isEmpty()
-            && currentState.isHashtagSearch
+            && !currentState.isHashtagSearch
 
     private fun itemAtEndHandle(lastLoadArticle: ArticleItem) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -83,13 +83,13 @@ class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>
                 start = lastLoadArticle.id.toInt().inc(),
                 size = listConfig.pageSize
             )
+            Log.d("ArticlesViewModel", "itemAtEndHandle: items.size: ${items.size}")
             if (items.isNotEmpty()) {
                 repository.insertArticlesToDb(items)
                 //invalidate data in data source -> create new LiveData<PagedList>
                 //TODO there is no invalidation now?
                 //listData.value?.dataSource?.invalidate()
             }
-
             withContext(Dispatchers.Main) {
                 notify(
                     Notify.TextMessage(

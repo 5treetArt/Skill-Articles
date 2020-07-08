@@ -5,7 +5,6 @@ import androidx.paging.DataSource
 import androidx.room.Room
 import androidx.room.paging.LimitOffsetDataSource
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.jraska.livedata.TestObserver
