@@ -2,14 +2,13 @@ package ru.skillbranch.skillarticles.data.repositories
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.ItemKeyedDataSource
 import ru.skillbranch.skillarticles.data.NetworkDataHolder
 import ru.skillbranch.skillarticles.data.local.DbManager.db
 import ru.skillbranch.skillarticles.data.local.PrefManager
 import ru.skillbranch.skillarticles.data.local.dao.ArticlePersonalInfosDao
-import ru.skillbranch.skillarticles.data.local.dao.ArticleContentDao
+import ru.skillbranch.skillarticles.data.local.dao.ArticleContentsDao
 import ru.skillbranch.skillarticles.data.local.dao.ArticleCountsDao
 import ru.skillbranch.skillarticles.data.local.dao.ArticlesDao
 import ru.skillbranch.skillarticles.data.local.entities.ArticleFull
@@ -47,12 +46,12 @@ object ArticleRepository: IArticleRepository {
         articlesDao: ArticlesDao,
         articlePersonalDao: ArticlePersonalInfosDao,
         articleCountsDao: ArticleCountsDao,
-        articleContentDao: ArticleContentDao
+        articleContentsDao: ArticleContentsDao
     ) {
         this.articlesDao = articlesDao
         this.articlePersonalDao = articlePersonalDao
         this.articleCountsDao = articleCountsDao
-        this.articleContentsDao = articleContentDao
+        this.articleContentsDao = articleContentsDao
     }
 
     override fun findArticle(articleId: String): LiveData<ArticleFull> {

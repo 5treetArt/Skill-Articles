@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import ru.skillbranch.skillarticles.data.local.entities.ArticleContent
 
 @Dao
-interface ArticleContentDao {
+interface ArticleContentsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(obj: ArticleContent): Long
 }
