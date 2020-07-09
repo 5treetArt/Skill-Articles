@@ -156,7 +156,17 @@ data class ArticlesState(
     val isBookmark: Boolean = false,
     val selectedCategories: List<String> = emptyList(),
     val isHashtagSearch: Boolean = false
-) : IViewModelState
+) : IViewModelState {
+    override fun save(outState: SavedStateHandle) {
+        outState["selectedCategories"] = selectedCategories.toTypedArray()
+    }
+
+    override fun restore(savedState: SavedStateHandle): IViewModelState {
+        return copy(
+            selectedCategories = (savedState["selectedCategories"] ?: emptyArray<String>()).toList()
+        )
+    }
+}
 
 
 class ArticlesBoundaryCallback(

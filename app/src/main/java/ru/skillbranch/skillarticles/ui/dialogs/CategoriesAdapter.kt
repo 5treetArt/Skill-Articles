@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_category.*
+import kotlinx.android.synthetic.main.item_category.view.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.local.entities.CategoryData
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
@@ -20,37 +21,37 @@ class CategoriesAdapter(private val listener: (CategoryData, Boolean) -> Unit)
     : ListAdapter<Pair<CategoryData, Boolean>, CategoryVH>(CategoryCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryVH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
-        return CategoryVH(view, listener)
+        return CategoryVH(view)
     }
 
-    override fun onBindViewHolder(holder: CategoryVH, position: Int) = holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: CategoryVH, position: Int) {
+        val it = getItem(position)
+        holder.bind(it.first, it.second, listener)
+    }
 }
 
-class CategoryVH(
-    override val containerView: View,
-    private val listener: (CategoryData, Boolean) -> Unit
-) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+class CategoryVH(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
     private val categorySize = containerView.context.dpToIntPx(40)
 
-    fun bind(data: Pair<CategoryData, Boolean>) {
-        ch_select.isChecked = data.second
-        ch_select.setOnCheckedChangeListener { _, isChecked ->
-            listener(data.first, isChecked)
+    fun bind(item: CategoryData, checked: Boolean, listener: (CategoryData, Boolean) -> Unit) {
+        containerView.ch_select.isChecked = checked
+        containerView.ch_select.setOnCheckedChangeListener { _, isChecked ->
+            listener(item, isChecked)
         }
 
         Glide.with(containerView.context)
-            .load(data.first.icon)
+            .load(item.icon)
             .circleCrop()
             .override(categorySize)
-            .into(iv_icon)
+            .into(containerView.iv_icon)
 
-        tv_category.text = data.first.title
-        tv_count.text = "${data.first.articlesCount}"
+        containerView.tv_category.text = item.title
+        containerView.tv_count.text = "${item.articlesCount}"
 
         itemView.setOnClickListener {
-            ch_select.isChecked = !ch_select.isChecked
-            listener(data.first, ch_select.isChecked)
+            containerView.ch_select.isChecked = !containerView.ch_select.isChecked
+            //listener(item, containerView.ch_select.isChecked)
         }
     }
 }

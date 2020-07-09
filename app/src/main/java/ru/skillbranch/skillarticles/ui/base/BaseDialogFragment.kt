@@ -20,8 +20,8 @@ abstract class BaseDialogFragment<T : BaseViewModel<out IViewModelState>> : Dial
     // Save your custom view at the class level
     private var customView: View? = null
 
-    //set listeners, tuning views
-    abstract fun setupViews()
+    //set listeners, tuning views. In dialog this method can be empty
+    open fun setupViews() {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Simply return the already inflated custom view
@@ -54,7 +54,7 @@ abstract class BaseDialogFragment<T : BaseViewModel<out IViewModelState>> : Dial
         viewModel.restoreState()
         binding?.restoreUi(savedInstanceState)
 
-        //owner it is view
+        //owner it is viewsuper.restore(savedState)
         viewModel.observeState(viewLifecycleOwner) { binding?.bind(it) }
         //bind default values if viewmodel not loaded data
         if (binding?.isInflated == false) binding?.onFinishInflate()
