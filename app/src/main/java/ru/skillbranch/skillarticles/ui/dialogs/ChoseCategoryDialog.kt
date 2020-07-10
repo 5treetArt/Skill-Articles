@@ -48,8 +48,6 @@ class ChoseCategoryDialog : BaseDialogFragment<ArticlesViewModel>() {
                 viewModel.applyCategories(binding.changedCategories)
             }.setNegativeButton("Reset") { _, _ ->
                 viewModel.applyCategories(emptyList())
-            }.setOnCancelListener {
-                viewModel.applyCategories(checked.toList())
             }
     }
 

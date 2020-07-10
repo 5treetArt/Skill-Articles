@@ -60,10 +60,7 @@ class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>
         //if all articles
         if (isEmptyFilter()) {
             builder.setBoundaryCallback(
-                ArticlesBoundaryCallback(
-                    ::zeroLoadingHandle,
-                    ::itemAtEndHandle
-                )
+                ArticlesBoundaryCallback(::zeroLoadingHandle, ::itemAtEndHandle)
             )
         }
 
