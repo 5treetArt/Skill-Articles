@@ -100,7 +100,7 @@ abstract class BaseViewModel<T : IViewModelState>(
     @Suppress("UNCHECKED_CAST")
     fun restoreState() {
         val restoredState = currentState.restore(handleState) as T
-        if(currentState == restoredState) return
+        if (currentState == restoredState) return
         state.value = restoredState
     }
 }
