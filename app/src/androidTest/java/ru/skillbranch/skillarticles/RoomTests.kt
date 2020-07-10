@@ -385,14 +385,14 @@ class RoomTests {
             .assertHasValue()
             .assertValue { !it[0].isBookmark }
 
-        testDb.articlePersonalInfos().toggleBookmarkOrInsert("0")
+        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("0")
 
         testItems
             .assertHasValue()
             .assertHistorySize(2)
             .assertValue { it[0].isBookmark }
 
-        testDb.articlePersonalInfos().toggleBookmarkOrInsert("0")
+        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("0")
         testItems
             .assertHasValue()
             .assertHistorySize(3)
@@ -497,7 +497,7 @@ class RoomTests {
                 ArticleTagXRef(articleId = "0", tagId = "#iOS")
             )
         )
-        testDb.articlePersonalInfos().toggleBookmarkOrInsert("0")
+        testDb.articlePersonalInfosDao().toggleBookmarkOrInsert("0")
         var actualArticleItems =
             testDb.articlesDao().findArticlesByRaw(SimpleSQLiteQuery(ArticleFilter().toQuery()))
                 .toTestList()

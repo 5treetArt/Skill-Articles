@@ -104,5 +104,5 @@ data class ArticleFull(
             entityColumn = "t_id"
         )
     )
-    val tags: List<Tag>
+    val tags: List<Tag> = emptyList()
 )
