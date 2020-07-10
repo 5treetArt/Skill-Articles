@@ -101,7 +101,7 @@ abstract class BaseViewModel<T : IViewModelState>(
     fun restoreState() {
         val restoredState = currentState.restore(handleState) as T
         if(currentState == restoredState) return
-        state.value = currentState.restore(handleState) as T
+        state.value = restoredState
     }
 }
 

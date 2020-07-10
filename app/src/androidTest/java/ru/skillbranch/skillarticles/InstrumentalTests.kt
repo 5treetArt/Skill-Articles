@@ -616,7 +616,7 @@ class InstrumentalTest1 {
             setupTestDao(
                 articlesDao = testDb.articlesDao(),
                 articleCountsDao = testDb.articleCountsDao(),
-                articleContentsDao = testDb.articleContentsDao(),
+                articleContentDao = testDb.articleContentsDao(),
                 articlePersonalDao = testDb.articlePersonalInfosDao()
             )
         }
