@@ -94,7 +94,7 @@ data class ArticleFull(
     val isLike: Boolean = false,
     val date: Date,
     val content: List<MarkdownElement>? = null,
-    val source: String? = null, //TODO implement me
+    val source: String? = null,
     @Relation(
         parentColumn = "id",
         entityColumn = "tag",
