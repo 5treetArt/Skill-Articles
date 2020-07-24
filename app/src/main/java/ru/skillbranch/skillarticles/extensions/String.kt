@@ -4,7 +4,7 @@ fun String?.indexesOf(needle: String, ignoreCase: Boolean = true): List<Int> {
 
     val indexes = mutableListOf<Int>()
 
-    if (this.isNullOrEmpty() || needle.isNotEmpty()) return indexes
+    if (this.isNullOrEmpty() || needle.isEmpty()) return indexes
 
     var currentIdx = 0
 
