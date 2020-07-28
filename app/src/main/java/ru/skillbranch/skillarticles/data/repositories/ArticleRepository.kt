@@ -126,25 +126,6 @@ object ArticleRepository: IArticleRepository {
         )
         articleCountsDao.incrementCommentsCount(articleId)
     }
-
-    //fun loadArticleContent(articleId: String): LiveData<List<MarkdownElement>?> {
-    //    return Transformations.map(network.loadArticleContent(articleId)) {
-    //        return@map if (it == null) null
-    //        else MarkdownParser.parse(it)
-    //    }
-    //}
-    //
-    //fun getArticle(articleId: String): LiveData<ArticleData?> {
-    //    return preferences.findArticle(articleId) //2s delay from db
-    //}
-    //
-    //fun loadArticlePersonalInfo(articleId: String): LiveData<ArticlePersonalInfo?> {
-    //    return preferences.findArticlePersonalInfo(articleId) //1s delay from db
-    //}
-    //
-    //fun updateArticlePersonalInfo(info: ArticlePersonalInfo) {
-    //    preferences.updateArticlePersonalInfo(info)
-    //}
 }
 
 class CommentsDataFactory(
