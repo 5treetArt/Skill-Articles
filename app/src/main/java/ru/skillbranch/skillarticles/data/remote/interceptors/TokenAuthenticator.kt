@@ -10,6 +10,8 @@ import ru.skillbranch.skillarticles.data.remote.req.RefreshReq
 import java.io.IOException
 
 class TokenAuthenticator : Authenticator {
+    private val pref = PrefManager
+    private val api by lazy { NetworkManager.api }
     /**
      * Authenticator for when the authToken need to be refresh and updated
      * every time we get a 401 error code
@@ -19,8 +21,6 @@ class TokenAuthenticator : Authenticator {
 
         if (response.code != 401) return null
 
-        val api = NetworkManager.api
-        val pref = PrefManager
         val refreshRes = api.refresh(RefreshReq(pref.refreshToken)).execute()
 
         if (!refreshRes.isSuccessful) return null

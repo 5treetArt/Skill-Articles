@@ -107,8 +107,8 @@ class ArticleViewModel(
         launchSafely {
             val isBookmarked = repository.toggleBookmark(articleId)
 
-            //if (isBookmarked) repository.addBookmark(articleId)
-            //else repository.removeBookmark(articleId)
+            if (isBookmarked) repository.addBookmark(articleId)
+            else repository.removeBookmark(articleId)
 
             val msg = if (isBookmarked) "Add to bookmarks" else "Remove from bookmarks"
             notify(Notify.TextMessage(msg))
