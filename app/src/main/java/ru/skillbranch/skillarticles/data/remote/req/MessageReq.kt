@@ -5,7 +5,3 @@ data class MessageReq(
     val answerTo: String? = null
 )
 
-data class RefreshReq(
-    val refreshToken: String,
-    val accessToken: String
-)

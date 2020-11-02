@@ -5,6 +5,7 @@ import retrofit2.http.*
 import ru.skillbranch.skillarticles.data.remote.req.LoginReq
 import ru.skillbranch.skillarticles.data.remote.req.MessageReq
 import ru.skillbranch.skillarticles.data.remote.req.RefreshReq
+import ru.skillbranch.skillarticles.data.remote.res.RefreshRes
 import ru.skillbranch.skillarticles.data.remote.res.*
 
 interface RestService {
@@ -49,7 +50,11 @@ interface RestService {
 
     // https://skill-articles.skill-branch.ru/api/v1/auth/refresh
     @POST("auth/refresh")
-    suspend fun refresh(@Body refreshRec: RefreshReq): AuthRes
+    suspend fun refreshAsync(@Body refreshRec: RefreshReq): RefreshRes
+
+    // https://skill-articles.skill-branch.ru/api/v1/auth/refresh
+    @POST("auth/refresh")
+    fun refresh(@Body refreshRec: RefreshReq): Call<RefreshRes>
 
     // Метод имеется в приложенном к уроку коде (lecture 11)
     @POST("auth/login")
