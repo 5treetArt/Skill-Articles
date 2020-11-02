@@ -1,23 +1,12 @@
 package ru.skillbranch.skillarticles.ui.dialogs
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.fragment_categories.*
-import kotlinx.android.synthetic.main.item_category.*
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.data.local.entities.CategoryData
-import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.ui.base.BaseDialogFragment
 import ru.skillbranch.skillarticles.ui.base.Binding
 import ru.skillbranch.skillarticles.ui.delegates.RenderProp
@@ -36,7 +25,7 @@ class ChoseCategoryDialog : BaseDialogFragment<ArticlesViewModel>() {
     private val categories by lazy { args.categories }
     private val checked by lazy { args.selectedCategories }
 
-    private val categoriesAdapter = CategoriesAdapter { category, isChecked ->
+    private val categoriesAdapter = CategoryAdapter { category, isChecked ->
         val categories = binding.changedCategories
         binding.changedCategories = (if (isChecked) categories.plus(category.categoryId)
             else categories.minus(category.categoryId)).distinct()
