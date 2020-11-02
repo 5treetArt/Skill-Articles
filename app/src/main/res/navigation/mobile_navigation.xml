@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/page_article"
         android:name="ru.skillbranch.skillarticles.ui.article.ArticleFragment"
-        android:label="ArticleFragment"
+        android:label="{title}"
         tools:layout="@layout/fragment_article">
         <argument
             android:name="article_id"

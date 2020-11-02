@@ -28,24 +28,28 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions.circleCropTransform
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.appbar.AppBarLayout
+import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.fragment_article.*
 import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.view.*
 import kotlinx.android.synthetic.main.layout_search_view.view.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.local.entities.Tag
+import ru.skillbranch.skillarticles.data.repositories.Element
 import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.extensions.*
 import ru.skillbranch.skillarticles.ui.base.*
 import ru.skillbranch.skillarticles.ui.custom.ArticleSubmenu
 import ru.skillbranch.skillarticles.ui.custom.Bottombar
 import ru.skillbranch.skillarticles.ui.custom.ShimmerDrawable
+import ru.skillbranch.skillarticles.ui.custom.markdown.MarkdownBuilder
 import ru.skillbranch.skillarticles.ui.custom.spans.IconLinkSpan
 import ru.skillbranch.skillarticles.ui.custom.spans.InlineCodeSpan
 import ru.skillbranch.skillarticles.ui.delegates.RenderProp
 import ru.skillbranch.skillarticles.viewmodels.article.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.article.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
+import ru.skillbranch.skillarticles.viewmodels.base.Loading
 import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
 class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
@@ -69,8 +73,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
     override val binding: ArticleBinding by lazy { ArticleBinding() }
     private val args: ArticleFragmentArgs by navArgs()
     override val prepareToolbar: (ToolbarBuilder.() -> Unit)? = {
-        this.setTitle(args.title)
-            .setSubtitle(args.category)
+        this.setSubtitle(args.category)
             .setLogo(args.categoryIcon)
             .addMenuItem(
                 MenuItemHolder(
@@ -96,6 +99,17 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+
+    override fun renderLoading(loadingState: Loading) {
+        when (loadingState) {
+            Loading.SHOW_LOADING -> if (!refresh.isRefreshing) root.progress.isVisible = true
+            Loading.SHOW_BLOCKING_LOADING -> root.progress.isVisible = false
+            Loading.HIDE_LOADING -> {
+                root.progress.isVisible = false
+                if (refresh.isRefreshing) refresh.isRefreshing = false
+            }
+        }
     }
 
     override fun setupViews() {
@@ -203,8 +217,10 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
         wrap_comments.setEndIconOnClickListener { view ->
             view.context.hideKeyboard(view)
             viewModel.handleClearComment()
-//            et_comment.text = null
-//            et_comment.clearFocus()
+        }
+
+        refresh.setOnRefreshListener {
+            viewModel.refresh()
         }
 
         with(rv_comments) {
@@ -315,6 +331,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
     }
 
     inner class ArticleBinding : Binding() {
+        private val mb = MarkdownBuilder(requireContext())
 
         var isFocusedSearch = false
         var searchQuery: String? = null
@@ -380,42 +397,21 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
             if (submenu.isOpen) submenu.isVisible = it
         }
 
-        private val colorOnSurface = root.attrValue(R.attr.colorOnSurface)
-        private val opacityColorSurface = root.getColor(R.color.opacity_color_surface)
-        private val cornerRadius = root.dpToPx(8)
-
         private var tags: List<String> by RenderProp(emptyList()) {
-            tv_hashtags.isVisible = it.isNotEmpty()
-            val spanned = buildSpannedString {
-                it.forEachIndexed { idx, tag ->
-                    inSpans(InlineCodeSpan(colorOnSurface, opacityColorSurface, cornerRadius, gap)) {
-                        append(tag)
-                    }
-                    if (idx != it.size - 1) append(" ")
+            val tags = buildSpannedString {
+                it.forEach { tag ->
+                    mb.buildElement(Element.InlineCode(tag), this)
+                    append(" ")
                 }
             }
-            tv_hashtags.setText(spanned, TextView.BufferType.SPANNABLE)
+            tv_hashtags.setText(tags, TextView.BufferType.SPANNABLE)
         }
 
-        private val colorSecondary = root.attrValue(R.attr.colorSecondary)
-        private val linkIcon = root.getDrawable(R.drawable.ic_link_black_24dp)!!.apply {
-            setTint(colorSecondary)
-        }
-        private val gap = root.dpToPx(8)
-        private val colorPrimary = root.attrValue(R.attr.colorPrimary)
-        private val strikeWidth = root.dpToPx(4)
-
-        private var source by RenderProp("") {
-            tv_source.isVisible = it.isNotBlank()
-            val spanned = buildSpannedString {
-                inSpans(
-                    IconLinkSpan(linkIcon, gap, colorPrimary, strikeWidth),
-                    URLSpan(it)
-                ) {
-                    append("Article source")
-                }
+        private var source: String by RenderProp("") { link ->
+            val s = buildSpannedString {
+                mb.buildElement(Element.Link(link, "Article source"), this)
             }
-            tv_source.setText(spanned, TextView.BufferType.SPANNABLE)
+            tv_source.setText(s, TextView.BufferType.SPANNABLE)
         }
 
         private var comment by RenderProp("") {

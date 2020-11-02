@@ -63,7 +63,7 @@ class ChoseCategoryDialog : BaseDialogFragment<ArticlesViewModel>() {
         }
     }
 
-    inner class CategoriesBinding: Binding() {
+    inner class CategoriesBinding : Binding() {
 
         var changedCategories: List<String> = emptyList()
 

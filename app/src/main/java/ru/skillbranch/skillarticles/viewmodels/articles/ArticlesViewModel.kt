@@ -19,6 +19,10 @@ import java.util.concurrent.Executors
 
 class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>(handle, ArticlesState()) {
     private val repository = ArticlesRepository
+
+    private var isLoadingInitial = false
+    private var isLoadingAfter = false
+
     private val listConfig by lazy {
         PagedList.Config.Builder()
             .setEnablePlaceholders(false)
@@ -74,44 +78,28 @@ class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>
             && currentState.selectedCategories.isEmpty()
             && !currentState.isHashtagSearch
 
+
     private fun itemAtEndHandle(lastLoadArticle: ArticleItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val items = repository.loadArticlesFromNetwork(
-                start = lastLoadArticle.id.toInt().inc(),
+        if (isLoadingAfter) return
+        else isLoadingAfter = true
+
+        launchSafely(null, { isLoadingAfter = false }) {
+            repository.loadArticlesFromNetwork(
+                start = lastLoadArticle.id,
                 size = listConfig.pageSize
             )
-            Log.d("ArticlesViewModel", "itemAtEndHandle: items.size: ${items.size}")
-            if (items.isNotEmpty()) {
-                repository.insertArticlesToDb(items)
-                //invalidate data in data source -> create new LiveData<PagedList>
-                //TODO there is no invalidation now?
-                //listData.value?.dataSource?.invalidate()
-            }
-            withContext(Dispatchers.Main) {
-                notify(
-                    Notify.TextMessage(
-                        "Load from network articles from ${items.firstOrNull()?.data?.id} " +
-                                "to ${items.lastOrNull()?.data?.id}"
-                    )
-                )
-            }
         }
     }
 
     private fun zeroLoadingHandle() {
-        notify(Notify.TextMessage("Storage is empty"))
-        viewModelScope.launch(Dispatchers.IO) {
-            val items =
-                repository.loadArticlesFromNetwork(
-                    start = 0,
-                    size = listConfig.initialLoadSizeHint
-                )
-            if (items.isNotEmpty()) {
-                repository.insertArticlesToDb(items)
-                //invalidate data in data source -> create new LiveData<PagedList>
-                //TODO there is no invalidation now?
-                //listData.value?.dataSource?.invalidate()
-            }
+        if (isLoadingInitial) return
+        else isLoadingInitial = true
+
+        launchSafely(null, { isLoadingInitial = false }) {
+            repository.loadArticlesFromNetwork(
+                start = null,
+                size = listConfig.initialLoadSizeHint
+            )
         }
     }
 
@@ -137,6 +125,18 @@ class ArticlesViewModel(handle: SavedStateHandle) : BaseViewModel<ArticlesState>
     fun applyCategories(selectedCategories: List<String>) {
         updateState { it.copy(selectedCategories = selectedCategories) }
     }
+
+    fun refresh() {
+        launchSafely {
+            val lastArticleId: String? = repository.findLastArticleId()
+            val count = repository.loadArticlesFromNetwork(
+                start = lastArticleId,
+                size = if (lastArticleId == null) listConfig.initialLoadSizeHint else -listConfig.pageSize
+            )
+            notify(Notify.TextMessage("Load $count new articles"))
+        }
+    }
+
 }
 
 private fun ArticlesState.toArticleFilter() = ArticleFilter(

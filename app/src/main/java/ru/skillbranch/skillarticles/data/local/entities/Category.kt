@@ -11,19 +11,19 @@ import androidx.room.PrimaryKey
 data class Category(
     @PrimaryKey
     @ColumnInfo(name = "category_id")
-    val categoryId:String,
-    val icon:String,
-    val title:String
+    val categoryId: String,
+    val icon: String,
+    val title: String
 )
 
 data class CategoryData(
     @ColumnInfo(name = "category_id")
-    val categoryId:String,
-    val icon:String,
-    val title:String,
+    val categoryId: String,
+    val icon: String,
+    val title: String,
     @ColumnInfo(name = "articles_count")
-    val articlesCount:Int = 0
-):Parcelable{
+    val articlesCount: Int = 0
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,

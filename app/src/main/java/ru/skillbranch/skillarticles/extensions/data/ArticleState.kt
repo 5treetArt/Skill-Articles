@@ -5,6 +5,7 @@ import ru.skillbranch.skillarticles.data.local.entities.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleFilter
 import ru.skillbranch.skillarticles.viewmodels.article.ArticleState
 
-fun ArticleState.toAppSettings() : AppSettings {
-    return AppSettings(isDarkMode,isBigText)
-}
+fun ArticleState.toAppSettings() = AppSettings(
+    isDarkMode,
+    isBigText
+)
