@@ -1,5 +1,6 @@
 package ru.skillbranch.skillarticles.ui.auth
 
+import androidx.activity.result.ActivityResultRegistry
 import androidx.annotation.VisibleForTesting
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
@@ -27,7 +28,7 @@ class RegistrationFragment() : BaseFragment<AuthViewModel>() {
     }
     override val layout: Int = R.layout.fragment_registration
 
-    override val binding by lazy { RegistrationBinding() }
+    //override val binding by lazy { RegistrationBinding() }
 
     // testing constructors
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
@@ -42,9 +43,9 @@ class RegistrationFragment() : BaseFragment<AuthViewModel>() {
     private val args: RegistrationFragmentArgs by navArgs()
 
     override fun setupViews() {
-        et_name.doAfterTextChanged { viewModel.handleRegisterName(it.toString()) }
-        et_login.doAfterTextChanged { viewModel.handleRegisterLogin(it.toString()) }
-        et_password.doAfterTextChanged { viewModel.handleRegisterPassword(it.toString()) }
+        //et_name.doAfterTextChanged { viewModel.handleRegisterName(it.toString()) }
+        //et_login.doAfterTextChanged { viewModel.handleRegisterLogin(it.toString()) }
+        //et_password.doAfterTextChanged { viewModel.handleRegisterPassword(it.toString()) }
 
         btn_register.setOnClickListener {
             viewModel.handleRegister(
@@ -56,7 +57,7 @@ class RegistrationFragment() : BaseFragment<AuthViewModel>() {
         }
 
     }
-
+/*
     inner class RegistrationBinding : Binding() {
 
         private var isNameCorrect by RenderProp(true) {
@@ -83,5 +84,5 @@ class RegistrationFragment() : BaseFragment<AuthViewModel>() {
             isLoginCorrect = data.isLoginCorrect
             isPasswordCorrect = data.isPasswordCorrect
         }
-    }
+    }*/
 }
