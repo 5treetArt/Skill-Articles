@@ -28,7 +28,7 @@ object PrefManager {
         token.map { it.isNotEmpty() }
     }
 
-    val profileLive: LiveData<User?> by PrefLiveObjDelegate (
+    val profileLive: LiveData<User?> by PrefLiveObjDelegate(
         "profile",
         moshi.adapter(User::class.java),
         preferences
@@ -50,5 +50,9 @@ object PrefManager {
 
     fun clearAll() {
         preferences.edit().clear().apply()
+    }
+
+    fun replaceAvatarUrl(url: String) {
+        profile = profile!!.copy(avatar = url)
     }
 }

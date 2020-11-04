@@ -2,10 +2,12 @@ package ru.skillbranch.skillarticles.extensions
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.annotation.IdRes
 import androidx.core.view.*
 import androidx.navigation.NavDestination
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputLayout
 
 
 fun View.setMarginOptionally(
@@ -54,4 +56,9 @@ fun matchDestination(destination: NavDestination, @IdRes destId: Int) : Boolean{
         currentDestination = currentDestination.parent
     }
     return currentDestination.id == destId
+}
+
+fun TextInputLayout.toggleError(errorStr: String? = null) {
+    isErrorEnabled = errorStr != null
+    error = errorStr
 }

@@ -152,7 +152,7 @@ class ArticleFilter(
             qb.appendWhere("refs.t_id = '$search'")
         }
         if (isBookmark) qb.appendWhere("is_bookmark = 1")
-        if (categories.isNotEmpty()) qb.appendWhere("category_id IN (${categories.joinToString(",")})")
+        if (categories.isNotEmpty()) qb.appendWhere("category_id IN (${categories.joinToString("\",\"", "\"", "\"")})")
 
         qb.orderBy("date")
         Log.d("TAG_ArticleFilter", "toQuery: ${qb.build()}")

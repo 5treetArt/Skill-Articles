@@ -11,12 +11,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_root.*
-import kotlinx.android.synthetic.main.fragment_article.*
 import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.fragment_articles.refresh
 import kotlinx.android.synthetic.main.layout_search_view.view.*
@@ -27,6 +27,7 @@ import ru.skillbranch.skillarticles.ui.base.Binding
 import ru.skillbranch.skillarticles.ui.base.MenuItemHolder
 import ru.skillbranch.skillarticles.ui.base.ToolbarBuilder
 import ru.skillbranch.skillarticles.ui.delegates.RenderProp
+import ru.skillbranch.skillarticles.ui.dialogs.ChoseCategoryDialog
 import ru.skillbranch.skillarticles.viewmodels.articles.ArticlesState
 import ru.skillbranch.skillarticles.viewmodels.articles.ArticlesViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
@@ -34,7 +35,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.Loading
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 
 class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
-    override val viewModel: ArticlesViewModel by activityViewModels()
+    override val viewModel: ArticlesViewModel by viewModels()
     override val layout: Int = R.layout.fragment_articles
     override val binding: ArticlesBinding by lazy { ArticlesBinding() }
     private val args: ArticlesFragmentArgs by navArgs()
@@ -56,7 +57,7 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
                 R.drawable.ic_filter_list_black_24dp,
                 null
             ) {
-                val action = ArticlesFragmentDirections.choseCategory(
+                val action = ArticlesFragmentDirections.chooseCategory(
                     binding.selectedCategories.toTypedArray(),
                     binding.categories.toTypedArray()
                 )
@@ -86,6 +87,11 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setFragmentResultListener(ChoseCategoryDialog.CHOOSE_CATEGORY_KEY) { _, bundle ->
+            @Suppress("UNCHECKED_CAST")
+            viewModel.applyCategories(bundle[ChoseCategoryDialog.SELECTED_CATEGORIES] as List<String>)
+        }
 
         suggestionAdapter = SimpleCursorAdapter(
             context,

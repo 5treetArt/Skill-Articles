@@ -1,10 +1,9 @@
 package ru.skillbranch.skillarticles.data.remote
 
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
-import ru.skillbranch.skillarticles.data.remote.req.LoginReq
-import ru.skillbranch.skillarticles.data.remote.req.MessageReq
-import ru.skillbranch.skillarticles.data.remote.req.RefreshReq
+import ru.skillbranch.skillarticles.data.remote.req.*
 import ru.skillbranch.skillarticles.data.remote.res.RefreshRes
 import ru.skillbranch.skillarticles.data.remote.res.*
 
@@ -48,6 +47,10 @@ interface RestService {
     @POST("auth/login")
     suspend fun login(@Body loginReq: LoginReq): AuthRes
 
+    // https://skill-articles.skill-branch.ru/api/v1/auth/register
+    @POST("auth/register")
+    suspend fun register(@Body registerReq: RegisterReq): AuthRes
+
     // https://skill-articles.skill-branch.ru/api/v1/auth/refresh
     @POST("auth/refresh")
     suspend fun refreshAsync(@Body refreshRec: RefreshReq): RefreshRes
@@ -85,6 +88,24 @@ interface RestService {
     @POST("articles/{article}/removeBookmark")
     suspend fun removeBookmark(
         @Path("article") articleId: String,
+        @Header("Authorization") token: String
+    )
+
+    @Multipart
+    @POST("profile/avatar/upload")
+    suspend fun upload(
+        @Part file: MultipartBody.Part?,
+        @Header("Authorization") token: String
+    ): UploadRes
+
+    @PUT("profile/avatar/remove")
+    suspend fun remove(
+        @Header("Authorization") token: String
+    )
+
+    @PUT("profile")
+    suspend fun editProfile(
+        @Body editProfileReq: EditProfileReq,
         @Header("Authorization") token: String
     )
 }
