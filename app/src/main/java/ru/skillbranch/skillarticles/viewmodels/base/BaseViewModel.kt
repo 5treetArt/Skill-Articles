@@ -18,10 +18,13 @@ abstract class BaseViewModel<T : IViewModelState>(
     private val handleState: SavedStateHandle,
     initState: T
 ) : ViewModel() {
+
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     val notifications = MutableLiveData<Event<Notify>>()
+
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     val navigation = MutableLiveData<Event<NavigationCommand>>()
+
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     val permissions = MutableLiveData<Event<List<String>>>()
     private val loading = MutableLiveData<Loading>(Loading.HIDE_LOADING)
@@ -49,6 +52,7 @@ abstract class BaseViewModel<T : IViewModelState>(
      * модифицированное состояние, которое присваивается текущему состоянию
      */
     @UiThread
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     inline fun updateState(update: (currentState: T) -> T) {
         val updatedState: T = update(currentState)
         state.value = updatedState
@@ -60,7 +64,8 @@ abstract class BaseViewModel<T : IViewModelState>(
      * повторно
      */
     @UiThread
-    protected fun notify(content: Notify) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    fun notify(content: Notify) {
         notifications.value = Event(content)
     }
 
