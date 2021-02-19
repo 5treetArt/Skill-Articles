@@ -98,7 +98,6 @@ abstract class BaseActivity<T : BaseViewModel<out IViewModelState>> : AppCompatA
                 )
             }
             is NavigationCommand.Logout -> {
-                //TODO WTF?
                 do {
                     val result = navController.popBackStack(R.id.nav_profile, true)
                 } while (result)
@@ -156,7 +155,7 @@ class ToolbarBuilder() {
                 logo = logoPlaceholder
                 toolbar.logoDescription = "logo"
                 toolbar.doOnNextLayout {
-                    val logo =children.filter { it.contentDescription == "logo" }.first() as ImageView
+                    val logo = children.filter { it.contentDescription == "logo" }.first() as ImageView
                     logo.scaleType = ImageView.ScaleType.CENTER_CROP
                     (logo.layoutParams as? Toolbar.LayoutParams)?.let {
                         it.width = logoSize

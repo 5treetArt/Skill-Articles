@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.style.URLSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +13,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.buildSpannedString
-import androidx.core.text.inSpans
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -28,13 +26,14 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions.circleCropTransform
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.appbar.AppBarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.fragment_article.*
 import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.view.*
 import kotlinx.android.synthetic.main.layout_search_view.view.*
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.data.local.entities.Tag
+import ru.skillbranch.skillarticles.data.remote.res.CommentRes
 import ru.skillbranch.skillarticles.data.repositories.Element
 import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.extensions.*
@@ -43,35 +42,23 @@ import ru.skillbranch.skillarticles.ui.custom.ArticleSubmenu
 import ru.skillbranch.skillarticles.ui.custom.Bottombar
 import ru.skillbranch.skillarticles.ui.custom.ShimmerDrawable
 import ru.skillbranch.skillarticles.ui.custom.markdown.MarkdownBuilder
-import ru.skillbranch.skillarticles.ui.custom.spans.IconLinkSpan
-import ru.skillbranch.skillarticles.ui.custom.spans.InlineCodeSpan
 import ru.skillbranch.skillarticles.ui.delegates.RenderProp
 import ru.skillbranch.skillarticles.viewmodels.article.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.article.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Loading
-import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
-    override val viewModel: ArticleViewModel by viewModels {
-        ViewModelFactory(
-            owner = this,
-            params = args.articleId
-        )
-    }
+    private val args: ArticleFragmentArgs by navArgs()
+    override val viewModel: ArticleViewModel by viewModels()
 
-    private val commentsAdapter by lazy {
-        CommentsAdapter {
-            viewModel.handleReplyTo(it.slug, it.user.name)
-            et_comment.requestFocus()
-            scroll.smoothScrollTo(0, wrap_comments.top)
-            et_comment.context.showKeyboard(et_comment)
-        }
-    }
+    @Inject
+    lateinit var commentsAdapter: CommentsAdapter
 
     override val layout = R.layout.fragment_article
     override val binding: ArticleBinding by lazy { ArticleBinding() }
-    private val args: ArticleFragmentArgs by navArgs()
     override val prepareToolbar: (ToolbarBuilder.() -> Unit)? = {
         this.setSubtitle(args.category)
             .setLogo(args.categoryIcon)
@@ -246,6 +233,13 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
         scroll.setMarginOptionally(bottom = 0)
     }
 
+    override fun clickOnComment(comment: CommentRes) {
+        viewModel.handleReplyTo(comment.slug, comment.user.name)
+        et_comment.requestFocus()
+        scroll.smoothScrollTo(0, wrap_comments.top)
+        et_comment.context.showKeyboard(et_comment)
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val menuItem = menu.findItem(R.id.action_search)
@@ -329,6 +323,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
             viewModel.handleCopyCode()
         }
     }
+
 
     inner class ArticleBinding : Binding() {
         private val mb = MarkdownBuilder(requireContext())

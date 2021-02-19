@@ -1,13 +1,18 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: "androidx.navigation.safeargs.kotlin"
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id "androidx.navigation.safeargs.kotlin"
+    id 'kotlin-kapt'
+    id "scabbard.gradle"
+    id 'dagger.hilt.android.plugin'
+}
+
 apply from: "../versions.gradle"
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "ru.skillbranch.skillarticles"
         minSdkVersion 23
@@ -36,6 +41,12 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+}
+
+scabbard {
+    enabled true
+    failOnError true
+    outputFormat "svg"
 }
 
 dependencies {
@@ -70,7 +81,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
-    implementation 'com.facebook.stetho:stetho:1.5.1'
 
     // network: retrofit, okhttp, moshi
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -87,6 +97,12 @@ dependencies {
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+
+    //di
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_vm_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kapt "androidx.hilt:hilt-compiler:$hilt_vm_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"

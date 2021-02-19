@@ -3,6 +3,7 @@ package ru.skillbranch.skillarticles.ui.auth
 import android.text.Spannable
 import android.view.WindowManager
 import androidx.core.text.set
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.fragment_auth.*
@@ -15,7 +16,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 
 class AuthFragment : BaseFragment<AuthViewModel>() {
 
-    override val viewModel: AuthViewModel by viewModels()
+    override val viewModel: AuthViewModel by activityViewModels()
     override val layout: Int = R.layout.fragment_auth
     private val args: AuthFragmentArgs by navArgs()
 

@@ -1,5 +1,7 @@
 package ru.skillbranch.skillarticles.viewmodels.auth
 
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.android.synthetic.main.fragment_registration.*
 import ru.skillbranch.skillarticles.data.repositories.RootRepository
@@ -9,10 +11,10 @@ import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
-class AuthViewModel(handle: SavedStateHandle) :
-    BaseViewModel<AuthState>(handle, AuthState()), IAuthViewModel {
-
-    private val repository = RootRepository
+class AuthViewModel @ViewModelInject constructor(
+    @Assisted handle: SavedStateHandle,
+    private val repository: RootRepository
+) : BaseViewModel<AuthState>(handle, AuthState()), IAuthViewModel {
 
     init {
         subscribeOnDataSource(repository.isAuth()) { isAuth, state ->
@@ -45,21 +47,29 @@ class AuthViewModel(handle: SavedStateHandle) :
     fun handleRegister(name: String, login: String, password: String, dest: Int?) {
         var isAllCorrect = true
 
-        if (name.isBlank() || login.isBlank() || password.isBlank()) notify(Notify.ErrorMessage(
-            "Name, login, password it is required fields and not must be empty"
-        )).also { isAllCorrect = false }
+        if (name.isBlank() || login.isBlank() || password.isBlank()) notify(
+            Notify.ErrorMessage(
+                "Name, login, password it is required fields and not must be empty"
+            )
+        ).also { isAllCorrect = false }
 
-        if (!nameRegex.matches(name)) notify(Notify.ErrorMessage(
-            """The name must be at least 3 characters long and contain only letters and numbers and can also contain the characters "-" and "_""""
-        )).also { isAllCorrect = false }
+        if (!nameRegex.matches(name)) notify(
+            Notify.ErrorMessage(
+                """The name must be at least 3 characters long and contain only letters and numbers and can also contain the characters "-" and "_""""
+            )
+        ).also { isAllCorrect = false }
 
-        if (login.isBlank()) notify(Notify.ErrorMessage(
-            "Incorrect Email entered"
-        )).also { isAllCorrect = false }
+        if (login.isBlank()) notify(
+            Notify.ErrorMessage(
+                "Incorrect Email entered"
+            )
+        ).also { isAllCorrect = false }
 
-        if (!passRegex.matches(password)) notify(Notify.ErrorMessage(
-            "Password must be at least 8 characters long and contain only letters and numbers"
-        )).also { isAllCorrect = false }
+        if (!passRegex.matches(password)) notify(
+            Notify.ErrorMessage(
+                "Password must be at least 8 characters long and contain only letters and numbers"
+            )
+        ).also { isAllCorrect = false }
 
         if (isAllCorrect) {
             launchSafely {

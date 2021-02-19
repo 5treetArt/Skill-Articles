@@ -1,44 +1,20 @@
 package ru.skillbranch.skillarticles.ui.auth
 
-import androidx.activity.result.ActivityResultRegistry
-import androidx.annotation.VisibleForTesting
-import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
-import androidx.savedstate.SavedStateRegistryOwner
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_registration.*
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.extensions.toggleError
-import ru.skillbranch.skillarticles.ui.RootActivity
 import ru.skillbranch.skillarticles.ui.base.BaseFragment
-import ru.skillbranch.skillarticles.ui.base.Binding
-import ru.skillbranch.skillarticles.ui.delegates.RenderProp
-import ru.skillbranch.skillarticles.viewmodels.auth.AuthState
 import ru.skillbranch.skillarticles.viewmodels.auth.AuthViewModel
-import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 
+@AndroidEntryPoint
 class RegistrationFragment() : BaseFragment<AuthViewModel>() {
 
-    // for testing
-    var _mockFactory: ((SavedStateRegistryOwner) -> ViewModelProvider.Factory)? = null
-
-    override val viewModel: AuthViewModel by viewModels {
-        _mockFactory?.invoke(this) ?: defaultViewModelProviderFactory
-    }
+    override val viewModel: AuthViewModel by activityViewModels()
     override val layout: Int = R.layout.fragment_registration
 
     //override val binding by lazy { RegistrationBinding() }
-
-    // testing constructors
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    constructor(
-        mockRoot: RootActivity,
-        mockFactory: ((SavedStateRegistryOwner) -> ViewModelProvider.Factory)? = null
-    ) : this() {
-        _mockRoot = mockRoot
-        _mockFactory = mockFactory
-    }
 
     private val args: RegistrationFragmentArgs by navArgs()
 
