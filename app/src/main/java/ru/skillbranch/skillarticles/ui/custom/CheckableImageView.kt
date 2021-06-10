@@ -22,7 +22,7 @@ class CheckableImageView @JvmOverloads constructor(
     }
 
     override fun onCreateDrawableState(extraSpace: Int): IntArray {
-        val drawableState =  super.onCreateDrawableState(extraSpace + 1)
+        val drawableState = super.onCreateDrawableState(extraSpace + 1)
         if(isChecked) View.mergeDrawableStates(drawableState, CHECKED_STATE_SET)
         return drawableState
     }
@@ -34,7 +34,7 @@ class CheckableImageView @JvmOverloads constructor(
     }
 
     override fun setChecked(check: Boolean) {
-        if(checked == check) return
+        if (checked == check) return
         checked = check
         refreshDrawableState()
     }
