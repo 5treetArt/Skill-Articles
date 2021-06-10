@@ -6,6 +6,7 @@ import androidx.core.text.set
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_auth.*
 import ru.skillbranch.skillarticles.ui.base.BaseFragment
 import ru.skillbranch.skillarticles.viewmodels.auth.AuthViewModel
@@ -14,6 +15,7 @@ import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.ui.custom.spans.UnderlineSpan
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 
+@AndroidEntryPoint
 class AuthFragment : BaseFragment<AuthViewModel>() {
 
     override val viewModel: AuthViewModel by activityViewModels()
